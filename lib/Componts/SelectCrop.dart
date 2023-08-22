@@ -1,16 +1,12 @@
 
 
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:visibility_detector/visibility_detector.dart';
-import 'package:get/get.dart';
-import '../Api/select_crop_api.dart';
+
 import '../data/response/status.dart';
 import '../utils/Colors.dart';
 import '../utils/util.dart';
 import '../view_model/myplot_view_model/crop_list_view_model.dart';
-import 'AddNewPlot.dart';
 
 class SelecctCrop extends StatefulWidget {
    SelecctCrop({Key? key}) : super(key: key);
@@ -160,46 +156,41 @@ class _SelecctCropState extends State<SelecctCrop> {
                                       itemBuilder: (context, cropIndex) {
                                         final crop =
                                             cropCategory.cropList[cropIndex];
-                                        return InkWell(
-                                          onTap: (){
-                                             Get.to(AddNewPlot());
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Material(
-                                                  borderRadius:
-                                                      BorderRadius.circular(100),
-                                                  elevation: 5,
-                                                  child: CircleAvatar(
-                                                      radius: 35,
-                                                      backgroundColor: kWhite,
-                                                      child: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                  100),
-                                                          child: Image.network(
-                                                            errorBuilder: (context,
-                                                                error, stackTrace) {
-                                                              return Image.asset(
-                                                                  'assets/images/imagenotavailable.jpg',
-                                                                  fit: BoxFit
-                                                                      .fitWidth);
-                                                            },
-                                                            crop.cropImage,
-                                                            height: 70,
-                                                          ))),
-                                                ),
-                                                SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Text(crop.cropName),
-                                                
-                                              ],
-                                            ),
+                                        return Container(
+                                          decoration: BoxDecoration(),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Material(
+                                                borderRadius:
+                                                    BorderRadius.circular(100),
+                                                elevation: 5,
+                                                child: CircleAvatar(
+                                                    radius: 35,
+                                                    backgroundColor: kWhite,
+                                                    child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                100),
+                                                        child: Image.network(
+                                                          errorBuilder: (context,
+                                                              error, stackTrace) {
+                                                            return Image.asset(
+                                                                'assets/images/imagenotavailable.jpg',
+                                                                fit: BoxFit
+                                                                    .fitWidth);
+                                                          },
+                                                          crop.cropImage,
+                                                          height: 70,
+                                                        ))),
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(crop.cropName),
+                                              
+                                            ],
                                           ),
                                         );
                                       },
