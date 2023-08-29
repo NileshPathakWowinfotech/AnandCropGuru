@@ -102,57 +102,31 @@ class _AddPostCommunityState extends State<AddPostCommunity>   with TickerProvid
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       appBar: AppBar(
+        flexibleSpace: Image(
+          image: AssetImage(Util.backgroundImage),
+          fit: BoxFit.cover,
+        ),
+        leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(Icons.arrow_back, color: kgrey)),
+        title: Text(
+         "Add Post",
+          style: TextStyle(
+              color: kgrey, fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+      ),
       body: Column(
         children: [
-          Container(
-            height: 110,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Util.newHomeColor, Util.endColor]),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(40),
-                bottomRight: Radius.circular(40),
-              ),
-            ),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 55,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: 3,
-                      ),
-                      IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(Icons.arrow_back,
-                              size: 30, color: kWhite)),
-                      SizedBox(
-                        width: 9,
-                      ),
-                      Text(
-                        "Add Post",
-                        style: TextStyle(
-                            color: kWhite,
-                            fontSize: 27,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
           Expanded(
             child: Container(
+              decoration: BoxDecoration(  
+                image: DecorationImage(  
+                  image: AssetImage(Util.backgroundImage)
+                )
+              ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: SingleChildScrollView(

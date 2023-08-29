@@ -1,14 +1,18 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Componts/AppBar.dart';
 import 'package:flutter_application_1/Model/user.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 
+import '../data/Model/offer_model.dart';
+import '../data/Model/user_model.dart';
 import '../models/user.dart';
 import '../services.dart';
 import '../utils/Colors.dart';
 import '../utils/util.dart';
+import '../view_model/user_view_model.dart';
 import 'cart_screen.dart';
 
 const double basicScreenPadding = 15;
@@ -16,12 +20,12 @@ late AnimationController _controller;
 String selectedOption = 'Product Description';
 
 class ProductDetailsScreen extends StatefulWidget {
+  final  pSubCatId;
+  final offerId;
 
-  Map product;
 
-  ProductDetailsScreen( this.product, {super.key});
-  
- 
+
+  ProductDetailsScreen({super.key, this.pSubCatId, this.offerId, });
 
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
@@ -33,18 +37,24 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
   Map<dynamic, dynamic>? productDetails;
   List<dynamic>? updatedProductDetails;
   List<dynamic>? sizeList;
+  Future<UserModel> getUserData() => UserViewModel().getUser();
 
-  void getData() async {
-    productDetails =
-        await Services.getProductDetails(widget.product, '91')
-            .then((value) {
-      updatedProductDetails = value['DATA1'];
-      sizeList = value['DATA2'];
-      Navigator.of(context).pop();
-      setState(() {
-        isDataLoaded = true;
+  void getData() {
+    getUserData().then((value) async {
+      print('dddddd ${value.talukaName}');
+      productDetails = await Services.getProductDetails(
+              widget.offerId.toString(),
+              widget.pSubCatId,
+              value.userId)
+          .then((value) {
+        updatedProductDetails = value['DATA1'];
+        sizeList = value['DATA2'];
+        Navigator.of(context).pop();
+        setState(() {
+          isDataLoaded = true;
+        });
+        return value;
       });
-      return value;
     }).catchError((error) {
       Fluttertoast.showToast(
           msg: "Something went wrong!",
@@ -97,71 +107,25 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     }
     return Scaffold(
         resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          flexibleSpace: Image( 
+            image: AssetImage(Util.backgroundImage),
+            fit: BoxFit.cover,
+          ),
+          leading: InkWell(
+            onTap: (){
+             Navigator.of(context);
+            },
+            child: Icon(Icons.arrow_back,color: kgrey,)),
+          title: Text("Product Details",style: TextStyle(color: kgrey),),
+        ),
         body: Container(
           color: Colors.white,
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: Column(
             children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: basicScreenPadding),
-                margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).viewPadding.top),
-                height: 70,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Util.newHomeColor,
-                      Util.endColor,
-                    ],
-                  ),
-                  // color: Theme.of(context).primaryColor,
-                  borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(25),
-                      bottomRight: Radius.circular(25)),
-                ),
-                child: IntrinsicHeight(
-                  child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Icon(
-                          Icons.arrow_back_outlined,
-                          color: Colors.white,
-                          size: 27,
-                        ),
-                      ),
-                      SizedBox(width: 15),
-                      Container(
-                        child: const Text('Product Details',
-                            style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white)),
-                      ),
-                      Expanded(child: Container()),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => CartScreen('91'),
-                          ));
-                        },
-                        child: Icon(
-                          Icons.shopping_cart_outlined,
-                          color: Colors.white,
-                          size: 27,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+               
               // SizedBox(height: 15),
               isDataLoaded
                   ? Expanded(
@@ -211,8 +175,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                             fontWeight: FontWeight.w800),
                                       )),
                                   SizedBox(height: 25),
-                                  SizeList(
-                                      sizeList!,"91", getData),
+                                  SizeList(sizeList!, "91", getData),
                                 ],
                               ),
                             ),
@@ -266,15 +229,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                 ? Container(
                                     padding:
                                         EdgeInsets.symmetric(horizontal: 10),
-                                    child: Html(data: htmlData,
-                                        // style: {
-                                        //   "p": Style(
-                                        //       color: Colors.grey,
-                                        //       fontFamily: 'roboto'
-                                        //     // fontSize: FontSize.larger,
-                                        //   ),
-                                        // }),
-                                  ))
+                                    child: Html(
+                                      data: htmlData,
+                                      // style: {
+                                      //   "p": Style(
+                                      //       color: Colors.grey,
+                                      //       fontFamily: 'roboto'
+                                      //     // fontSize: FontSize.larger,
+                                      //   ),
+                                      // }),
+                                    ))
                                 : selectedOption == 'Ratings'
                                     ? Container(
                                         child: Column(
@@ -286,7 +250,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                   showDialog(
                                                       context: context,
                                                       builder: (context) {
-                                                        return ratingDialog(updatedProductDetails?[0]['PRODUCT_ID'].toString() ?? '', '91');
+                                                        return ratingDialog(
+                                                            updatedProductDetails?[
+                                                                            0][
+                                                                        'PRODUCT_ID']
+                                                                    .toString() ??
+                                                                '',
+                                                            '91');
                                                       });
                                                 },
                                                 child: Container(
@@ -319,7 +289,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                         ),
                       ),
                     )
-                  : Container()
+                  : Container(),
+              InkWell(
+                onTap: (){
+                  Get.to(CartScreen('91'));
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  height: 45,
+                  color: kgreen,
+                  child: Text('Order Place',style: TextStyle(color: kWhite,fontSize: 15),),
+                ),
+              )
             ],
           ),
         ));
@@ -630,6 +611,7 @@ class ratingDialog extends StatefulWidget {
   @override
   State<ratingDialog> createState() => _ratingDialogState();
 }
+
 class _ratingDialogState extends State<ratingDialog>
     with TickerProviderStateMixin {
   TextEditingController feedbackTextController = TextEditingController();
@@ -687,9 +669,12 @@ class _ratingDialogState extends State<ratingDialog>
                               color: Colors.white,
                               fontSize: 17,
                               fontWeight: FontWeight.w700)),
-                      GestureDetector(onTap: (){
-                        Navigator.of(context).pop();
-                      }, child: Icon(Icons.close, color: Colors.white, size: 26))
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child:
+                              Icon(Icons.close, color: Colors.white, size: 26))
                     ],
                   )),
               SizedBox(
@@ -749,15 +734,17 @@ class _ratingDialogState extends State<ratingDialog>
                         maxLines: 5,
                         style: TextStyle(fontSize: 14),
                         decoration: InputDecoration(
-                            hintText: 'Feedback :', border: InputBorder.none,
-                        hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
+                          hintText: 'Feedback :',
+                          border: InputBorder.none,
+                          hintStyle:
+                              TextStyle(color: Colors.grey, fontSize: 14),
                         ),
                       ),
                     ),
                     SizedBox(height: 30),
                     GestureDetector(
-                      onTap: (){
-                        if(feedbackTextController.text.trim().isEmpty){
+                      onTap: () {
+                        if (feedbackTextController.text.trim().isEmpty) {
                           // print(feedbackTextController.toString().trim().isEmpty);
                           Fluttertoast.showToast(
                               msg: 'Please Enter Feedback',
@@ -766,23 +753,31 @@ class _ratingDialogState extends State<ratingDialog>
                               timeInSecForIosWeb: 1,
                               backgroundColor: Colors.black,
                               textColor: Colors.white,
-                              fontSize: 16.0
-                          );
+                              fontSize: 16.0);
                           return;
                         }
 
                         Util.animatedProgressDialog(context, _controller);
                         _controller.forward();
-                        Services.addReview(widget.productId, widget.userId, givenRating, feedbackTextController.text).then((value) {
+                        Services.addReview(widget.productId, widget.userId,
+                                givenRating, feedbackTextController.text)
+                            .then((value) {
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
                         });
                       },
                       child: Container(
                         // margin: MediaQuery.of(context).viewInsets,
-                        padding: EdgeInsets.symmetric(horizontal: 50, vertical: 8),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(3)), color: Util.colorPrimary),
-                        child: Text('Submit', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17)),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 50, vertical: 8),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(3)),
+                            color: Util.colorPrimary),
+                        child: Text('Submit',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17)),
                       ),
                     )
                   ],

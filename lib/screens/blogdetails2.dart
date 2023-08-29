@@ -8,16 +8,17 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:http/http.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import '../data/Model/CropModels/blog_model.dart';
 import '../services2.dart';
 import '../utils/Colors.dart';
 import '../utils/util.dart';
 
 class BlogDetails2 extends StatefulWidget {
-  int blogId2;
-  final viwes;
-  final likes;
+ final BlogsModels item;
+ 
 
-  BlogDetails2(this.blogId2, {Key? key, this.viwes, this.likes}) : super(key: key);
+
+  BlogDetails2( {Key? key, required this.item}) : super(key: key);
 
   @override
   State<BlogDetails2> createState() => _BlogDetails2State();
@@ -27,7 +28,7 @@ class _BlogDetails2State extends State<BlogDetails2> {
   bool like = false;
   Map<String, dynamic>? responses;
   void getDetails() async{
-    responses = await Services2.getBlogDetails2(widget.blogId2.toString()).then((value) {
+    responses = await Services2.getBlogDetails2(widget.item.blogId.toString()).then((value) {
       setState(() {
         responses = value;
       });
@@ -47,118 +48,49 @@ class _BlogDetails2State extends State<BlogDetails2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       appBar: AppBar(
+        flexibleSpace: Image(
+          image: AssetImage(Util.backgroundImage),
+          fit: BoxFit.cover,
+        ),
+        leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(Icons.arrow_back, color: kgrey)),
+        title: Text(
+          "Blogs Details",
+          style: TextStyle(
+              color: kgrey, fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        actions: [
+           Padding(
+             padding: const EdgeInsets.all(10.0),
+             child: Container(
+                          height: 30,
+                          width: 30,
+                          decoration: BoxDecoration(
+                            color: kgreen,
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                          ),
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: like== true ?Icon(
+                                Icons.thumb_up_off_alt_sharp,
+                                color: Colors.white,
+                                size: 25,
+                              ):Icon(
+                                Icons.thumb_up_outlined,
+                                color: Colors.white,
+                                size: 25,
+                              )
+                          ),
+                        ),
+           ),
+        ],
+      ),
         body: Column(
           children: [
-            Container(
-              height: 110,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Util.newHomeColor, Util.endColor]),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(40),
-                  bottomRight: Radius.circular(40),
-                ),
-              ),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 55,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                icon: Icon(Icons.arrow_back,
-                                    size:
-                                    30, color: kWhite)),
-                            SizedBox(
-                              width: 9,
-                            ),
-                            Text(
-                              "Blog Details",
-                              style: TextStyle(
-                                  color: kWhite,
-                                  fontSize: 27,
-                                  fontWeight: FontWeight.bold),
-                            ),
-
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            InkWell(
-                              onTap: () async {
-                                final response =
-                                await get(Uri.parse(responses!['BLOG_IMAGE'] ?? ' '));
-                                // final bytes = response.bodyBytes;
-                                final Directory temp = await getTemporaryDirectory();
-                                final File imageFile =
-                                File('${temp.path}/productImage.jpg');
-                                await Util.validateImage(responses!['BLOG_IMAGE']).then((value) async{
-                                  if(value){
-                                    imageFile.writeAsBytesSync(response.bodyBytes);
-                                  } else {
-                                    ByteData bytes = await rootBundle.load('assets/images/anand_crop_guru_logo.png');
-                                    imageFile.writeAsBytes(bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
-                                  }
-                                  return value;
-                                });
-                                var widget;
-                                Share.shareFiles(
-                                  ['${temp.path}/productImage.jpg'],
-                                  text:
-                                  '${Util.stripHtmlIfNeeded(responses!['BLOG'] ?? '')}\n\n\n'
-                                      'Get more information download this app\n'
-                                      'https://play.google.com/store/apps/details?id=com.cropguru&hl',
-                                );
-                              },
-                              child: Icon(
-                                Icons.share_sharp,
-                                color: Colors.white,
-                                size: 28,
-                              ),
-
-                            ),
-                            SizedBox(width: 10,),
-                            Container(
-                              height: 35,
-                              width: 35,
-                              decoration: BoxDecoration(
-                                color: kgreen,
-                                borderRadius: BorderRadius.all(Radius.circular(15)),
-                              ),
-                              child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(4),
-                                  child: like== true ?Icon(
-                                    Icons.thumb_up_off_alt_sharp,
-                                    color: Colors.white,
-                                    size: 25,
-                                  ):Icon(
-                                    Icons.thumb_up_outlined,
-                                    color: Colors.white,
-                                    size: 25,
-                                  )
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-
             Expanded(
               child: responses != null ? Container(
                 child: SingleChildScrollView(
@@ -184,7 +116,7 @@ class _BlogDetails2State extends State<BlogDetails2> {
                               ),
                               SizedBox(width: 5,),
                               Text(
-                                "${widget.likes} like",
+                                "${widget.item.blogLikeStatus} like",
                                 style: TextStyle(
                                     color: kgreyy,
                                     fontSize: 13,
@@ -206,7 +138,7 @@ class _BlogDetails2State extends State<BlogDetails2> {
                               ),
                               SizedBox(width: 5,),
                               Text(
-                                "${widget.viwes} views",
+                                "${widget.item.blogView} views",
                                 style: TextStyle(
                                     color: kgreyy,
                                     fontSize: 13,

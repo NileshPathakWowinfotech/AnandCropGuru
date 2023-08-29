@@ -63,6 +63,7 @@ dependencies:
   blinking_text: ^1.0.2
   flutter_popup_menu_button: ^0.0.1+5
   custom_pop_up_menu: ^1.2.4
+  youtube_player_iframe: ^4.0.4
 
 dev_dependencies:
   flutter_test:

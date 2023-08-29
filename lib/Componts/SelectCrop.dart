@@ -1,12 +1,14 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Componts/AddNewPlot.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-
 import '../data/response/status.dart';
 import '../utils/Colors.dart';
 import '../utils/util.dart';
 import '../view_model/myplot_view_model/crop_list_view_model.dart';
+import 'MyPloatPage/add_plot_from.dart';
 
 class SelecctCrop extends StatefulWidget {
    SelecctCrop({Key? key}) : super(key: key);
@@ -25,6 +27,7 @@ class _SelecctCropState extends State<SelecctCrop> {
     // TODO: implement initState
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,9 +92,9 @@ class _SelecctCropState extends State<SelecctCrop> {
                   children: [ 
                      ChangeNotifierProvider<CropAddListViewModel>(
                         create: (BuildContext context) => selectCropViewModel,
-                        child: Consumer<CropAddListViewModel>(
-                builder: (context, value, _) {
-                  switch (value.CropAddList.status!) {
+                        child: Consumer<CropAddListViewModel>(    
+                       builder: (context, value, _) {
+                     switch (value.CropAddList.status!) {
                     case Status.LOADING:
                       return const Center(child: CircularProgressIndicator());
                     case Status.ERROR:
@@ -154,43 +157,49 @@ class _SelecctCropState extends State<SelecctCrop> {
                                       shrinkWrap: true,
                                       physics: NeverScrollableScrollPhysics(),
                                       itemBuilder: (context, cropIndex) {
-                                        final crop =
-                                            cropCategory.cropList[cropIndex];
-                                        return Container(
-                                          decoration: BoxDecoration(),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Material(
-                                                borderRadius:
-                                                    BorderRadius.circular(100),
-                                                elevation: 5,
-                                                child: CircleAvatar(
-                                                    radius: 35,
-                                                    backgroundColor: kWhite,
-                                                    child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                                100),
-                                                        child: Image.network(
-                                                          errorBuilder: (context,
-                                                              error, stackTrace) {
-                                                            return Image.asset(
-                                                                'assets/images/imagenotavailable.jpg',
-                                                                fit: BoxFit
-                                                                    .fitWidth);
-                                                          },
-                                                          crop.cropImage,
-                                                          height: 70,
-                                                        ))),
-                                              ),
-                                              SizedBox(
-                                                height: 5,
-                                              ),
-                                              Text(crop.cropName),
+                                        final crop = cropCategory.cropList[cropIndex];
+                                        return InkWell(
+                                          onTap: (){
+                                          // Get.to(AddNewPlott());
+                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddNewPlotFrom()));
                                               
-                                            ],
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Material(
+                                                  borderRadius:
+                                                      BorderRadius.circular(100),
+                                                  elevation: 5,
+                                                  child: CircleAvatar(
+                                                      radius: 35,
+                                                      backgroundColor: kWhite,
+                                                      child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                  100),
+                                                          child: Image.network(
+                                                            errorBuilder: (context,
+                                                                error, stackTrace) {
+                                                              return Image.asset(
+                                                                  'assets/images/imagenotavailable.jpg',
+                                                                  fit: BoxFit
+                                                                      .fitWidth);
+                                                            },
+                                                            crop.cropImage,
+                                                            height: 70,
+                                                          ))),
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Text(crop.cropName),
+                                                
+                                              ],
+                                            ),
                                           ),
                                         );
                                       },

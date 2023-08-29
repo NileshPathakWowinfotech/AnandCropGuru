@@ -1,6 +1,10 @@
 class AppUrls { 
    
    static  var BASEURL = "http://mycropguruapiwow.cropguru.in/api/";  
+
+   static  var WATHERURL = "http://api.weatherapi.com/v1/forecast.json?";  
+   
+   static  var IMAGEURL = "http:"; 
   
   //Mobile OTP Base url
    static var MOBILEOTPLOGIN = BASEURL+"OTP_Mobile";   
@@ -64,7 +68,16 @@ class AppUrls {
 
 
 //Crop Variety List Api 
- static var CropVariety =  BASEURL+'GetChataniType'; 
+ static var CropVariety =  BASEURL+'GetChataniType';  
 
+ 
+//Product Details Api 
+ static var ProductDetails =  BASEURL+'ProductList?PRODUCT_ID='; 
+
+//Video catgeory Api 
+ static var VideoCategory=  BASEURL+'GetVideoHome?';
+
+//Video blog Api 
+ static var blog =  BASEURL+'HomeScreenNews?';
 
 }

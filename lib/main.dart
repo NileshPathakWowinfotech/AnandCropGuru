@@ -7,6 +7,7 @@ import 'package:flutter_application_1/utils/routes/routes_name.dart';
 import 'package:flutter_application_1/utils/util.dart';
 import 'package:flutter_application_1/view_model/auth_view_model.dart';
 import 'package:flutter_application_1/view_model/home_view_model.dart';
+import 'package:flutter_application_1/view_model/myplot_view_model/crop_list_view_model.dart';
 import 'package:flutter_application_1/view_model/myplot_view_model/diary_view_model.dart';
 import 'package:flutter_application_1/view_model/myplot_view_model/question_answer.dart';
 import 'package:flutter_application_1/view_model/myplot_view_model/reportmaster_view_model.dart';
@@ -38,6 +39,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ReportMasterViewModel()),
         ChangeNotifierProvider(create: (_) => DiaryDetailsViewModel()),
         ChangeNotifierProvider(create: (_) => SelectedDateProvider()),
+        ChangeNotifierProvider(create: (_) => CropAddListViewModel()),
+        
         
       ],
       child: GetMaterialApp(

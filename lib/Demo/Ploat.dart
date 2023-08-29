@@ -42,12 +42,9 @@ class _PloatState extends State<Ploat> with TickerProviderStateMixin {
         child: Icon(Icons.add),
         backgroundColor: Colors.orange,
         onPressed: () {
-
- Get.to(
-            SelecctCrop(),
+          Get.to(SelecctCrop(),
               transition: Transition.cupertinoDialog,
-              duration: Duration(seconds: 1)); 
-
+              duration: Duration(seconds: 1));
 
           // Get.to(MyApiNestedList(),
           //     transition: Transition.cupertinoDialog,
@@ -64,24 +61,26 @@ class _PloatState extends State<Ploat> with TickerProviderStateMixin {
               return Center(child: Text(value.lablist.message.toString()));
             case Status.COMPLETED:
               return Container(
-                decoration: BoxDecoration( 
-                   image: DecorationImage(
-                    image: AssetImage(Util.backgroundImage)
-                   )
-                ),
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage(Util.backgroundImage))),
                 child: ListView.builder(
                   itemCount: value.lablist.data!.data.length,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    var profit = value.lablist.data!.data[index].totalIncome - value.lablist.data!.data[index].totalExpences;
-                    double expenes =value.lablist.data!.data[index].totalExpences; 
-                      double pl = profit;
-                      String profitloss = pl.toStringAsFixed(2); // 1.51
+                    var profit = value.lablist.data!.data[index].totalIncome -
+                        value.lablist.data!.data[index].totalExpences;
+                    double expenes =
+                        value.lablist.data!.data[index].totalExpences;
+                    double pl = profit;
+                    String profitloss = pl.toStringAsFixed(2); // 1.51
                     String number = expenes.toStringAsFixed(2); // 1.51
                     dynamic item = value.lablist.data!.data[index];
                     return InkWell(
                       onTap: () {
-                        Get.to(MyCrop(item: item,));
+                        Get.to(MyCrop(
+                          item: item,
+                        ));
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -95,14 +94,15 @@ class _PloatState extends State<Ploat> with TickerProviderStateMixin {
                                   color: Colors.grey.withOpacity(0.5),
                                   spreadRadius: 2,
                                   blurRadius: 3,
-                                  offset:
-                                      Offset(0, 3), // changes position of shadow
+                                  offset: Offset(
+                                      0, 3), // changes position of shadow
                                 ),
                               ],
                             ),
                             child: Column(children: [
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 3),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 3),
                                 child: SizedBox(
                                   height: 20,
                                   child: Row(
@@ -134,7 +134,9 @@ class _PloatState extends State<Ploat> with TickerProviderStateMixin {
                                               )),
                                           child: Center(
                                               child: Text(
-                                            value.lablist.data!.data[index].isPackageExpired                                           .toString(),
+                                            value.lablist.data!.data[index]
+                                                .isPackageExpired
+                                                .toString(),
                                             style: TextStyle(
                                                 color: kWhite,
                                                 fontSize: 15,
@@ -244,8 +246,8 @@ class _PloatState extends State<Ploat> with TickerProviderStateMixin {
                                 ),
                               ),
                               Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 10),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
                                   child: Expanded(
                                       child: Container(
                                           height: 48,
@@ -257,7 +259,8 @@ class _PloatState extends State<Ploat> with TickerProviderStateMixin {
                                                   width: 2, color: kgrey)),
                                           child: Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Expanded(
                                                   child: Container(
@@ -282,8 +285,8 @@ class _PloatState extends State<Ploat> with TickerProviderStateMixin {
                                                         Text(
                                                           number,
                                                           style: TextStyle(
-                                                              color:
-                                                                  Colors.orange),
+                                                              color: Colors
+                                                                  .orange),
                                                         ),
                                                       ],
                                                     ),
@@ -317,8 +320,8 @@ class _PloatState extends State<Ploat> with TickerProviderStateMixin {
                                                               .totalIncome
                                                               .toString(),
                                                           style: TextStyle(
-                                                              color:
-                                                                  Colors.orange),
+                                                              color: Colors
+                                                                  .orange),
                                                         ),
                                                       ],
                                                     ),
@@ -331,7 +334,8 @@ class _PloatState extends State<Ploat> with TickerProviderStateMixin {
                                                         color: kWhite,
                                                         child: Column(
                                                           children: [
-                                                            Text("Proffit/Loss"),
+                                                            Text(
+                                                                "Proffit/Loss"),
                                                             SizedBox(
                                                               height: 2,
                                                             ),
@@ -343,7 +347,8 @@ class _PloatState extends State<Ploat> with TickerProviderStateMixin {
                                                               style: TextStyle(
                                                                   color: profitloss ==
                                                                           0.0
-                                                                      ? Colors.red
+                                                                      ? Colors
+                                                                          .red
                                                                       : kgreen),
                                                             ),
                                                           ],

@@ -4,6 +4,7 @@ import 'package:flutter_application_1/screens/community.dart';
 import 'package:flutter_application_1/screens/home_screen.dart';
 import 'package:flutter_application_1/screens/mart.dart';
 import 'package:flutter_application_1/screens/profile.dart';
+import 'package:flutter_application_1/utils/Colors.dart';
 import 'package:flutter_application_1/utils/util.dart';
 import 'package:flutter_application_1/widgets/ftechmvvmdemo.dart';
 
@@ -37,6 +38,120 @@ class _HomePageState extends State<HomePage> {
     return Stack(
       children: [
         Scaffold(
+           appBar: AppBar(
+        backgroundColor: kprimarygreen,
+        title: InkWell(
+          onTap: () {},
+          child: Image.asset(
+            'assets/images/white_theam_logo.png',
+            height: 40,
+          ),
+        ),
+        actions: [
+          Container(
+            alignment: Alignment.center,
+            width: 130,
+            height: 38,
+            decoration: BoxDecoration(
+                color: klgreen, borderRadius: BorderRadius.circular(20)),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  height: 35,
+                  width: 40,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        left: 25,
+                        bottom: 15,
+                        child: Text(
+                          '0',
+                          style: TextStyle(
+                              color: kWhite,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Positioned(
+                          left: 8,
+                          top: 10,
+                          child: Image.asset(
+                            "assets/images/trophy.png",
+                            color: lgreen,
+                            height: 20,
+                          )),
+                    ],
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  height: 35,
+                  width: 40,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        left: 25,
+                        bottom: 15,
+                        child: Text(
+                          '0',
+                          style: TextStyle(
+                              color: kWhite,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Positioned(
+                        left: 8,
+                        top: 10,
+                        child: Icon(
+                          Icons.notifications,
+                          color: lgreen,
+                          size: 25,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 35,
+                  width: 40,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        left: 25,
+                        bottom: 15,
+                        child: Text(
+                          '0',
+                          style: TextStyle(
+                              color: kWhite,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Positioned(
+                        left: 8,
+                        top: 10,
+                        child: Icon(
+                          Icons.shopping_cart_outlined,
+                          color: lgreen,
+                          size: 25,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            width: 25,
+          ),
+        ],
+      ),
+          
           resizeToAvoidBottomInset: false,
           body: Center(
             child: _widgetOptions.elementAt(_selectedIndex),
@@ -111,8 +226,6 @@ class _HomePageState extends State<HomePage> {
             type: BottomNavigationBarType.fixed,
             currentIndex: _selectedIndex,
             selectedItemColor: Util.newHomeColor,
-            // unselectedItemColor: Colors.grey,
-            // unselectedLabelStyle: TextStyle(color: Colors.grey,),
             onTap: _onItemTapped,
           ),
         ),

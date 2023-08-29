@@ -28,16 +28,16 @@ class CropAddListViewModel with ChangeNotifier {
   setlabTestingType(ApiResponse<CropAddListModel> response) {
     CropAddList = response;
 
-    print('  Report data $response');
+    print('Report data $response');
     notifyListeners();
   } 
 
 
   //Crop Variety response
-  ApiResponse<CropVarietyListModel> CropVarietyList = ApiResponse.loading();
+  ApiResponse<CropVarietyListModel> cropVarietyList = ApiResponse.loading();
 
   setCropVarietyList(ApiResponse<CropVarietyListModel> response) {
-    CropVarietyList = response;
+    cropVarietyList = response;
 
     print('  Report data $response');
     notifyListeners();
@@ -83,6 +83,7 @@ class CropAddListViewModel with ChangeNotifier {
         "TYPE": "user",
         "USER_ID": "3"
         });
+        
     setCropVarietyList(ApiResponse.loading());
     _myRepo.CropVarietyListApi(croplistdata).then((value) {
       setCropVarietyList(ApiResponse.completed(value));

@@ -1,13 +1,15 @@
-
 import 'package:flutter_application_1/utils/app_urls.dart';
 import 'package:flutter_application_1/utils/url.dart';
+import 'package:flutter_application_1/view_model/user_view_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import './models/otp_response.dart';
 import 'Model/user.dart';
+import 'data/Model/user_model.dart';
 
 class Services {
+
   static Future<OTPResponse> getOTP(String mobileNumber) async {
     var url = Uri.parse(AppUrls.MOBILEOTPLOGIN);
     try {
@@ -243,10 +245,10 @@ class Services {
     }
   }
 
-  static Future<Map<dynamic, dynamic>> getProductDetails(
-      Map product,  user) async {
+  static Future<Map<dynamic, dynamic>> getProductDetails(productid,subcat,userId) async {
+    
     var url = Uri.parse(
-        'http://mycropguruapiwow.cropguru.in/api/ProductList?PRODUCT_ID=${product['PRODUCT_ID']}');
+        'http://mycropguruapiwow.cropguru.in/api/ProductList?PRODUCT_ID=${productid}');
     try {
       var response = await http.post(url,
           headers: <String, String>{
@@ -256,15 +258,15 @@ class Services {
             "START": 0,
             "END": 1000,
             "WORD": "None",
-            "USER_ID": user.USER_ID,
+            "USER_ID": userId.toString(),
             "LANG_ID": "3",
-            "CAT_ID": product['PCAT_ID'],
+            "CAT_ID": " 1",
             "TYPE": "Product",
-            "SUBCAT_ID": product['PSUBCAT_ID'],
+            "SUBCAT_ID":subcat,
             "LATITUDE": "20.0086761",
             "ACCESS_TOKEN": "123456",
-            "DISTRICT_ID": user.DISTRICT_ID,
-            "TALUKA_ID": user.TALUKA_ID,
+            "DISTRICT_ID": " ",
+            "TALUKA_ID": "",
             "CROP_ID": "0",
             "PLOT_ID": "0",
             "SCHEDULE_ID": "0",
@@ -276,14 +278,15 @@ class Services {
       }
 
       Map<dynamic, dynamic> productDetails = jsonDecode(response.body);
-
+    
       return productDetails;
     } catch (error) {
       rethrow;
     }
   }
 
-  static Future<bool> addQtyToCart(String userId, Map product, double qty, String task) async {
+  static Future<bool> addQtyToCart(
+      String userId, Map product, double qty, String task) async {
     var url = Uri.parse('http://mycropguruapiwow.cropguru.in/api/Cart');
     try {
       var response = await http.post(url,
@@ -292,10 +295,10 @@ class Services {
           },
           body: json.encode({
             "CART_ID": "1",
-            "USER_ID":userId,
-            "PRODUCT_ID":product['PRODUCT_ID'],
-            "PS_ID":product['PSIZE_ID'],
-            "QTY":qty,
+            "USER_ID": userId,
+            "PRODUCT_ID": product['PRODUCT_ID'],
+            "PS_ID": product['PSIZE_ID'],
+            "QTY": qty,
             "TASK": "UPDATE",
             "EXTRA1": "",
             "EXTRA2": "",
@@ -319,7 +322,8 @@ class Services {
     }
   }
 
-  static Future<bool> addProductToCart(String userId, Map product, double qty, String task) async {
+  static Future<bool> addProductToCart(
+      String userId, Map product, double qty, String task) async {
     var url = Uri.parse('http://mycropguruapiwow.cropguru.in/api/Cart');
     try {
       var response = await http.post(url,
@@ -328,10 +332,10 @@ class Services {
           },
           body: json.encode({
             "CART_ID": "1",
-            "USER_ID":userId,
-            "PRODUCT_ID":product['PRODUCT_ID'],
-            "PS_ID":product['PS_ID'],
-            "QTY":qty,
+            "USER_ID": userId,
+            "PRODUCT_ID": product['PRODUCT_ID'],
+            "PS_ID": product['PS_ID'],
+            "QTY": qty,
             "TASK": "UPDATE",
             "EXTRA1": "",
             "EXTRA2": "",
@@ -391,7 +395,8 @@ class Services {
     }
   }
 
-  static Future<bool> addReview(String productId, String userId, double rating, String ratingMessage) async {
+  static Future<bool> addReview(String productId, String userId, double rating,
+      String ratingMessage) async {
     var url = Uri.parse('http://mycropguruapiwow.cropguru.in/api/Get_Data');
     try {
       var response = await http.post(url,
@@ -424,16 +429,14 @@ class Services {
   }
 
   static Future<List<dynamic>> getAppVersion(String userId) async {
-    var url = Uri.parse('http://mycropguruapiwow.cropguru.in/api/GetVersion?TYPE=1');
+    var url =
+        Uri.parse('http://mycropguruapiwow.cropguru.in/api/GetVersion?TYPE=1');
     try {
       var response = await http.post(url,
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
-          body: json.encode({
-            "MAC_ADDRESS": "",
-            "USER_ID": userId
-          }));
+          body: json.encode({"MAC_ADDRESS": "", "USER_ID": userId}));
 
       if (response.statusCode >= 400) {
         throw Exception('Something went wrong!');
@@ -516,7 +519,8 @@ class Services {
     }
   }
 
-  static Future<List<dynamic>> addOrder(Map<String, dynamic> orderDetails) async {
+  static Future<List<dynamic>> addOrder(
+      Map<String, dynamic> orderDetails) async {
     var url = Uri.parse('http://mycropguruapiwow.cropguru.in/api/PlaceOrder');
     try {
       var response = await http.post(url,
@@ -534,7 +538,7 @@ class Services {
             "COUPEN_ID": "",
             "COUPEN_CODE": "",
             "COUPEN_AMOUNT": "",
-            "PAYMENT_METHOD": orderDetails['PAYMENT_METHOD'],     //"COD",
+            "PAYMENT_METHOD": orderDetails['PAYMENT_METHOD'], //"COD",
             "PAYMENT_TYPE": "",
             "GST_NO": "",
             "SHIPPING_CHARGES": orderDetails['SHIPPING_CHARGES'],
@@ -562,5 +566,4 @@ class Services {
       rethrow;
     }
   }
-
 }

@@ -8,20 +8,14 @@ import 'package:http/http.dart' as http;
 import '../Api/comment_post_api.dart';
 import '../Api/postLike.dart';
 import '../Componts/GoogleMapLocattion/google_map.dart';
+import '../data/Model/CropModels/community_model.dart';
 import '../utils/Colors.dart';
 import '../utils/util.dart';
 
 class PostDetailsScreen extends StatefulWidget {
-  const PostDetailsScreen({Key? key, this.username, this.cropName, this.information, this.image, this.todaydate, this.likeecount, this.userId, this.postId, this.profilePhoto}) : super(key: key);
-  final username;
-  final cropName;
-  final information;
-  final image;
-  final todaydate;
-   final likeecount;
-   final userId;
-   final postId;
-   final profilePhoto;
+  const PostDetailsScreen({Key? key, required this.communityListMOdel,}) : super(key: key);
+
+   final CommunityListMOdel communityListMOdel;
    
 
   @override
@@ -29,6 +23,7 @@ class PostDetailsScreen extends StatefulWidget {
 }
 
 class _PostDetailsScreenState extends State<PostDetailsScreen> with TickerProviderStateMixin{
+  
   bool like = false;
 
   late Map mapresponse;
@@ -48,7 +43,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> with TickerProvid
           "END" : 10000,
           "WORD": "NONE",
           "GET_DATA": "Get_AllPostCommentsByPostId",
-          "ID1": widget.postId,
+          "ID1": widget.communityListMOdel.userId.toString(),
           "ID2": "",
           "ID3": "",
           "STATUS": "",
@@ -62,7 +57,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> with TickerProvid
     jsonResponse = json.decode(response.body);
     print(jsonResponse["ResponseMessage"]);
     if (response.statusCode == 200) {
-      print(response.body);
+      print(widget.communityListMOdel.userId);
 
       mapresponse = json.decode(response.body);
       listresponse = mapresponse["DATA"];
@@ -101,64 +96,31 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> with TickerProvid
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       appBar: AppBar(
+        flexibleSpace: Image(
+          image: AssetImage(Util.backgroundImage),
+          fit: BoxFit.cover,
+        ),
+        leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(Icons.arrow_back, color: kgrey)),
+        title: InkWell(
+          onTap: (){
+            commentapi();
+          },
+          child: Text(
+            "Post Details",
+            style: TextStyle(
+                color: kgrey, fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Container(
-            height: 110,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Util.newHomeColor, Util.endColor]),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(40),
-                bottomRight: Radius.circular(40),
-              ),
-            ),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 55,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: 3,
-                      ),
-                      IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(Icons.arrow_back,
-                              size: 30, color: kWhite)),
-                      SizedBox(
-                        width: 9,
-                      ),
-                      InkWell(
-                        onTap: (){
-                         // Get.to(ShopGoogleMapLocation());
-                        },
-                        child: Text(
-                          "Post Datails ",
-                          style: TextStyle(
-                              color: kWhite,
-                              fontSize: 27,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-
-
           SizedBox(height: 5,),
           Expanded(
             child: Padding(
@@ -178,7 +140,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> with TickerProvid
                             backgroundColor: kgreen,
                             child: CircleAvatar(
                               radius: 20,
-                              child: Image.network(widget.profilePhoto, errorBuilder: (context, error, stackTrace) {
+                              child: Image.network(widget.communityListMOdel.profilePhoto, errorBuilder: (context, error, stackTrace) {
                                 return Image.asset(
                                   "assets/images/profile.png",
                                   height: 200,
@@ -186,7 +148,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> with TickerProvid
                               })
                           ),),
                           SizedBox(width: 8,),
-                          Text(widget.username, style: TextStyle(
+                          Text(widget.communityListMOdel.fullName, style: TextStyle(
                               color: kblack,
                               fontSize: 16,
                               fontWeight: FontWeight.bold),
@@ -208,7 +170,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> with TickerProvid
                           ),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Text(widget.cropName, style: TextStyle(
+                            child: Text(widget.communityListMOdel.cropName, style: TextStyle(
                                 color: kblack,
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold
@@ -216,7 +178,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> with TickerProvid
                           )),
                       SizedBox(height: 8,),
 
-                      Text(widget.information, style: TextStyle(
+                      Text(widget.communityListMOdel.postName, style: TextStyle(
                           color: kblack,
                           fontSize: 16,
                           fontWeight: FontWeight.bold
@@ -227,7 +189,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> with TickerProvid
                         decoration: BoxDecoration(
 
                             image: DecorationImage(image: NetworkImage(
-                             widget.image == null? "https://us.123rf.com/450wm/mathier/mathier1905/mathier190500002/134557216-no-thumbnail-image-placeholder-for-forums-blogs-and-websites.jpg?ver=6":   widget.image.toString()),
+                            widget.communityListMOdel.postPhoto == null? "https://us.123rf.com/450wm/mathier/mathier1905/mathier190500002/134557216-no-thumbnail-image-placeholder-for-forums-blogs-and-websites.jpg?ver=6":   widget.communityListMOdel.postPhoto),
                                 fit: BoxFit.fill)
                         ),
                       ),
@@ -246,7 +208,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> with TickerProvid
 
                                   setState(() {
                                     like= !like;
-                                    PostLikeApi.postlikeapi(widget.userId,widget.postId);
+                                    PostLikeApi.postlikeapi(widget.communityListMOdel.userId,widget.communityListMOdel.postId);
                                   });
                                   print("true");
                                   },
@@ -289,14 +251,18 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> with TickerProvid
 
                         ],
                       ),
-                      Text("${widget.likeecount} Likes",style: TextStyle(color: kblack,fontSize: 12 , fontWeight: FontWeight.bold),),
-                      Text(widget.information,style: TextStyle(fontSize: 12 ),),
+                      Text("${widget.communityListMOdel.myLikeCount} Likes",style: TextStyle(color: kblack,fontSize: 12 , fontWeight: FontWeight.bold),),
+                      Text(widget.communityListMOdel.postDescription,style: TextStyle(fontSize: 12 ),),
                       SizedBox(height: 8,),
-                      Text(widget.todaydate,style: TextStyle(color: kblack,fontSize: 12 ),),
+                      Text(widget.communityListMOdel.regDate,style: TextStyle(color: kblack,fontSize: 12 ),),
                       SizedBox(height: 8,),
                       Text("Comments",style: TextStyle(color: Colors.orange,fontSize: 15,fontWeight: FontWeight.bold ),),
                       SizedBox(height: 5,),
-                      commentslist(),
+                      Container(
+                        height: 200,
+
+                width: 200,                       
+                 child: commentslist()),
                     ],
                   ),
                 ),
@@ -353,7 +319,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> with TickerProvid
                       Util.animatedProgressDialog(context, _controller);
                       _controller.forward();
                     });
-                    CommentPostApi.commentpostapi(commentController.text,widget.postId,widget.userId).then((value) {
+                    CommentPostApi.commentpostapi(commentController.text,widget.communityListMOdel.postId,widget.communityListMOdel.userId).then((value) {
                       _controller.reset();
                       Navigator.pop(context);
                       setState(() {});

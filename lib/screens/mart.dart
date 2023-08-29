@@ -56,24 +56,7 @@ class _MartState extends State<Mart> with TickerProviderStateMixin{
 
   @override
   void initState() {
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 3000),
-      vsync: this,
-    );
-
-    _controller.addListener(() {
-      if (_controller.isCompleted) {
-        _controller.reset();
-        _controller.forward();
-      }
-    });
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Util.animatedProgressDialog(context, _controller);
-      _controller.forward();
-      setUser();
-    });
+     setUser();
   }
 
   @override
@@ -118,11 +101,16 @@ class _MartState extends State<Mart> with TickerProviderStateMixin{
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            child: const Text('Mart',
-                                style: TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white)),
+                            child: InkWell(
+                              onTap: (){
+                                setUser();
+                              },
+                              child: const Text('Mart',
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)),
+                            ),
                           ),
                 GestureDetector(
                   onTap: () {

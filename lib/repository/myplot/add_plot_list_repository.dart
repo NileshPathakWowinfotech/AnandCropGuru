@@ -27,7 +27,9 @@ class CropListRepository  {
   Future<CropVarietyListModel> CropVarietyListApi(data)async{
     try{
      dynamic response = await _apiServices.getPostResponse(AppUrls.CropVariety, data); 
+      print(response);
      return response = CropVarietyListModel.fromJson(response);
+     
     }catch(e){
       throw e;
     }

@@ -95,13 +95,11 @@ class _WeatherState extends State<Weather> {
 
             ),
             Expanded(
-
               child: SingleChildScrollView(
                 child: Column(
                   children: [
                     SizedBox(height: 8,),
                    Text(date,style: TextStyle(color: kWhite, fontWeight: FontWeight.bold, fontSize: 20), ),
-
                     SizedBox(height: 110,),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -119,7 +117,6 @@ class _WeatherState extends State<Weather> {
                    padding: const EdgeInsets.symmetric(horizontal: 15),
                    child: Container(
                      height: 330,
-
                      decoration: BoxDecoration(
                          gradient: LinearGradient(
                              begin: Alignment.topCenter,
@@ -129,8 +126,6 @@ class _WeatherState extends State<Weather> {
                              dblue,
 
                              ]
-
-
                          ),
                        border: Border.all(width: 0.5, color: kwBorder),
                        borderRadius: BorderRadius.circular(16)
@@ -214,65 +209,7 @@ class _WeatherState extends State<Weather> {
                       padding: const EdgeInsets.symmetric(horizontal: 17),
                       child: Divider(color: kWhite,),
                     ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 240,
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              lblue,
-                              dblue,
-                            ]
-                        ),
-                        border: Border.all(width: 0.5, color: kwBorder),
-                        borderRadius: BorderRadius.circular(16)
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 30,),
-                        Row(
-                          children: [
-                            SizedBox(width: 10,),
-                            Text("Hourly Forecast",style:  TextStyle(color: kWhite, fontSize: 17,fontWeight: FontWeight.bold), ),
-                          ],
-                        ) ,
-                        SizedBox(height: 20,),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child: Row(
-                            children: [
-                              Column(
-                                children: [
-                                  Column(
-                                    children: [
-                                      Text("2023-05-11",style:  TextStyle(color: kWhite, fontSize: 16,), ),
-                                      SizedBox(height: 2,),
-                                      Text("00:00",style:  TextStyle(color: kWhite, fontSize: 17,), ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 15,),
-                                  Image.asset("assets/images/moon.png",height: 45,),
-                                  SizedBox(height: 18,),
-                                  Row(
-                                    children: [
-                                      Text("15",style:  TextStyle(color: kWhite, fontSize: 17,fontWeight: FontWeight.bold), ),
-                                      Image.asset("assets/images/celsius1.png",height: 16, color: kWhite,),
-                                    ],
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                )
+                   
                   ],
                 ),
               ),

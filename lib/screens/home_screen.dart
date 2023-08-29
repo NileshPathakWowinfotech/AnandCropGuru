@@ -5,13 +5,19 @@ import 'package:flutter_application_1/utils/Colors.dart';
 import 'package:get/get.dart';
 
 import '../Componts/MyFarms.dart';
+import '../Componts/Social.dart';
 import '../Componts/anand_biochemr_R_&_d_center.dart';
 import '../utils/util.dart';
+import '../view_model/wather_view_model.dart';
 import '../widgets/upper_home_screen.dart';
 import 'blogs_Screen.dart';
 import 'dr_post_screen.dart';
 import 'farming_videos.dart';
+import 'knwg_hub.dart';
+import 'kurshi_product_Screen.dart';
+import 'my_post_home_screen.dart';
 import 'notifications.dart';
+import 'offer_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -41,12 +47,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
           SliverAppBar(
-            // surfaceTintColor: Colors.transparent,
-            // automaticallyImplyLeading: false,
             shadowColor: Theme.of(context).primaryColor,
             expandedHeight: 415,
             title: Text(
-              'Anand CropGuru',
+              'Anand CropGuru'
             ),
             actions: [
               IconButton(
@@ -128,122 +132,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 }
 
-class HomeScreenfirst extends StatelessWidget {
+class HomeScreenfirst extends StatefulWidget {
   const HomeScreenfirst({super.key});
 
   @override
+  State<HomeScreenfirst> createState() => _HomeScreenfirstState();
+}
+
+class _HomeScreenfirstState extends State<HomeScreenfirst> {
+  WatherViewModel watherViewModel = WatherViewModel();
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: kprimarygreen,
-        title:Image.asset(
-          'assets/images/white_theam_logo.png',
-          height: 40,
-        ),
-        actions: [
-          Container(
-            alignment: Alignment.center,
-            width: 130,
-            height: 38,
-            decoration: BoxDecoration(
-                color: klgreen, borderRadius: BorderRadius.circular(20)),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  height: 35,
-                  width: 40,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        left: 25,
-                        bottom: 15,
-                        child: Text(
-                          '0',
-                          style: TextStyle(
-                              color: kWhite,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Positioned(
-                          left: 8,
-                          top: 10,
-                          child: Image.asset(
-                            "assets/images/trophy.png",
-                            color: lgreen,
-                            height: 20,
-                          )),
-                    ],
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  height: 35,
-                  width: 40,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        left: 25,
-                        bottom: 15,
-                        child: Text(
-                          '0',
-                          style: TextStyle(
-                              color: kWhite,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Positioned(
-                        left: 8,
-                        top: 10,
-                        child: Icon(
-                          Icons.notifications,
-                          color: lgreen,
-                          size: 25,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  height: 35,
-                  width: 40,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        left: 25,
-                        bottom: 15,
-                        child: Text(
-                          '0',
-                          style: TextStyle(
-                              color: kWhite,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Positioned(
-                        left: 8,
-                        top: 10,
-                        child: Icon(
-                          Icons.shopping_cart_outlined,
-                          color: lgreen,
-                          size: 25,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          SizedBox(
-            width: 25,
-          ),
-        ],
-      ),
+     
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -278,7 +179,11 @@ class HomeScreenfirst extends StatelessWidget {
             ),
 
             Modules(),
-            QutionsAnswrs(),
+            SizedBox(child: QutionsAnswrs()),
+            
+            SizedBox(
+              height: 500,
+              child: MYPostHomeScreen()),
 
             SizedBox(
               height: 30,
@@ -450,9 +355,7 @@ class _QutionsAnswrsState extends State<QutionsAnswrs> {
             )
           ],
         ),
-
-
-   ],
+      ],
     );
   }
 }
@@ -483,7 +386,6 @@ class Modules extends StatelessWidget {
               SeeByList(
                 press: () {
                   Get.to(MyFarms());
-                  
                 },
                 image: 'assets/images/field.png',
                 titile: 'My Plot',
@@ -496,12 +398,16 @@ class Modules extends StatelessWidget {
                 titile: 'Laboratory',
               ),
               SeeByList(
-                press: () {},
+                press: () {
+                  Get.to(OfferScreen());
+                },
                 image: 'assets/images/offer.png',
                 titile: 'Offer',
               ),
               SeeByList(
-                press: () {},
+                press: () {
+                  Get.to(FarmingVideos());
+                },
                 image: 'assets/images/video_icons.png',
                 titile: 'Video',
               ),
@@ -512,22 +418,31 @@ class Modules extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               SeeByList(
-                press: () {},
+                press: () {
+                  Get.to(KnwgHub());
+                },
                 image: 'assets/images/open-book.png',
                 titile: 'KNWG HUB',
               ),
               SeeByList(
-                press: () {},
+                press: () {
+                  Get.to(KurshiProductSCreen());
+                },
                 image: 'assets/images/field.png',
                 titile: 'Kurshi Product',
               ),
               SeeByList(
-                press: () {},
+                press: () {
+                  Get.to(BolgsScreen());
+                },
                 image: 'assets/images/blog.png',
                 titile: 'Blog',
               ),
               SeeByList(
-                press: () {},
+                press: () {
+                   Get.to(Social());
+                  
+                },
                 image: 'assets/images/see_by_list_item_icons/social.png',
                 titile: 'Social media',
               ),
@@ -555,7 +470,7 @@ class SeeByList extends StatelessWidget {
         InkWell(
           onTap: () {
             press();
-          } ,
+          },
           child: Container(
             padding: const EdgeInsets.all(4.0),
             alignment: Alignment.center,
