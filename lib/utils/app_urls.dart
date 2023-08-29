@@ -78,6 +78,9 @@ class AppUrls {
  static var VideoCategory=  BASEURL+'GetVideoHome?';
 
 //Video blog Api 
- static var blog =  BASEURL+'HomeScreenNews?';
+ static var blog =  BASEURL+'HomeScreenNews?'; 
+
+ //Bannar blog Api 
+ static var Bannar =  BASEURL+'Banner';
 
 }

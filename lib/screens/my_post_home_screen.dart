@@ -25,32 +25,45 @@ class MYPostHomeScreen extends StatefulWidget {
 
 class _MYPostHomeScreenState extends State<MYPostHomeScreen> {
   MyPostViewModel myPostViewModel = MyPostViewModel();
-  bool like = false;
-  @override
+    bool like = false;
+    @override
   void initState() {
     myPostViewModel.myPosListAPi();
     // TODO: implement initState
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: ChangeNotifierProvider<MyPostViewModel>(
-                create: (BuildContext context) => myPostViewModel,
-                child: Consumer<MyPostViewModel>(builder: (context, value, _) {
-                  switch (value.myPostList.status!) {
-                    case Status.LOADING:
-                      return const Center(child: CircularProgressIndicator());
-                    case Status.ERROR:
-                      return Center(
-                          child: Text(value.myPostList.message.toString()));
-                    case Status.COMPLETED:
-                      return Column(
-                          children: value.myPostList.data!.data.map((doc) {
-                        return  Container(
+    return 
+        Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: ChangeNotifierProvider<MyPostViewModel>(
+            create: (BuildContext context) => myPostViewModel,
+            child: Consumer<MyPostViewModel>(builder: (context, value, _) {
+              switch (value.myPostList.status!) {
+                case Status.LOADING:
+                  return const Center(child: CircularProgressIndicator());
+                case Status.ERROR:
+                  return Center(child: Text(value.myPostList.message.toString()));
+                case Status.COMPLETED:
+                  return value.myPostList.data!.data.isEmpty? Container(height: 200,color: Colors.red,width: 400,): Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(),
+                      child: ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 0, vertical: 0),
+                       
+                        itemCount: value.myPostList.data!.data.length,
+                        itemBuilder: (context, index) {
+                          dynamic item = value.myPostList.data!.data[index];
+                          return InkWell(
+                            onTap: () {
+                              Get.to(BlogDetails2(item: item,
+                                ));
+                            },
+                            child: Container(
                               margin: EdgeInsets.only(
                                   left: 8, right: 8, bottom: 12),
                               padding: EdgeInsets.only(
@@ -71,7 +84,8 @@ class _MYPostHomeScreenState extends State<MYPostHomeScreen> {
                                 child: Column(
                                   children: [
                                     Text(
-                                     doc.blogTitle,
+                                      value
+                                          .myPostList.data!.data[index].blogTitle,
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16),
@@ -80,7 +94,8 @@ class _MYPostHomeScreenState extends State<MYPostHomeScreen> {
                                       height: 200,
                                       width: MediaQuery.of(context).size.width,
                                       child: Image.network(
-                                        doc.blogImage,
+                                        value.myPostList.data!.data[index]
+                                            .blogImage,
                                         errorBuilder:
                                             (context, error, stackTrace) {
                                           return Image.network(
@@ -99,14 +114,22 @@ class _MYPostHomeScreenState extends State<MYPostHomeScreen> {
                                         InkWell(
                                           onTap: () async {
                                             final response = await get(
-                                                Uri.parse(doc.blogImage ??
+                                                Uri.parse(value
+                                                        .myPostList
+                                                        .data!
+                                                        .data[index]
+                                                        .blogImage ??
                                                     ' '));
                                             // final bytes = response.bodyBytes;
                                             final Directory temp =
                                                 await getTemporaryDirectory();
                                             final File imageFile = File(
                                                 '${temp.path}/productImage.jpg');
-                                            await Util.validateImage(doc.blogImage)
+                                            await Util.validateImage(value
+                                                    .myPostList
+                                                    .data!
+                                                    .data[index]
+                                                    .blogImage)
                                                 .then((value) async {
                                               if (value) {
                                                 imageFile.writeAsBytesSync(
@@ -126,7 +149,7 @@ class _MYPostHomeScreenState extends State<MYPostHomeScreen> {
                                             Share.shareFiles(
                                               ['${temp.path}/productImage.jpg'],
                                               text:
-                                                  '${Util.stripHtmlIfNeeded(doc.blogTitle ?? '')}\n\n\n'
+                                                  '${Util.stripHtmlIfNeeded(value.myPostList.data!.data[index].blogTitle ?? '')}\n\n\n'
                                                   'Get more information download this app\n'
                                                   'https://play.google.com/store/apps/details?id=com.cropguru&hl',
                                             );
@@ -163,8 +186,15 @@ class _MYPostHomeScreenState extends State<MYPostHomeScreen> {
                                                   ? temp = "like"
                                                   : temp = "deslike";
                                               like
-                                                  ? doc.blogLikeCount += 1
-                                                  : doc
+                                                  ? value
+                                                      .myPostList
+                                                      .data!
+                                                      .data[index]
+                                                      .blogLikeCount += 1
+                                                  : value
+                                                      .myPostList
+                                                      .data!
+                                                      .data[index]
                                                       .blogLikeCount -= 1;
                                             });
 
@@ -199,7 +229,7 @@ class _MYPostHomeScreenState extends State<MYPostHomeScreen> {
                                           width: 10,
                                         ),
                                         Text(
-                                          '${doc.blogLikeCount} Likes',
+                                          '${value.myPostList.data!.data[index].blogLikeCount} Likes',
                                         ),
                                         SizedBox(
                                           width: 3,
@@ -220,7 +250,7 @@ class _MYPostHomeScreenState extends State<MYPostHomeScreen> {
                                           color: Colors.grey,
                                         ),
                                         Text(
-                                          ' ${doc.blogView} Views',
+                                          ' ${value.myPostList.data!.data[index].blogView} Views',
                                         ),
                                         Expanded(child: Container()),
                                         Icon(
@@ -233,15 +263,14 @@ class _MYPostHomeScreenState extends State<MYPostHomeScreen> {
                                   ],
                                 ),
                               ),
-                            );
-                          
-                      }).toList() // all the children is making an error
+                            ),
                           );
-                  }
-                }))));
+                        },
+                      ));
+              }
+            })));
   }
 }
 
     
   
- 

@@ -18,6 +18,7 @@ import 'kurshi_product_Screen.dart';
 import 'my_post_home_screen.dart';
 import 'notifications.dart';
 import 'offer_screen.dart';
+import 'oneoffer_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -181,12 +182,10 @@ class _HomeScreenfirstState extends State<HomeScreenfirst> {
             Modules(),
             SizedBox(child: QutionsAnswrs()),
             
-            SizedBox(
-              height: 500,
-              child: MYPostHomeScreen()),
+            MYPostHomeScreen(),
 
             SizedBox(
-              height: 30,
+              height: 10,
             )
           ],
         ),
@@ -369,17 +368,8 @@ class Modules extends StatelessWidget {
       color: kprimarygreen,
       child: Column(
         children: [
-          Container(
-            height: 120,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    fit: BoxFit.fitWidth,
-                    image: AssetImage(
-                      "assets/images/banner1.jpg",
-                    ))),
-          ),
-          SizedBox(height: 20),
+        OneOfferPage(),
+          SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [

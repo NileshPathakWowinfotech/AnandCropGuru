@@ -1,15 +1,22 @@
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/data/Model/MartModels/product_details_model.dart';
+import 'package:flutter_application_1/utils/Colors.dart';
 import 'package:flutter_application_1/utils/dummy_data.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 import '../Componts/MyFarms.dart';
 import '../Componts/Social.dart';
 import '../Componts/anand_biochemr_R_&_d_center.dart';
 import '../Componts/emergencycall.dart';
 import '../Componts/weather.dart';
+import '../data/response/status.dart';
+import '../screens/product_details_screen.dart';
 import '../utils/util.dart';
+import '../view_model/CropModels/bannar_view_model.dart';
+import '../view_model/CropModels/video_view_model.dart';
 
 class UpperHomeScreen extends StatefulWidget {
   const UpperHomeScreen({super.key});
@@ -215,32 +222,55 @@ class SeeByListItem extends StatelessWidget {
 }
 
 //Widget - Upper Home Screen Carousel Slider
-class UpperHomeScreenCarouselSlider extends StatelessWidget {
+class UpperHomeScreenCarouselSlider extends StatefulWidget {
+  @override
+  State<UpperHomeScreenCarouselSlider> createState() => _UpperHomeScreenCarouselSliderState();
+}
+
+class _UpperHomeScreenCarouselSliderState extends State<UpperHomeScreenCarouselSlider> {
+  BannarViewModel bannarViewModel = BannarViewModel();
+  @override
+  void initState() {
+    bannarViewModel.bannarListAPi();
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: CarouselSlider(
-          items: [
-            'https://cropguru.in/Cropguru_Admin/upload/v2.jpg',
-            'https://cropguru.in/Cropguru_Admin/upload/4.png',
-          ].map((link) {
+    return ChangeNotifierProvider<BannarViewModel>(
+                create: (BuildContext context) => bannarViewModel,
+                child: Consumer<BannarViewModel>(builder: (context, value, _) {
+                  switch (value.bannarList.status!) {
+                    case Status.LOADING:
+                      return  Container(height: 170,color: kprimarygreen,);
+                    case Status.ERROR:
+                      return Center(
+                          child: Text(value.bannarList.message.toString()));
+                    case Status.COMPLETED:
+                      return Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(),
+                          child:  CarouselSlider(
+          items: value.bannarList.data!.data.map((link) {
             return Container(
+
               decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey,
-                    offset: Offset(0.0, 1.0), //(x,y)
-                    blurRadius: 3.0,
-                  ),
-                ],
+                color: kgreen,
+               
               ),
               height: 170,
               child: ClipRRect(
              
-                child: Image.network(
-                  link,
-                  fit: BoxFit.cover,
+                child: InkWell(
+                  onTap: (){
+                    Get.to(ProductDetailsScreen(offerId: link.productId,pSubCatId: link.psubcatId,));
+                  },
+                  child: Image.network(
+                    link.bannerImage,
+                    width: MediaQuery.of(context).size.width,
+                    
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             );
@@ -254,5 +284,16 @@ class UpperHomeScreenCarouselSlider extends StatelessWidget {
             // reverse: true,
           )),
     );
+                  }
+                }));
   }
 }
+                            
+                          
+                  
+                
+  
+
+
+
+ 
