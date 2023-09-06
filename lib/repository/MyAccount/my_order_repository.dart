@@ -1,27 +1,23 @@
-
-import '../../data/Model/CropModels/blog_model.dart';
-import '../../data/Model/CropModels/krushi_model.dart';
+import '../../data/Model/CropModels/bannarimage_model.dart';
+import '../../data/Model/ProfileModels/my_order_model.dart';
 import '../../data/network/BaseApiServices.dart';
 import '../../data/network/NetworkApiServices.dart';
 import '../../utils/app_urls.dart';
 
-class KrushiRepository{
+
+class MyOrderRepository{
 
 
 BaseApiServices  _apiServices = NetworkApiService();
   
-  Future<KrushiLIstModel> krushiListApi(dynamic data)async{
+  Future<MyOrderModel> myOrderListApi(dynamic data)async{
     try{
      dynamic response = await _apiServices.getPostResponse(AppUrls.GetData, data); 
-
-    
       print(response);
-     return response = KrushiLIstModel.fromJson(response);
+     return response = MyOrderModel.fromJson(response);
     }catch(e){
       throw e;
     }
-
- 
   } 
 
 

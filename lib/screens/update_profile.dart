@@ -1,13 +1,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../services.dart';
 import '../utils/Colors.dart';
 import '../utils/prefs_util.dart';
 import '../utils/util.dart';
+
 
 class UpdateProfile extends StatefulWidget {
   static final routeName = '/update-profile';
@@ -15,20 +13,12 @@ class UpdateProfile extends StatefulWidget {
   @override
   State<UpdateProfile> createState() => _UpdateProfileState();
 }
-
 class _UpdateProfileState extends State<UpdateProfile> with TickerProviderStateMixin{
   bool isInitialized = false;
   double textSize = 16;
   double textFieldHeight = 45;
   
 
-  void setUser() async {
-    // user = await PrefsUtil.getUserDetails();
-  }
-
-  // void setUser() async {
-  //   user = await PrefsUtil.getUserDetails();
-  // }
   String selectedStateName = 'not set';
   String selectedStateID = 'not set';
 
@@ -100,7 +90,6 @@ class _UpdateProfileState extends State<UpdateProfile> with TickerProviderStateM
 
   @override
   void initState() {
-    setUser();
     Future.delayed(const Duration(milliseconds: 0), () {
       setState(() {
         isInitialized = false;
@@ -155,63 +144,37 @@ class _UpdateProfileState extends State<UpdateProfile> with TickerProviderStateM
     // }
 
     return Scaffold(
+       appBar: AppBar(
+        flexibleSpace: Image(
+          image: AssetImage(Util.backgroundImage),
+          fit: BoxFit.cover,
+        ),
+        leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(Icons.arrow_back, color: kgrey)),
+        title: Text(
+          "Profile",
+          style: TextStyle(
+              color: kgrey, fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+       
+      ),
       resizeToAvoidBottomInset: false,
       body: Container(
-        color: Util.lightGreen,
-        child: Column(
-          children: [
-            Container(
-              margin:
-                  EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
-              height: 70,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Util.newHomeColor,
-                    Util.endColor,
-                  ],
-                ),
-                // color: Theme.of(context).primaryColor,
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(25),
-                    bottomRight: Radius.circular(25)),
-              ),
-              child: Row(
-                children: [
-                  // flag ? Icon(Icons.arrow_right_outlined) : Icon(Icons.arrow_drop_down_outlined),
-                  //
-                  // ElevatedButton(onPressed: (){
-                  //   setState(() {
-                  //     flag = !flag;
-                  //   });
-                  // }, child: Text('Tap')),
-                  SizedBox(width: 20),
-                  GestureDetector(
-                    onTap: (){
-                      Navigator.of(context).pop();
-                    },
-                    child: Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                  ),
-                  SizedBox(width: 20),
-                  Text(
-                    'Profile',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: ScrollConfiguration(
+        decoration: BoxDecoration( 
+          image: DecorationImage( 
+            image: AssetImage(Util.backgroundImage),
+            fit: BoxFit.cover
+          )
+        ),
+      
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+             
+              ScrollConfiguration(
                 behavior: const ScrollBehavior().copyWith(overscroll: false),
                 child: SingleChildScrollView(
                   child: Container(
@@ -361,10 +324,10 @@ class _UpdateProfileState extends State<UpdateProfile> with TickerProviderStateM
                                   backgroundColor: Colors.black,
                                   textColor: Colors.white,
                                   fontSize: 16.0);
-
+        
                               return;
                             }
-
+        
                             showProgressIndicator();
                             Services.getDistricts(selectedStateID).then((value) {
                               Navigator.of(context).pop();
@@ -444,7 +407,7 @@ class _UpdateProfileState extends State<UpdateProfile> with TickerProviderStateM
                                   backgroundColor: Colors.black,
                                   textColor: Colors.white,
                                   fontSize: 16.0);
-
+        
                               return;
                             }
                             if (selectedDistrictName == 'not set') {
@@ -458,7 +421,7 @@ class _UpdateProfileState extends State<UpdateProfile> with TickerProviderStateM
                                   fontSize: 16.0);
                               return;
                             }
-
+        
                             showProgressIndicator();
                             Services.getTalukaList(selectedStateID, selectedDistrictID, '3')
                                 .then((value) {
@@ -529,7 +492,7 @@ class _UpdateProfileState extends State<UpdateProfile> with TickerProviderStateM
                           height: textFieldHeight,
                           child: TextField(
                             onChanged: (value) {
-
+        
                             },
                             controller: villageName,
                             decoration: InputDecoration(
@@ -596,10 +559,10 @@ class _UpdateProfileState extends State<UpdateProfile> with TickerProviderStateM
                                         backgroundColor: Colors.black,
                                         textColor: Colors.white,
                                         fontSize: 16.0);
-
+        
                                     return;
                                   }
-
+        
                                   if (selectedStateName == 'not set') {
                                     Fluttertoast.showToast(
                                         msg: "Please select state",
@@ -611,7 +574,7 @@ class _UpdateProfileState extends State<UpdateProfile> with TickerProviderStateM
                                         fontSize: 16.0);
                                     return;
                                   }
-
+        
                                   if (selectedDistrictName == 'not set') {
                                     Fluttertoast.showToast(
                                         msg: "Please select district",
@@ -621,10 +584,10 @@ class _UpdateProfileState extends State<UpdateProfile> with TickerProviderStateM
                                         backgroundColor: Colors.black,
                                         textColor: Colors.white,
                                         fontSize: 16.0);
-
+        
                                     return;
                                   }
-
+        
                                   if (selectedTalukaName == 'not set') {
                                     Fluttertoast.showToast(
                                         msg: "Please select Taluka",
@@ -634,10 +597,10 @@ class _UpdateProfileState extends State<UpdateProfile> with TickerProviderStateM
                                         backgroundColor: Colors.black,
                                         textColor: Colors.white,
                                         fontSize: 16.0);
-
+        
                                     return;
                                   }
-
+        
                                   if (fullName!.text.trim().length < 3) {
                                     Fluttertoast.showToast(
                                         msg: 'Please enter more than 3 characters in full name',
@@ -647,10 +610,10 @@ class _UpdateProfileState extends State<UpdateProfile> with TickerProviderStateM
                                         backgroundColor: Colors.black,
                                         textColor: Colors.white,
                                         fontSize: 16.0);
-
+        
                                     return;
                                   }
-
+        
                                   if (villageName!.text.toString().trim().isEmpty) {
                                     Fluttertoast.showToast(
                                         msg: "Please enter village name",
@@ -660,10 +623,10 @@ class _UpdateProfileState extends State<UpdateProfile> with TickerProviderStateM
                                         backgroundColor: Colors.black,
                                         textColor: Colors.white,
                                         fontSize: 16.0);
-
+        
                                     return;
                                   }
-
+        
                                   if (villageName!.text.toString().trim().length < 3) {
                                     Fluttertoast.showToast(
                                         msg: "Please enter more than 3 characters in village name",
@@ -673,12 +636,12 @@ class _UpdateProfileState extends State<UpdateProfile> with TickerProviderStateM
                                         backgroundColor: Colors.black,
                                         textColor: Colors.white,
                                         fontSize: 16.0);
-
+        
                                     return;
                                   }
-
+        
                                   showProgressIndicator();
-
+        
                                   // User? user;
                                   // Function temp = () async{
                                   //   user = await PrefsUtil.getUserDetails().then((value){
@@ -694,7 +657,7 @@ class _UpdateProfileState extends State<UpdateProfile> with TickerProviderStateM
                                   //     return value;
                                   //   });
                                   //   PrefsUtil.setUserDetails(user);
-
+        
                                   //   await Services.updateUserDetails(user).then((value) {
                                   //     if(value){
                                   //       Navigator.of(context).pop();
@@ -730,8 +693,8 @@ class _UpdateProfileState extends State<UpdateProfile> with TickerProviderStateM
                                   //   });
                                   // };
                                   // temp();
-
-
+        
+        
                                 },
                                 style: ElevatedButton.styleFrom(
                                   shadowColor: Colors.black54,
@@ -756,8 +719,8 @@ class _UpdateProfileState extends State<UpdateProfile> with TickerProviderStateM
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

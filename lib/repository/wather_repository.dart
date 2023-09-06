@@ -15,7 +15,7 @@ class WatherRepository{
    Future<WatherModel> watherList(uri)async{
     try{
      dynamic response = await _apiServices.getResponse(uri);
-     print(response);
+     print(uri);
      return response = WatherModel.fromJson(response);
     }catch(e){
       throw e;

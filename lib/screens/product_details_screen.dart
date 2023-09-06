@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Componts/AppBar.dart';
-import 'package:flutter_application_1/Model/user.dart';
+import 'package:flutter_application_1/view_model/Mart/product_comment_view_model.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-
-import '../data/Model/offer_model.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../Componts/Martwidgets/product_all_page_list.dart';
+import '../Componts/Martwidgets/product_blog_details.dart';
+import '../Demo/productDemo.dart';
 import '../data/Model/user_model.dart';
-import '../models/user.dart';
+import '../data/response/status.dart';
 import '../services.dart';
 import '../utils/Colors.dart';
 import '../utils/util.dart';
+import '../view_model/CropModels/related_video_view_model.dart';
+import '../view_model/Mart/product_blog_view_model.dart';
 import '../view_model/user_view_model.dart';
 import 'cart_screen.dart';
 
@@ -20,12 +24,16 @@ late AnimationController _controller;
 String selectedOption = 'Product Description';
 
 class ProductDetailsScreen extends StatefulWidget {
-  final  pSubCatId;
+  final pSubCatId;
   final offerId;
+  final ProductdId;
 
-
-
-  ProductDetailsScreen({super.key, this.pSubCatId, this.offerId, });
+  ProductDetailsScreen({
+    super.key,
+    this.pSubCatId,
+    this.offerId,
+    this.ProductdId,
+  });
 
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
@@ -38,14 +46,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
   List<dynamic>? updatedProductDetails;
   List<dynamic>? sizeList;
   Future<UserModel> getUserData() => UserViewModel().getUser();
+   String? userId;
 
   void getData() {
     getUserData().then((value) async {
-      print('dddddd ${value.talukaName}');
+      
+      print('dddddd ${value.userId}'); 
+      userId = value.userId;
       productDetails = await Services.getProductDetails(
-              widget.offerId.toString(),
-              widget.pSubCatId,
-              value.userId)
+              widget.offerId.toString(), widget.pSubCatId, value.userId)
           .then((value) {
         updatedProductDetails = value['DATA1'];
         sizeList = value['DATA2'];
@@ -108,16 +117,22 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          flexibleSpace: Image( 
+          flexibleSpace: Image(
             image: AssetImage(Util.backgroundImage),
             fit: BoxFit.cover,
           ),
           leading: InkWell(
-            onTap: (){
-             Navigator.of(context);
-            },
-            child: Icon(Icons.arrow_back,color: kgrey,)),
-          title: Text("Product Details",style: TextStyle(color: kgrey),),
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(
+                Icons.arrow_back,
+                color: kgrey,
+              )),
+          title: Text(
+            "Product Details",
+            style: TextStyle(color: kgrey),
+          ),
         ),
         body: Container(
           color: Colors.white,
@@ -125,7 +140,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
           width: MediaQuery.of(context).size.width,
           child: Column(
             children: [
-               
               // SizedBox(height: 15),
               isDataLoaded
                   ? Expanded(
@@ -175,7 +189,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                             fontWeight: FontWeight.w800),
                                       )),
                                   SizedBox(height: 25),
-                                  SizeList(sizeList!, "91", getData),
+                                  SizeList(sizeList!, "21013", getData),
                                 ],
                               ),
                             ),
@@ -250,13 +264,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                   showDialog(
                                                       context: context,
                                                       builder: (context) {
-                                                        return ratingDialog(
-                                                            updatedProductDetails?[
-                                                                            0][
-                                                                        'PRODUCT_ID']
-                                                                    .toString() ??
-                                                                '',
-                                                            '91');
+                                                        return ratingDialog(widget.ProductdId
+                                                           );
                                                       });
                                                 },
                                                 child: Container(
@@ -281,26 +290,54 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                 ),
                                               ),
                                             ),
+                                            SizedBox(
+                                              height: 12,
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: RatingAndComment(productId:widget.ProductdId ,),
+                                            )
                                           ],
                                         ),
                                       )
-                                    : Container()
+                                    : selectedOption == "Related Videos"
+                                        ? RelatedVideoList(
+                                            productId: widget.ProductdId,
+                                          )
+                                        : Blogs(),
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: 236,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage(Util.backgroundImage),
+                                      fit: BoxFit.cover)),
+                              child: Demoomy(),
+                            )
                           ],
                         ),
                       ),
                     )
-                  : Container(),
+                  : Blogs(),
+
               InkWell(
-                onTap: (){
-                  Get.to(CartScreen('91'));
+                onTap: () {
+                   getUserData().then((value) async {
+                   print(value.userId.toString());
+                   Get.to(CartScreen(value.userId));
+                   });
                 },
                 child: Container(
                   alignment: Alignment.center,
                   height: 45,
                   color: kgreen,
-                  child: Text('Order Place',style: TextStyle(color: kWhite,fontSize: 15),),
+                  child: Text(
+                    'Order Place',
+                    style: TextStyle(color: kWhite, fontSize: 15),
+                  ),
                 ),
-              )
+              ),
             ],
           ),
         ));
@@ -606,8 +643,8 @@ class _SizeListItemState extends State<SizeListItem> {
 
 class ratingDialog extends StatefulWidget {
   String productId;
-  String userId;
-  ratingDialog(this.productId, this.userId);
+  
+  ratingDialog(this.productId,);
   @override
   State<ratingDialog> createState() => _ratingDialogState();
 }
@@ -615,34 +652,11 @@ class ratingDialog extends StatefulWidget {
 class _ratingDialogState extends State<ratingDialog>
     with TickerProviderStateMixin {
   TextEditingController feedbackTextController = TextEditingController();
-
   late AnimationController _controller;
-
-  @override
-  void initState() {
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 3000),
-      vsync: this,
-    );
-
-    _controller.addListener(() {
-      if (_controller.isCompleted) {
-        _controller.reset();
-        _controller.forward();
-      }
-    });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     double givenRating = 1;
+     final commentProductViewViewModel = Provider.of<CommentProductViewViewModel>(context);
     return AlertDialog(
       insetPadding: EdgeInsets.all(10),
       contentPadding: EdgeInsets.zero,
@@ -698,15 +712,15 @@ class _ratingDialogState extends State<ratingDialog>
                                 fontSize: 13))),
                     SizedBox(height: 15),
                     RatingBar.builder(
-                      initialRating: 1,
-                      minRating: 1,
+                      initialRating: 0,
+                      minRating: 0,
                       direction: Axis.horizontal,
                       allowHalfRating: true,
                       itemCount: 5,
                       itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
                       itemBuilder: (context, _) => Icon(
                         Icons.star,
-                        color: Colors.amber,
+                        color: kgreen,
                       ),
                       onRatingUpdate: (rating) {
                         givenRating = rating;
@@ -744,27 +758,34 @@ class _ratingDialogState extends State<ratingDialog>
                     SizedBox(height: 30),
                     GestureDetector(
                       onTap: () {
-                        if (feedbackTextController.text.trim().isEmpty) {
-                          // print(feedbackTextController.toString().trim().isEmpty);
-                          Fluttertoast.showToast(
-                              msg: 'Please Enter Feedback',
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Colors.black,
-                              textColor: Colors.white,
-                              fontSize: 16.0);
-                          return;
-                        }
+                        // if (feedbackTextController.text.trim().isEmpty) {
+                        //   // print(feedbackTextController.toString().trim().isEmpty);
+                        //   Fluttertoast.showToast(
+                        //       msg: 'Please Enter Feedback',
+                        //       toastLength: Toast.LENGTH_SHORT,
+                        //       gravity: ToastGravity.BOTTOM,
+                        //       timeInSecForIosWeb: 1,
+                        //       backgroundColor: Colors.black,
+                        //       textColor: Colors.white,
+                        //       fontSize: 16.0);
+                        //   return;
+                        // }
 
-                        Util.animatedProgressDialog(context, _controller);
-                        _controller.forward();
-                        Services.addReview(widget.productId, widget.userId,
-                                givenRating, feedbackTextController.text)
-                            .then((value) {
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
-                        });
+                        // Util.animatedProgressDialog(context, _controller);
+                        // _controller.forward();
+                        // Services.addReview(widget.productId, widget.userId,
+                        //         givenRating, feedbackTextController.text)
+                        //     .then((value) {
+                        //   Navigator.of(context).pop();
+                        //   Navigator.of(context).pop();
+                        // });
+                        if(feedbackTextController.text.isEmpty){
+                          Util.flushBarErrorMessage('Please Enter FeedBack',context);
+                        }else{
+                         commentProductViewViewModel.feedBack(context,feedbackTextController.text,givenRating, widget.productId);
+                        }
+                       
+                       
                       },
                       child: Container(
                         // margin: MediaQuery.of(context).viewInsets,
@@ -791,5 +812,429 @@ class _ratingDialogState extends State<ratingDialog>
         ),
       ),
     );
+  }
+}
+
+class RelatedVideoList extends StatefulWidget {
+  const RelatedVideoList({super.key, this.productId});
+  final productId;
+
+  @override
+  State<RelatedVideoList> createState() => _RelatedVideoListState();
+}
+
+class _RelatedVideoListState extends State<RelatedVideoList> {
+  RelatedVideoViewModel relatedVideoViewModel = RelatedVideoViewModel();
+
+  @override
+  void initState() {
+    relatedVideoViewModel.relatedVideoAPi(widget.productId);
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<RelatedVideoViewModel>(
+        create: (BuildContext context) => relatedVideoViewModel,
+        child: Consumer<RelatedVideoViewModel>(builder: (context, value, _) {
+          switch (value.relatedVideoList.status!) {
+            case Status.LOADING:
+              return Text('');
+            case Status.ERROR:
+              return Center(
+                  child: Text(value.relatedVideoList.message.toString()));
+            case Status.COMPLETED:
+              return Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(),
+                  child: value.relatedVideoList.data!.data.isEmpty
+                      ? Center(
+                          child: Container(
+                          height: 100,
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage(
+                                      "assets/images/no_data_faund.jpg"))),
+                        ))
+                      : ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 0, vertical: 0),
+                          itemCount: value.relatedVideoList.data!.data.length,
+                          itemBuilder: (context, index) {
+                            dynamic item =
+                                value.relatedVideoList.data!.data[index];
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 5),
+                              child: Material(
+                                elevation: 1,
+                                borderRadius: BorderRadius.circular(6),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: kWhite,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 10),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [],
+                                        ),
+                                        Text(
+                                          value.relatedVideoList.data!
+                                              .data[index].videoTitle,
+                                          style: TextStyle(
+                                            color: kblack,
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        InkWell(
+                                          onTap: () async {
+                                            String? url;
+                                            print("hello");
+
+                                            url =
+                                                "https://www.youtube.com/watch?v=${value.relatedVideoList.data!.data[index].videoUrl.toString()}";
+                                            if (await canLaunch(url!)) {
+                                              await launch(
+                                                url!,
+                                                headers: {
+                                                  "Content-Type":
+                                                      "application/x-www-form-urlencoded",
+                                                  "Content-Disposition":
+                                                      "inline"
+                                                },
+                                              );
+                                              print("browser url");
+                                              print(url);
+                                            } else
+                                              // can't launch url, there is some error
+                                              throw "Could not launch $url";
+                                          },
+                                          child: Container(
+                                            height: 200,
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(),
+                                            child: Stack(
+                                              children: [
+                                                Image.network(
+                                                    'https://i.ytimg.com/vi/yEDIJODOE58/maxresdefault.jpg'),
+                                                Center(
+                                                    child: Image.asset(
+                                                  "assets/images/play.png",
+                                                  height: 40,
+                                                  color: Colors.red,
+                                                )),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ));
+          }
+        }));
+  }
+}
+
+class Blogs extends StatefulWidget {
+  const Blogs({super.key});
+
+  @override
+  State<Blogs> createState() => _BlogsState();
+}
+
+class _BlogsState extends State<Blogs> {
+  ProductBlogViewViewModel productBlogViewViewModel =
+      ProductBlogViewViewModel();
+  @override
+  void initState() {
+    productBlogViewViewModel.productblogaPI();
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<ProductBlogViewViewModel>(
+        create: (BuildContext context) => productBlogViewViewModel,
+        child: Consumer<ProductBlogViewViewModel>(builder: (context, value, _) {
+          switch (value.productLists.status!) {
+            case Status.LOADING:
+              return Text('');
+            case Status.ERROR:
+              return Center(child: Text(value.productLists.message.toString()));
+            case Status.COMPLETED:
+              return Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(),
+                  child: value.productLists.data!.data.isEmpty
+                      ? Center(
+                          child: Container(
+                            height: 100,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: AssetImage(
+                                        "assets/images/no_data_faund.jpg"))),
+                          ),
+                        )
+                      : ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 0, vertical: 0),
+                          itemCount: value.productLists.data!.data.length,
+                          itemBuilder: (context, index) {
+                            dynamic item = value.productLists.data!.data[index];
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Material(
+                                elevation: 5,
+                                borderRadius: BorderRadius.circular(5),
+                                child: InkWell(
+                                  onTap: () {
+                                    Get.to(ProductBlogDetails(blog: item));
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Center(
+                                              child: Text(
+                                            value.productLists.data!.data[index]
+                                                .blogTitle,
+                                            style: TextStyle(
+                                                color: kgrey,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold),
+                                          )),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Center(
+                                              child: Image.network(
+                                            value.productLists.data!.data[index]
+                                                .blogImage,
+                                            height: 300,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Image.asset(
+                                                  'assets/images/imagenotavailable.jpg');
+                                            },
+                                          )),
+                                          SizedBox(
+                                            height: 20,
+                                          ),
+                                          Html(
+                                              data: value.productLists.data!
+                                                  .data[index].blogDescription),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.share,
+                                                      color: kgreen,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    Text(
+                                                      value.productLists.data!
+                                                          .data[index].regDate,
+                                                      style: TextStyle(
+                                                          color: kgrey,
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Icon(
+                                                  Icons.arrow_forward,
+                                                  color: klorange,
+                                                )
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ));
+          }
+        }));
+  }
+}
+
+class RatingAndComment extends StatefulWidget {
+  const RatingAndComment({
+    super.key, this.productId,
+  });
+  final productId;
+
+  @override
+  State<RatingAndComment> createState() => _RatingAndCommentState();
+}
+
+class _RatingAndCommentState extends State<RatingAndComment> {
+  CommentProductViewViewModel commentProductViewViewModel =
+      CommentProductViewViewModel();
+  @override
+  void initState() {
+    commentProductViewViewModel.commentProduct(widget.productId);
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<CommentProductViewViewModel>(
+        create: (BuildContext context) => commentProductViewViewModel,
+        child:
+            Consumer<CommentProductViewViewModel>(builder: (context, value, _) {
+          switch (value.productLists.status!) {
+            case Status.LOADING:
+              return const Center(child: CircularProgressIndicator());
+            case Status.ERROR:
+              return Center(child: Text(value.productLists.message.toString()));
+            case Status.COMPLETED:
+              return Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(),
+                  child: ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                    itemCount: value.productLists.data!.data.length,
+                    itemBuilder: (context, index) {
+                      dynamic item = value.productLists.data!.data[index];
+                      return Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              children: [
+                                CircleAvatar(
+                                  radius: 20,
+                                  child: Image.network(
+                                      value.productLists.data!.data[index]
+                                          .profilePhoto,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                    return Image.asset(
+                                      "assets/images/profile.png",
+                                      height: 200,
+                                    );
+                                  }),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item = value
+                                      .productLists.data!.data[index].fullName,
+                                  style: TextStyle(
+                                    color: kblack,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                Text(
+                                  value.productLists.data!.data[index].regDate
+                                      .toString(),
+                                  style: TextStyle(color: kgrey, fontSize: 12),
+                                ),
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                Text(
+                                  maxLines: 3,
+                                  value.productLists.data!.data[index]
+                                      .ratingMessage
+                                      .toString(),
+                                  style: TextStyle(color: kblack, fontSize: 12),
+                                ),
+                                SizedBox(height: 5,),
+                                  RatingBar.builder(
+                                  initialRating:  value.productLists.data!.data[index].rating,
+                                      
+                                  minRating: 1,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: true,
+                                  itemCount: 5,
+                                  itemSize: 12,
+                                  itemPadding:
+                                      EdgeInsets.symmetric(horizontal: 4.0),
+                                  itemBuilder: (context, _) => Icon(
+                                    Icons.star,
+                                    color: kgreen,
+                                  ),
+                                  onRatingUpdate: (rating) {
+                                    print(rating);
+                                  },
+                                ),
+                                SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width - 100,
+                                    child: Divider(
+                                      thickness: 0,
+                                      color: kblack,
+                                    )),
+                              
+                              ],
+                            )
+                          ]);
+                    },
+                  ));
+          }
+        }));
   }
 }

@@ -8,7 +8,7 @@ import '../../view_model/home_view_model.dart';
 
 class lab_List extends StatefulWidget {
   const lab_List({super.key, required this.category});
-   final Datum category;
+   final SoilTestingTypeListModelDATA category;
 
   @override
   State<lab_List> createState() => _lab_ListState();

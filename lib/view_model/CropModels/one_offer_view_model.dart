@@ -5,7 +5,7 @@ import '../../data/Model/user_model.dart';
 import '../../data/network/BaseApiServices.dart';
 import '../../data/network/NetworkApiServices.dart';
 import '../../data/response/api_response.dart';
-import '../../repository/CropModels/oneoffer_repository.dart';
+import '../../repository/CropModelsRepository/oneoffer_repository.dart';
 import '../user_view_model.dart';
 
 class OneOfferViewModel with ChangeNotifier{

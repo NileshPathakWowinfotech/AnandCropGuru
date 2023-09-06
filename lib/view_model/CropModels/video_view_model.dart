@@ -16,7 +16,7 @@ import '../../data/Model/CropModels/video_playlist_model.dart';
 import '../../data/Model/offer_model.dart';
 import '../../data/Model/user_model.dart';
 import '../../repository/offer_repository.dart';
-import '../../repository/CropModels/video_repository.dart';
+import '../../repository/CropModelsRepository/video_repository.dart';
 
 class VideoViewModel with ChangeNotifier {
   late List datais;

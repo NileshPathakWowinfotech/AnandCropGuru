@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../models/user.dart';
 import '../services.dart';
+import '../utils/Colors.dart';
 import '../utils/dash_rect.dart';
 import '../utils/prefs_util.dart';
 import '../utils/util.dart';
@@ -29,7 +30,7 @@ class _ApplyCouponScreenState extends State<ApplyCouponScreen>
   void getData() async {
     Util.animatedProgressDialog(context, _controller);
     _controller.forward();
-    couponList = await Services.getCoupons(widget.userdata.USER_ID!).then((value) {
+    couponList = await Services.getCoupons(widget.userdata).then((value) {
       _controller.reset();
       Navigator.of(context).pop();
       setState(() {
@@ -65,65 +66,40 @@ class _ApplyCouponScreenState extends State<ApplyCouponScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        color: Colors.white,
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Column(children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: basicScreenPadding),
-            margin:
-                EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
-            height: 70,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Util.newHomeColor,
-                  Util.endColor,
-                ],
-              ),
-              // color: Theme.of(context).primaryColor,
-              borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(25),
-                  bottomRight: Radius.circular(25)),
-            ),
-            child: IntrinsicHeight(
-              child: Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Icon(
-                      Icons.arrow_back_outlined,
-                      color: Colors.white,
-                      size: 27,
-                    ),
-                  ),
-                  SizedBox(width: 15),
-                  Container(
-                    child: const Text('Apply Coupon Code',
-                        style: TextStyle(
-                            fontSize: 21,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white)),
-                  ),
-                ],
-              ),
-            ),
+       appBar: AppBar(
+          flexibleSpace: Image(
+            image: AssetImage(Util.backgroundImage),
+            fit: BoxFit.cover,
           ),
-          // SizedBox(height: 15),
+          leading: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(
+                Icons.arrow_back,
+                color: kgrey,
+              )),
+          title: Text(
+            "Apply copen code ",
+            style: TextStyle(color: kgrey),
+          ),
+        ),
+      body: Container(
+        decoration: BoxDecoration( 
+          image: DecorationImage(
+            image: AssetImage(Util.backgroundImage),
+            fit: BoxFit.cover
+          )
+        ),
+        child: Column(  
+          children: [
           Expanded(
             child: SingleChildScrollView(
               child: Column(
                 children: [
                   Container(
                     height: 260,
-                    child: Image.asset('assets/images/walletamt.png'),
+                    child: Image.asset('assets/images/walletamt.webp'),
                   ),
                   Column(
                     children: couponList != null

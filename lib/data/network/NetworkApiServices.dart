@@ -22,10 +22,13 @@ class NetworkApiService extends BaseApiServices {
  // POST API MODEL
   @override
   Future getPostResponse(String url,dynamic data)async {
+    print("Api data $url");
+    print("print data $data");
    dynamic responseJson;
     try {
      Response response = await post(
       Uri.parse(url),
+      
       body: data,
       headers:  <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',

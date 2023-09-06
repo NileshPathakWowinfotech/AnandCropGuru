@@ -43,12 +43,13 @@ class HomeViewViewModel with ChangeNotifier {
   }
 
   Future<void> labTestingType() async {
+    getUserData().then((value) {
     final  registerdata =  jsonEncode({
       "START": '0',
       "END": "10000",
       "WORD": "NONE",
       "GET_DATA": "Get_TestingTypeList",
-      "ID1": "",
+      "ID1": value.userId,
       "ID2": "",
       "ID3": "",
       "STATUS": "",
@@ -57,7 +58,7 @@ class HomeViewViewModel with ChangeNotifier {
       "EXTRA1": "",
       "EXTRA2": "",
       "EXTRA3": "",
-      "LANG_ID": "3"
+      "LANG_ID": "1"
     });
     setlabTestingType(ApiResponse.loading());
     _myRepo.soilListApi(registerdata).then((value) {
@@ -65,6 +66,7 @@ class HomeViewViewModel with ChangeNotifier {
     }).onError((error, stackTrace) {
       print('error this $error');
       setlabTestingType(ApiResponse.error(error.toString()));
+    });
     });
   }
 
@@ -109,7 +111,7 @@ class HomeViewViewModel with ChangeNotifier {
   Future<void> labListApi() async {
     
      getUserData().then((value) {
-      print("kddkdkd :- ");
+      print("kddkdkd :-${value.userId} ");
        
       
     final  listData =jsonEncode({
@@ -126,7 +128,7 @@ class HomeViewViewModel with ChangeNotifier {
     "EXTRA1": "माती परीक्षण",
     "EXTRA2": "",
     "EXTRA3": "",
-    "LANG_ID": ""
+    "LANG_ID": "3"
     });
     print(listData);
     setlablist(ApiResponse.loading());

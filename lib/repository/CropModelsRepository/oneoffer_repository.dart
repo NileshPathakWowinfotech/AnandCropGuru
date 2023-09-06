@@ -12,7 +12,8 @@ BaseApiServices  _apiServices = NetworkApiService();
   Future<OneOfferModel> oneOfferListApi(dynamic data)async{
     try{
      dynamic response = await _apiServices.getPostResponse(AppUrls.GetData, data); 
-      print(response);
+    print("one offer  Api ${AppUrls.Bannar}");
+     print("data Api ${data}");
      return response = OneOfferModel.fromJson(response);
     }catch(e){
       throw e;

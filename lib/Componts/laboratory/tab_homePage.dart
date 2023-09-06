@@ -7,7 +7,7 @@ import 'lab_tab.dart';
 
 class TabHomePage extends StatelessWidget {
   const TabHomePage({super.key, required this.item});
-  final Datum item;
+  final SoilTestingTypeListModelDATA item;
 
   @override
   Widget build(BuildContext context) {

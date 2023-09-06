@@ -1,10 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_application_1/screens/apply_coupon_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
-import '../Model/user.dart';
 import '../services.dart';
 import '../utils/Colors.dart';
 import '../utils/prefs_util.dart';
@@ -40,11 +37,11 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen>
   void getData() async {
     Util.animatedProgressDialog(context, _controller);
     _controller.forward();
-    cartItemList = await Services.getCartItems(widget.user.USER_ID ?? '')
+    cartItemList = await Services.getCartItems(widget.user)
         .then((value1) async {
       deliveryAddress =
           await PrefsUtil.getDeliveryAddress().then((value2) async {
-        appVersion = await Services.getAppVersion(widget.user.USER_ID!)
+        appVersion = await Services.getAppVersion(widget.user)
             .then((value) async {
           currentAppliedCoupon =
               await PrefsUtil.getCurrentAppliedCoupon().then((value) {
@@ -172,392 +169,360 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen>
       calculateData();
     }
     return Scaffold(
-        body: Container(
-            color: Colors.white,
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: Column(children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: basicScreenPadding),
-                margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).viewPadding.top),
-                height: 70,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Util.newHomeColor,
-                      Util.endColor,
-                    ],
-                  ),
-                  // color: Theme.of(context).primaryColor,
-                  borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(25),
-                      bottomRight: Radius.circular(25)),
-                ),
-                child: IntrinsicHeight(
-                  child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+       appBar: AppBar(
+          flexibleSpace: Image(
+            image: AssetImage(Util.backgroundImage),
+            fit: BoxFit.cover,
+          ),
+          leading: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(
+                Icons.arrow_back,
+                color: kgrey,
+              )),
+          title: Text(
+            "PLACE ORDER",
+            style: TextStyle(color: kgrey),
+          ),
+        ),
+        body: Column(
+          children: [
+          cartItemList != null
+              ? Expanded(
+                  child: Column(
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Icon(
-                          Icons.arrow_back_outlined,
-                          color: Colors.white,
-                          size: 27,
-                        ),
-                      ),
-                      SizedBox(width: 15),
-                      Container(
-                        child: const Text('PLACE ORDER',
-                            style: TextStyle(
-                                fontSize: 21,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white)),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              // SizedBox(height: 12),
-              cartItemList != null
-                  ? Expanded(
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: SingleChildScrollView(
-                              padding: EdgeInsets.all(15),
-                              child: Column(
+                      Expanded(
+                        child: SingleChildScrollView(
+                          padding: EdgeInsets.all(15),
+                          child: Column(
+                            children: [
+                              AddressContainer(deliveryAddress!),
+                              SizedBox(height: 12),
+                              ProductListContainer(cartItemList!),
+                              SizedBox(height: 15),
+                              CouponContainer(widget.user, couponCount,
+                                  refresh, currentAppliedCoupon!),
+                              SizedBox(height: 15),
+                              Column(
                                 children: [
-                                  AddressContainer(deliveryAddress!),
-                                  SizedBox(height: 12),
-                                  ProductListContainer(cartItemList!),
-                                  SizedBox(height: 15),
-                                  CouponContainer(widget.user, couponCount,
-                                      refresh, currentAppliedCoupon!),
-                                  SizedBox(height: 15),
-                                  Column(
-                                    children: [
-                                      Material(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(9)),
-                                        elevation: 3,
-                                        child: Container(
-                                          padding: EdgeInsets.all(15),
-                                          width: double.infinity,
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Billing Details',
-                                                style: TextStyle(
-                                                    color: greenTextColor,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16),
-                                              ),
-                                              SizedBox(height: sizeBoxHeight),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text('Total Price'),
-                                                  Text('₹ $totalPrice',
-                                                      style: textStyle1)
-                                                ],
-                                              ),
-                                              SizedBox(height: sizeBoxHeight),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text('Total Products'),
-                                                  Text('$totalProducts',
-                                                      style: textStyle1)
-                                                ],
-                                              ),
-                                              SizedBox(height: sizeBoxHeight),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text('Delivery Charges'),
-                                                  Text('₹ $deliveryCharges',
-                                                      style: textStyle1)
-                                                ],
-                                              ),
-                                              SizedBox(height: sizeBoxHeight),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text('You Save'),
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                          '(${savedPercentage.round()} % Off) '),
-                                                      Text('-₹ $savedAmount',
-                                                          style: textStyle1),
-                                                    ],
-                                                  )
-                                                ],
-                                              ),
-                                              SizedBox(height: sizeBoxHeight),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text('Used Wallet Amount'),
-                                                  Text('-₹ $usedWalletAmount',
-                                                      style: textStyle1)
-                                                ],
-                                              ),
-                                              SizedBox(height: sizeBoxHeight),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                      'Applied Coupon Discount'),
-                                                  Text(
-                                                      '-₹ $appliedCouponDiscount',
-                                                      style: textStyle1)
-                                                ],
-                                              ),
-                                              SizedBox(height: sizeBoxHeight),
-                                              Divider(
-                                                  color: Colors.green[100],
-                                                  thickness: 2),
-                                              // SizedBox(height: sizeBoxHeight),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    'Grand Total',
-                                                    style: TextStyle(
-                                                        color: greenTextColor,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 16),
-                                                  ),
-                                                  Text(
-                                                    '₹ $grandTotal',
-                                                    style: TextStyle(
-                                                        color: greenTextColor,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 16),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(height: 15),
-                                      Material(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(9)),
-                                        elevation: 3,
-                                        child: Container(
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          padding: EdgeInsets.all(20),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text(
-                                                'Payment Method',
-                                                style: TextStyle(
-                                                    color: greenTextColor,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16),
-                                              ),
-                                              // SizedBox(height: 9),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    'Cash On Delivery',
-                                                    style:
-                                                        TextStyle(fontSize: 16),
-                                                  ),
-                                                  Transform.scale(
-                                                      scale: 1.2,
-                                                      child: Radio(
-                                                          value:
-                                                              'Cash On Delivery',
-                                                          focusColor:
-                                                              Util.colorPrimary,
-                                                          groupValue: mode,
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              mode = value!;
-                                                            });
-                                                          }))
-                                                ],
-                                              ),
-                                              // SizedBox(height: 9),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    'Pay Online',
-                                                    style:
-                                                        TextStyle(fontSize: 16),
-                                                  ),
-                                                  Transform.scale(
-                                                    scale: 1.2,
-                                                    child: Radio(
-                                                        value: 'Pay Online',
-                                                        groupValue: mode,
-                                                        onChanged: (value) {
-                                                          setState(() {
-                                                            mode = value!;
-                                                          });
-                                                        }),
-                                                  )
-                                                ],
-                                              ),
-                                              SizedBox(height: 9),
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  )
-                                  // PaymentModeContainer()
-                                ],
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              if (deliveryAddress?.values.first == null) {
-                                Fluttertoast.showToast(
-                                    msg: "Select delivery address",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.black,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0);
-                                return;
-                              }
-
-                              if (mode.isEmpty) {
-                                Fluttertoast.showToast(
-                                    msg: "Please Select Payment Method",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.black,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0);
-                                return;
-                              }
-
-                              if (mode == 'Cash On Delivery') {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      //27 April 2023 start here
-                                      insetPadding: EdgeInsets.all(0),
-                                      actionsPadding: EdgeInsets.only(
-                                          bottom: 15, right: 20),
-                                      titlePadding:
-                                          EdgeInsets.only(left: 20, top: 20),
-                                      contentPadding: EdgeInsets.only(
-                                          left: 20,
-                                          right: 20,
-                                          top: 9,
-                                          bottom: 20),
-                                      title: Row(
+                                  Material(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(9)),
+                                    elevation: 3,
+                                    child: Container(
+                                      padding: EdgeInsets.all(15),
+                                      width: double.infinity,
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          Container(
-                                            height: 40,
-                                            width: 40,
-                                            child: Image.asset(
-                                                'assets/images/anand_crop_guru_logo.png'),
+                                          Text(
+                                            'Billing Details',
+                                            style: TextStyle(
+                                                color: greenTextColor,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
                                           ),
-                                          Text('Anand Crop Guru'),
+                                          SizedBox(height: sizeBoxHeight),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceBetween,
+                                            children: [
+                                              Text('Total Price'),
+                                              Text('₹ $totalPrice',
+                                                  style: textStyle1)
+                                            ],
+                                          ),
+                                          SizedBox(height: sizeBoxHeight),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceBetween,
+                                            children: [
+                                              Text('Total Products'),
+                                              Text('$totalProducts',
+                                                  style: textStyle1)
+                                            ],
+                                          ),
+                                          SizedBox(height: sizeBoxHeight),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceBetween,
+                                            children: [
+                                              Text('Delivery Charges'),
+                                              Text('₹ $deliveryCharges',
+                                                  style: textStyle1)
+                                            ],
+                                          ),
+                                          SizedBox(height: sizeBoxHeight),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceBetween,
+                                            children: [
+                                              Text('You Save'),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                      '(${savedPercentage.round()} % Off) '),
+                                                  Text('-₹ $savedAmount',
+                                                      style: textStyle1),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(height: sizeBoxHeight),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceBetween,
+                                            children: [
+                                              Text('Used Wallet Amount'),
+                                              Text('-₹ $usedWalletAmount',
+                                                  style: textStyle1)
+                                            ],
+                                          ),
+                                          SizedBox(height: sizeBoxHeight),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceBetween,
+                                            children: [
+                                              Text(
+                                                  'Applied Coupon Discount'),
+                                              Text(
+                                                  '-₹ $appliedCouponDiscount',
+                                                  style: textStyle1)
+                                            ],
+                                          ),
+                                          SizedBox(height: sizeBoxHeight),
+                                          Divider(
+                                              color: Colors.green[100],
+                                              thickness: 2),
+                                          // SizedBox(height: sizeBoxHeight),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Grand Total',
+                                                style: TextStyle(
+                                                    color: greenTextColor,
+                                                    fontWeight:
+                                                        FontWeight.bold,
+                                                    fontSize: 16),
+                                              ),
+                                              Text(
+                                                '₹ $grandTotal',
+                                                style: TextStyle(
+                                                    color: greenTextColor,
+                                                    fontWeight:
+                                                        FontWeight.bold,
+                                                    fontSize: 16),
+                                              ),
+                                            ],
+                                          ),
                                         ],
                                       ),
-                                      content: Text(
-                                          'Do you want to place this order?'),
-                                      actions: [
-                                        GestureDetector(
-                                            onTap: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text('NO',
-                                                style: TextStyle(
-                                                    color: blueTextColor,
-                                                    fontWeight:
-                                                        FontWeight.bold))),
-                                        SizedBox(width: 7),
-                                        GestureDetector(
-                                          onTap: () {
-                                            // Map<String, dynamic> orderDetails = {
-                                            //   'USER_ID' : ,
-                                            //   'TOTAL_PRICE' : ,
-                                            //   'TOTAL_DISC' : ,
-                                            //   'TOTAL_QTY' : ,
-                                            //   'ORDER_ADDRESS' : ,
-                                            //   'ORDER_DATE' : ,
-                                            //   'PAYMENT_METHOD' : ,
-                                            //   'SHIPPING_CHARGES' : ,
-                                            //   'WALLET_AMOUNT' : ,
-                                            // };
-                                          },
-                                          child: Text('YES',
-                                              style: TextStyle(
-                                                  color: blueTextColor,
-                                                  fontWeight: FontWeight.bold)),
-                                        )
-                                      ],
-                                    );
-                                  },
-                                );
-                              } else {}
-                            },
-                            child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 15),
-                                height: 45,
-                                width: MediaQuery.of(context).size.width,
-                                color: Util.colorPrimary,
-                                child: Center(
-                                    child: Text(
-                                  'Place Your Order',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 16),
-                                ))),
+                                    ),
+                                  ),
+                                  SizedBox(height: 15),
+                                  Material(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(9)),
+                                    elevation: 3,
+                                    child: Container(
+                                      width:
+                                          MediaQuery.of(context).size.width,
+                                      padding: EdgeInsets.all(20),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            'Payment Method',
+                                            style: TextStyle(
+                                                color: greenTextColor,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                          // SizedBox(height: 9),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Cash On Delivery',
+                                                style:
+                                                    TextStyle(fontSize: 16),
+                                              ),
+                                              Transform.scale(
+                                                  scale: 1.2,
+                                                  child: Radio(
+                                                      value:
+                                                          'Cash On Delivery',
+                                                      focusColor:
+                                                          Util.colorPrimary,
+                                                      groupValue: mode,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          mode = value!;
+                                                        });
+                                                      }))
+                                            ],
+                                          ),
+                                          // SizedBox(height: 9),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Pay Online',
+                                                style:
+                                                    TextStyle(fontSize: 16),
+                                              ),
+                                              Transform.scale(
+                                                scale: 1.2,
+                                                child: Radio(
+                                                    value: 'Pay Online',
+                                                    groupValue: mode,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        mode = value!;
+                                                      });
+                                                    }),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(height: 9),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              )
+                              // PaymentModeContainer()
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    )
-                  : Container(),
-            ])));
+                      GestureDetector(
+                        onTap: () {
+                          if (deliveryAddress?.values.first == null) {
+                            Fluttertoast.showToast(
+                                msg: "Select delivery address",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.black,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
+                            return;
+                          }
+
+                          if (mode.isEmpty) {
+                            Fluttertoast.showToast(
+                                msg: "Please Select Payment Method",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.black,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
+                            return;
+                          }
+
+                          if (mode == 'Cash On Delivery') {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  //27 April 2023 start here
+                                  insetPadding: EdgeInsets.all(0),
+                                  actionsPadding: EdgeInsets.only(
+                                      bottom: 15, right: 20),
+                                  titlePadding:
+                                      EdgeInsets.only(left: 20, top: 20),
+                                  contentPadding: EdgeInsets.only(
+                                      left: 20,
+                                      right: 20,
+                                      top: 9,
+                                      bottom: 20),
+                                  title: Row(
+                                    children: [
+                                      Container(
+                                        height: 40,
+                                        width: 40,
+                                        child: Image.asset(
+                                            'assets/images/anand_crop_guru_logo.png'),
+                                      ),
+                                      Text('Anand Crop Guru'),
+                                    ],
+                                  ),
+                                  content: Text(
+                                      'Do you want to place this order?'),
+                                  actions: [
+                                    GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('NO',
+                                            style: TextStyle(
+                                                color: blueTextColor,
+                                                fontWeight:
+                                                    FontWeight.bold))),
+                                    SizedBox(width: 7),
+                                    GestureDetector(
+                                      onTap: () {
+                                        // Map<String, dynamic> orderDetails = {
+                                        //   'USER_ID' : ,
+                                        //   'TOTAL_PRICE' : ,
+                                        //   'TOTAL_DISC' : ,
+                                        //   'TOTAL_QTY' : ,
+                                        //   'ORDER_ADDRESS' : ,
+                                        //   'ORDER_DATE' : ,
+                                        //   'PAYMENT_METHOD' : ,
+                                        //   'SHIPPING_CHARGES' : ,
+                                        //   'WALLET_AMOUNT' : ,
+                                        // };
+                                      },
+                                      child: Text('YES',
+                                          style: TextStyle(
+                                              color: blueTextColor,
+                                              fontWeight: FontWeight.bold)),
+                                    )
+                                  ],
+                                );
+                              },
+                            );
+                          } else {}
+                        },
+                        child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 15),
+                            height: 45,
+                            width: MediaQuery.of(context).size.width,
+                            color:lgreen,
+                            child: Center(
+                                child: Text(
+                              'Place Your Order',
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 16),
+                            ))),
+                      ),
+                    ],
+                  ),
+                )
+              : Container(),
+        ]));
   }
 }
 
@@ -826,7 +791,7 @@ class _BillingDetailsContainerState extends State<BillingDetailsContainer> {
 }
 
 class CouponContainer extends StatefulWidget {
-  User user;
+  final user;
   int couponCount;
   Function refresh;
   Map<dynamic, dynamic> currentAppliedCoupon;
@@ -855,7 +820,7 @@ class _CouponContainerState extends State<CouponContainer> {
       onTap: () {
         Navigator.of(context)
             .push(MaterialPageRoute(
-                builder: (context) => ApplyCouponScreen(userdata: widget,)))
+                builder: (context) => ApplyCouponScreen(userdata: widget.user,)))
             .then((value) {
           widget.refresh();
           return value;
@@ -874,7 +839,7 @@ class _CouponContainerState extends State<CouponContainer> {
                   Container(
                       height: 27,
                       width: 27,
-                      child: Image.asset('assets/images/coupon.png',
+                      child: Image.asset('assets/images/discount.png',
                           color: Util.colorPrimary)),
                   SizedBox(width: 12),
                   Container(

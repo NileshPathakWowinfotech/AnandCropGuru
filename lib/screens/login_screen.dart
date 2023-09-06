@@ -216,7 +216,7 @@ class _LoginScreenState extends State<LoginScreen>
                                       "MOBILE_NUMBER": _mobile.text,
                                     });
                                     authViewMode.loginApi(data, context,
-                                        _mobile.text, _name.text);
+                                        _mobile.text, _name.text.toString());
                                   }
                                 },
                                 child: Text(

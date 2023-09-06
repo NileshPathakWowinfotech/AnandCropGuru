@@ -1,14 +1,22 @@
 import 'package:blinking_text/blinking_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_1/Componts/Search_product.dart';
 import 'package:flutter_application_1/utils/Colors.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 import '../Componts/MyFarms.dart';
 import '../Componts/Social.dart';
 import '../Componts/anand_biochemr_R_&_d_center.dart';
+import '../Componts/sheduleWather.dart';
+import '../Demo/productDemo.dart';
+import '../data/response/status.dart';
+import '../utils/app_urls.dart';
 import '../utils/util.dart';
 import '../view_model/wather_view_model.dart';
+import '../widgets/ftechmvvmdemo.dart';
 import '../widgets/upper_home_screen.dart';
 import 'blogs_Screen.dart';
 import 'dr_post_screen.dart';
@@ -50,9 +58,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           SliverAppBar(
             shadowColor: Theme.of(context).primaryColor,
             expandedHeight: 415,
-            title: Text(
-              'Anand CropGuru'
-            ),
+            title: Text('Anand CropGuru'),
             actions: [
               IconButton(
                   onPressed: () {
@@ -142,10 +148,17 @@ class HomeScreenfirst extends StatefulWidget {
 
 class _HomeScreenfirstState extends State<HomeScreenfirst> {
   WatherViewModel watherViewModel = WatherViewModel();
+  WatherViewModel homeViewViewModel = WatherViewModel();
+  @override
+  void initState() {
+    homeViewViewModel.watherModelCurrent();
+    homeViewViewModel.schduleListApi();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -163,17 +176,114 @@ class _HomeScreenfirstState extends State<HomeScreenfirst> {
                   child: Padding(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-                    child: Container(
+                    child: InkWell(
+                      onTap: () {
+                        Get.to(MyPostApi());
+                      },
+                      child: Container(
                         decoration: BoxDecoration(
-                            border: Border.all(width: 1.5, color: kWhite),
-                            borderRadius: BorderRadius.circular(18),
-                            image: DecorationImage(
-                              fit: BoxFit.fill,
-                              image:
-                                  AssetImage('assets/images/wether_bannar.jpg'),
-                            )),
+                          border: Border.all(width: 1.5, color: kWhite),
+                          borderRadius: BorderRadius.circular(18),
+                          color: indigo,
+                        ),
                         height: 40.0,
-                        width: MediaQuery.of(context).size.width - 38),
+                        width: MediaQuery.of(context).size.width - 38,
+                        child: ChangeNotifierProvider<WatherViewModel>(
+                          create: (BuildContext context) => homeViewViewModel,
+                          child: Consumer<WatherViewModel>(
+                              builder: (context, value, _) {
+                            switch (value.watherList.status!) {
+                              case Status.LOADING:
+                                return const Center(
+                                    child: Text('Loading....',style: TextStyle(color: kWhite),));
+                              case Status.ERROR:
+                                return Center(
+                                    child: Text(
+                                        value.watherList.message.toString()));
+                              case Status.COMPLETED:
+                                return SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 15),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                        
+                                          SizedBox(width: 5,),
+                                          Image.network("http:"+value.watherList.data!.current!.condition!.icon.toString()),
+                                           Text(
+                                           "${value.watherList.data!.current!.condition!.text.toString()}",
+                                
+                                            style: TextStyle(
+                                                color: kWhite,
+                                                fontSize: 13),
+                                          ),
+                                          SizedBox(width: 5,),
+                                            Text(
+                                           "${value.watherList.data!.current!.temp_c.toString()} C",
+                                
+                                            style: TextStyle(
+                                                color: kWhite,
+                                                fontSize: 13),
+                                          ),
+                                
+                                           ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        //    physics: NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: value.watherList.data!
+                                            .forecast!.forecastday!.length,
+                                        itemBuilder: (context, index) {
+                                          final items = value
+                                              .watherList
+                                              .data!
+                                              .forecast!
+                                              .forecastday![index]!
+                                              .hour;
+                                          return ListView.builder(
+                                              shrinkWrap: true,
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: items!.length,
+                                              itemBuilder: (context, index) {
+                                                return Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.center,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                         
+                                                      
+                                                      
+                                                      Image.network(
+                                                        'https:'+items[index]!
+                                                                .condition!.icon
+                                                                .toString(),
+                                                        height: 20,
+                                                      ),
+                                                      
+                                                    ],
+                                                    )
+                                                    ]));
+                                                
+                                              });
+                                        }),
+                                        ],
+                                      ),
+                                    ),
+                                  ]),
+                                );
+                            }
+                            return Container();
+                          }),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -181,7 +291,7 @@ class _HomeScreenfirstState extends State<HomeScreenfirst> {
 
             Modules(),
             SizedBox(child: QutionsAnswrs()),
-            
+
             MYPostHomeScreen(),
 
             SizedBox(
@@ -368,7 +478,7 @@ class Modules extends StatelessWidget {
       color: kprimarygreen,
       child: Column(
         children: [
-        OneOfferPage(),
+          OneOfferPage(),
           SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -430,8 +540,7 @@ class Modules extends StatelessWidget {
               ),
               SeeByList(
                 press: () {
-                   Get.to(Social());
-                  
+                  Get.to(Social());
                 },
                 image: 'assets/images/see_by_list_item_icons/social.png',
                 titile: 'Social media',
@@ -500,7 +609,7 @@ class WetherForcasting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: kprimarygreen,
+      color: kblack,
       height: 300,
       child: Container(
         height: 200,
@@ -525,39 +634,40 @@ class SerachBarHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: kprimarygreen,
-        height: 48,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-          child: Container(
-              alignment: Alignment.center,
-              height: 35,
-              decoration: BoxDecoration(
-                  color: ksearchBackground,
-                  borderRadius: BorderRadius.circular(15)),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                            hintText: 'Search',
-                            hintStyle: TextStyle(
-                                color: kWhite, fontWeight: FontWeight.w300),
-                            border: InputBorder.none),
-                      ),
-                    ),
-                    Icon(
-                      Icons.search,
-                      color: kWhite,
-                    )
-                  ],
-                ),
-              )),
-        ));
+    return InkWell(
+      onTap: () {
+        Get.to(Demoomy());
+      },
+      child: Container(
+          color: kprimarygreen,
+          height: 48,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            child: Container(
+                alignment: Alignment.center,
+                height: 35,
+                decoration: BoxDecoration(
+                    color: ksearchBackground,
+                    borderRadius: BorderRadius.circular(15)),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                          child: Text(
+                        'Search',
+                        style: TextStyle(color: kWhite, fontSize: 15),
+                      )),
+                      Icon(
+                        Icons.search,
+                        color: kWhite,
+                      )
+                    ],
+                  ),
+                )),
+          )),
+    );
   }
 }

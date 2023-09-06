@@ -12,7 +12,9 @@ BaseApiServices  _apiServices = NetworkApiService();
   Future<BannarImageModel> bannarListApi(dynamic data)async{
     try{
      dynamic response = await _apiServices.getPostResponse(AppUrls.Bannar, data); 
-      print(response);
+     print("bannar Api ${AppUrls.Bannar}");
+     print("data Api ${data}");
+
      return response = BannarImageModel.fromJson(response);
     }catch(e){
       throw e;

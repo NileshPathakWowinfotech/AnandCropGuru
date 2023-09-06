@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Componts/MyPloatPage/repository_of_knowledge.dart';
 import 'package:flutter_application_1/utils/Colors.dart';
 import 'package:flutter_application_1/utils/util.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import '../../data/Model/MyPlotModel.dart/my_plot_model.dart';
@@ -145,7 +146,7 @@ class _FaqState extends State<Faq> {
     //     List.generate(10, (index) => {"id": index, "name": "Product $index"})
     //         .toList();
 
-    return ChangeNotifierProvider<FaqViewModel>(
+    return  ChangeNotifierProvider<FaqViewModel>(
         create: (BuildContext context) => faqviewmodel,
         child: Consumer<FaqViewModel>(builder: (context, value, _) {
           switch (value.faqSublist.status!) {
@@ -154,7 +155,47 @@ class _FaqState extends State<Faq> {
             case Status.ERROR:
               return Center(child: Text(value.faqSublist.message.toString()));
             case Status.COMPLETED:
-              return GridView.builder(
+              return value.faqSublist.data!.data.isEmpty?Center(
+                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 14, vertical: 5),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          border:
+                                              Border.all(width: 1, color: kgreen),
+                                          borderRadius: BorderRadius.circular(5),
+                                        ),
+                                        child: value.faqSublist.data!
+                                                    .responseMessage ==
+                                                null
+                                            ? Text("")
+                                            : Html(
+                                                data: value.faqSublist.data!
+                                                    .responseMessage)),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Container(
+                                        height: 40,
+                                        color: kgreen,
+                                        child: Center(
+                                          child: Text("Ok",
+                                              style: TextStyle(
+                                                  color: kWhite,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold)),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                ): GridView.builder(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 160,
                     childAspectRatio: 3.50 / 4.00,

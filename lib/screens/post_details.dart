@@ -43,7 +43,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> with TickerProvid
           "END" : 10000,
           "WORD": "NONE",
           "GET_DATA": "Get_AllPostCommentsByPostId",
-          "ID1": widget.communityListMOdel.userId.toString(),
+          "ID1":"21013",
           "ID2": "",
           "ID3": "",
           "STATUS": "",
@@ -54,6 +54,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> with TickerProvid
           "EXTRA3" : "",
           "LANG_ID": "1"
         }));
+
     jsonResponse = json.decode(response.body);
     print(jsonResponse["ResponseMessage"]);
     if (response.statusCode == 200) {
@@ -63,7 +64,9 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> with TickerProvid
       listresponse = mapresponse["DATA"];
       isLoaded = true;
     }
+    widget.communityListMOdel.userId.toString();
   }
+
 
   void initState() {
     _controller = AnimationController(

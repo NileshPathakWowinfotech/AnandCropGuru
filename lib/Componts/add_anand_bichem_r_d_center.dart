@@ -14,7 +14,7 @@ import 'Purchase.dart';
 
 class AddAnandBichemRDCenter extends StatelessWidget {
   AddAnandBichemRDCenter({Key? key, required this.category}) : super(key: key);
-  final Datum category;
+  final SoilTestingTypeListModelDATA category;
   String? url;
 
   TextEditingController pincodeController = TextEditingController();
@@ -66,7 +66,7 @@ class AddAnandBichemRDCenter extends StatelessWidget {
                             child: Row(
                               children: [
                                 Text(
-                                  category.testingTypeName,
+                                  category.TESTING_TYPE_ID.toString(),
                                   style: TextStyle(
                                     color: kblack,
                                     fontSize: 12,
@@ -99,7 +99,7 @@ class AddAnandBichemRDCenter extends StatelessWidget {
                             child: Row(
                               children: [
                                 Text(
-                                  category.amount.toString(),
+                                  category.AMOUNT.toString(),
                                   style: TextStyle(
                                     color: kblack,
                                     fontSize: 12,
@@ -125,7 +125,7 @@ class AddAnandBichemRDCenter extends StatelessWidget {
                         InkWell(
                           onTap: () async {
                             url =
-                                "https://www.youtube.com/watch?v=${category.videoUrl}";
+                                "https://www.youtube.com/watch?v=${category.VIDEO_URL}";
                             if (await canLaunch(url!)) {
                               await launch(
                                 url!,
@@ -150,7 +150,7 @@ class AddAnandBichemRDCenter extends StatelessWidget {
                             child: Stack(
                               children: [
                                 Image.network(
-                                  category.testingImg,
+                                  category.TESTING_IMG.toString(),
                                   fit: BoxFit.cover,
                                   width: MediaQuery.of(context).size.width,
                                   height: MediaQuery.of(context).size.height,
@@ -271,8 +271,8 @@ class AddAnandBichemRDCenter extends StatelessWidget {
 
                     labEnquiriesFromProvide.labEnquiriesFormApi(
                       context,
-                      category.testingTypeName,
-                      category.amount,
+                      category.TESTING_TYPE_NAME.toString(),
+                      category.AMOUNT,
                       addresssController.text,
                       pincodeController.text,
                       remarkController.text

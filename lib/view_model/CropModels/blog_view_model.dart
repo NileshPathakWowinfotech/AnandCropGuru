@@ -7,7 +7,7 @@ import '../../data/Model/user_model.dart';
 import '../../data/network/BaseApiServices.dart';
 import '../../data/network/NetworkApiServices.dart';
 import '../../data/response/api_response.dart';
-import '../../repository/CropModels/blog_repository.dart';
+import '../../repository/CropModelsRepository/blog_repository.dart';
 import '../../utils/app_urls.dart';
 import '../user_view_model.dart';
 

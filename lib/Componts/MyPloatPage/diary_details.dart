@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utils/Colors.dart';
 import 'package:flutter_application_1/utils/util.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
@@ -64,7 +65,49 @@ class _DiaryDetailsState extends State<DiaryDetails> {
                       decoration: BoxDecoration(
                           image: DecorationImage(
                               image: AssetImage(Util.backgroundImage))),
-                      child: ListView.builder(
+                      child:value.plotinromeationList.data!.data.isEmpty?Center(
+                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 14, vertical: 5),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          border:
+                                              Border.all(width: 1, color: kgreen),
+                                          borderRadius: BorderRadius.circular(5),
+                                        ),
+                                        child: value.plotinromeationList.data!
+                                                    .responseMessage ==
+                                                null
+                                            ? Text("")
+                                            : Html(
+                                                data: value.plotinromeationList.data!
+                                                    .responseMessage)),
+                                    InkWell(
+                                      onTap: () {
+                                        // Get.to(ViewOldShedue(
+                                        //   item: widget.item,
+                                        // ));
+                                      },
+                                      child: Container(
+                                        height: 40,
+                                        color: kgreen,
+                                        child: Center(
+                                          child: Text("Ok",
+                                              style: TextStyle(
+                                                  color: kWhite,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold)),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                ): ListView.builder(
                         
                         itemCount: value.plotinromeationList.data!.data.length,
                      

@@ -5,7 +5,7 @@ import '../../data/Model/user_model.dart';
 import '../../data/network/BaseApiServices.dart';
 import '../../data/network/NetworkApiServices.dart';
 import '../../data/response/api_response.dart';
-import '../../repository/CropModels/my_post_repository.dart';
+import '../../repository/CropModelsRepository/my_post_repository.dart';
 import '../../utils/app_urls.dart';
 import '../user_view_model.dart';
 
@@ -34,15 +34,28 @@ class MyPostViewModel with ChangeNotifier {
   Future<void> myPosListAPi() async {
     getUserData().then((value) async {
       print(value.userId);
-      final data =
-          jsonEncode({"START": 0, "END": 4, "WORD": "nONE", "LANG_ID": "1"});
+      final data = jsonEncode({
+        "START": 0,
+        "END": 5,
+        "WORD": "",
+        "GET_DATA": "Get_DoctorPostList",
+        "ID1": value.userId.toString(),
+        "ID2": "",
+        "ID3": "",
+        "STATUS": "",
+        "START_DATE": "",
+        "END_DATE": "",
+        "EXTRA1": "",
+        "EXTRA2": "",
+        "EXTRA3": "",
+        "LANG_ID": "1"
+      });
       Map<String, String> queryParams = {
         "USER_ID": "21013",
       };
-      Uri uri = Uri.parse(AppUrls.blog).replace(queryParameters: queryParams);
-      print(uri);
+     
       setMyPost(ApiResponse.loading());
-      _myRepo.myPostListApi(uri.toString(), data).then((value) {
+      _myRepo.myPostListApi(data).then((value) {
         setMyPost(ApiResponse.completed(value));
         print('hello');
       }).onError((error, stackTrace) {

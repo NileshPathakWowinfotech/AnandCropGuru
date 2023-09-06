@@ -80,7 +80,9 @@ class _KurshiProductSCreenState extends State<KurshiProductSCreen> {
             children: [
               InkWell(
                 onTap: (){
-                   Get.to(ProductDetailsScreen(offerId: value.krushiList.data!.data[index].productId ,pSubCatId:value.krushiList.data!.data[index].psubcatId ,));
+                   Get.to(ProductDetailsScreen(
+                    ProductdId: value.krushiList.data!.data[index].productId ,
+                    offerId: value.krushiList.data!.data[index].productId ,pSubCatId:value.krushiList.data!.data[index].psubcatId ,));
                 },
                 child: Material(
                   elevation: 5,

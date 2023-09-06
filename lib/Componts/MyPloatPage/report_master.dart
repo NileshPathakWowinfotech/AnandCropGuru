@@ -72,7 +72,49 @@ class _ReportMasterState extends State<ReportMaster>
                     decoration: BoxDecoration(
                         image: DecorationImage(
                             image: AssetImage(Util.backgroundImage))),
-                    child: ListView.builder(
+                    child:value.reportMasterList.data!.data.isEmpty?Center(
+                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 14, vertical: 5),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          border:
+                                              Border.all(width: 1, color: kgreen),
+                                          borderRadius: BorderRadius.circular(5),
+                                        ),
+                                        child: value.reportMasterList.data!
+                                                    .responseMessage ==
+                                                null
+                                            ? Text("")
+                                            : Html(
+                                                data: value.reportMasterList.data!
+                                                    .responseMessage)),
+                                    InkWell(
+                                      onTap: () {
+                                        // Get.to(ViewOldShedue(
+                                        //   item: widget.item,
+                                        // ));
+                                      },
+                                      child: Container(
+                                        height: 40,
+                                        color: kgreen,
+                                        child: Center(
+                                          child: Text("Ok",
+                                              style: TextStyle(
+                                                  color: kWhite,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold)),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                ): ListView.builder(
                       itemCount: value.reportMasterList.data!.data.length,
                       itemBuilder: (context, index) {
                         dynamic item =value.reportMasterList.data!.data[index];

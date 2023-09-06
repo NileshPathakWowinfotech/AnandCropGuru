@@ -5,6 +5,8 @@ import 'package:flutter_application_1/utils/Colors.dart';
 import 'package:flutter_application_1/utils/routes/routes.dart';
 import 'package:flutter_application_1/utils/routes/routes_name.dart';
 import 'package:flutter_application_1/utils/util.dart';
+import 'package:flutter_application_1/view_model/Mart/product_comment_view_model.dart';
+import 'package:flutter_application_1/view_model/MyAccount.dart/bulik_order_view_model.dart';
 import 'package:flutter_application_1/view_model/auth_view_model.dart';
 import 'package:flutter_application_1/view_model/home_view_model.dart';
 import 'package:flutter_application_1/view_model/myplot_view_model/crop_list_view_model.dart';
@@ -40,8 +42,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => DiaryDetailsViewModel()),
         ChangeNotifierProvider(create: (_) => SelectedDateProvider()),
         ChangeNotifierProvider(create: (_) => CropAddListViewModel()),
-        
-        
+        ChangeNotifierProvider(create: (_) => BlukOrderViewModel()),
+        ChangeNotifierProvider(create: (_) => CommentProductViewViewModel()),
       ],
       child: GetMaterialApp(
         translations: Messages(),
@@ -49,7 +51,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Dr Crop Guru',
         theme: ThemeData(
-         // useMaterial3: true,
+          // useMaterial3: true,
           primarySwatch: Util.colorCustomPrimary,
           appBarTheme: AppBarTheme(
             color: Util.newHomeColor,

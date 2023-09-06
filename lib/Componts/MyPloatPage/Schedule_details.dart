@@ -3,73 +3,42 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 
+import '../../data/Model/MyPlotModel.dart/Schedule/Schedule_model.dart';
 import '../../utils/Colors.dart';
 import '../../utils/util.dart';
 
-class ScheduleDetails extends StatefulWidget {
+class ScheduleDetails extends StatelessWidget {
   const ScheduleDetails(
-      {Key? key, this.title, this.daysafter, this.scheduletype, this.image, this.schedule})
+      {Key? key,required this.scheduleitem, this.type})
       : super(key: key);
-  final title;
-  final daysafter;
-  final scheduletype;
-  final image;
-  final schedule;
 
-  @override
-  _ScheduleDetailsState createState() => _ScheduleDetailsState();
-}
+ final Schedule scheduleitem;
+ final type;
 
-class _ScheduleDetailsState extends State<ScheduleDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80.0),
-        child: Container(
-            child: AppBar(
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(30.0),
-                bottomRight: Radius.circular(30.0),
+    appBar:   AppBar(
+        flexibleSpace:Image.asset(Util.backgroundImage,fit: BoxFit.cover,),
+      
+       
+           leading:  InkWell(
+              onTap: () => Navigator.pop(context),
+              child: Icon(
+                Icons.arrow_back,
+                color: kgrey,
               ),
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Util.newHomeColor, Util.endColor]),
             ),
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(25.0),
-              bottomRight: Radius.circular(25.0),
-            ),
-          ),
-          elevation: 0,
-          backgroundColor: Colors.green,
-          leading: Builder(
-            builder: (context) => IconButton(
-              icon: InkWell(
-                onTap: () => Navigator.pop(context),
-                child: Icon(
-                  Icons.arrow_back,
-                  color: kWhite,
-                ),
-              ),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-            ),
-          ),
-          title: Text(
-            'Old Schedule(Fertilizer)',
-            style: TextStyle(
-                color: kWhite, fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-        )),
-      ),
+            
+          
+        title: Text(
+          'Old Schedule(${type})',
+          style: TextStyle(
+              color: kgrey, fontSize: 20, fontWeight: FontWeight.bold),),
+    ),
+    
+        
+      
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -109,7 +78,7 @@ class _ScheduleDetailsState extends State<ScheduleDetails> {
                             SizedBox(
                               width: 5,
                             ),
-                            Text(widget.daysafter,
+                            Text(scheduleitem.scheduleDay,
                                 style: TextStyle(
                                     color: kWhite,
                                     fontSize: 15,
@@ -132,7 +101,7 @@ class _ScheduleDetailsState extends State<ScheduleDetails> {
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold)),
                               Expanded(
-                                child: Text("  ${widget.title}",
+                                child: Text("  ${scheduleitem.title}",
                                     style: TextStyle(
                                         color: kgreen,
                                         fontSize: 15,
@@ -150,7 +119,7 @@ class _ScheduleDetailsState extends State<ScheduleDetails> {
                                       color: kblack,
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold)),
-                              Text(" ${widget.scheduletype}",
+                              Text(" ${scheduleitem.scheduleType}",
                                   style: TextStyle(
                                       color: kgreen,
                                       fontSize: 15,
@@ -161,7 +130,7 @@ class _ScheduleDetailsState extends State<ScheduleDetails> {
                             height: 15,
                           ),
                           Center(
-                              child: Image.network(widget.image, height: 200,
+                              child: Image.network(scheduleitem.scheduleImage, height: 200,
                                   errorBuilder: (context, error, stackTrace) {
                             return Image.asset(
                               "assets/images/noimage.png",
@@ -173,7 +142,7 @@ class _ScheduleDetailsState extends State<ScheduleDetails> {
                           ),
 
                           Html(
-                              data:widget.schedule),
+                              data:scheduleitem.schedule),
                         ],
                       ),
                     ),

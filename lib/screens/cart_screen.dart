@@ -28,7 +28,7 @@ class _CartScreenState extends State<CartScreen> with TickerProviderStateMixin {
     Util.animatedProgressDialog(context, _controller);
     _controller.forward();
     cartItemList =
-        await Services.getCartItems(widget.user.USER_ID ?? '').then((value) {
+        await Services.getCartItems(widget.user).then((value) {
       _controller.reset();
       Navigator.of(context).pop();
       setState(() {
@@ -42,7 +42,7 @@ class _CartScreenState extends State<CartScreen> with TickerProviderStateMixin {
 
   void reloadData() async {
     cartItemList =
-        await Services.getCartItems(widget.user.USER_ID ?? '').then((value) {
+        await Services.getCartItems(widget.user).then((value) {
       _controller.reset();
       Navigator.of(context).pop();
       setState(() {
@@ -95,135 +95,98 @@ class _CartScreenState extends State<CartScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       appBar: AppBar(
+          flexibleSpace: Image(
+            image: AssetImage(Util.backgroundImage),
+            fit: BoxFit.cover,
+          ),
+          leading: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(
+                Icons.arrow_back,
+                color: kgrey,
+              )),
+          title: Text(
+            "My Cart",
+            style: TextStyle(color: kgrey),
+          ),
+        ),
         body: Container(
-            // color: Colors.white,
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: Column(children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: basicScreenPadding),
-                margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).viewPadding.top),
-                height: 70,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Util.newHomeColor,
-                      Util.endColor,
-                    ],
-                  ),
-                  // color: Theme.of(context).primaryColor,
-                  borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(25),
-                      bottomRight: Radius.circular(25)),
-                ),
-                child: IntrinsicHeight(
-                  child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Icon(
-                          Icons.arrow_back_outlined,
-                          color: Colors.white,
-                          size: 27,
-                        ),
-                      ),
-                      SizedBox(width: 15),
-                      Container(
-                        child: const Text('My Cart',
-                            style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white)),
-                      ),
-                      Expanded(child: Container()),
-                      Icon(
-                        Icons.shopping_cart_outlined,
-                        color: Colors.white,
-                        size: 27,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              // ListView.builder(
-              //   padding: EdgeInsets.only(bottom: 15, top: 15),
-              //   itemCount: cartItemList?.length,
-              //   itemBuilder: (context, index) {
-              //     return CartItem(cartItemList?[index], widget.user, getData);
-              //   },)
-
-              cartItemList != null
-                  ? Expanded(
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: ListView(
-                              padding: EdgeInsets.symmetric(vertical: 15),
-                              children: cartItemList!.map((item) {
-                                return CartItem(item, widget.user, reloadData);
-                              }).toList(),
-                            ),
+          decoration: BoxDecoration( 
+            image: DecorationImage( 
+              image: AssetImage(Util.backgroundImage),
+              fit: BoxFit.cover
+            )
+          ),
+          child: Column(children: [
+        
+            cartItemList != null
+                ? Expanded(
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: ListView(
+                            padding: EdgeInsets.symmetric(vertical: 15),
+                            children: cartItemList!.map((item) {
+                              return CartItem(item,widget.user, reloadData);
+                            }).toList(),
                           ),
-                          cartItemList?.length != 0 ? Container(
-                            padding: EdgeInsets.symmetric(horizontal: 15),
-                            height: 65,
-                            width: MediaQuery.of(context).size.width,
-                            color: Util.colorPrimary,
-                            child: Row(
-                              children: [
-                                Text('${cartItemList?.length} item',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14)),
-                                SizedBox(width: 6),
-                                Container(
-                                    height: 20, width: 1, color: Colors.white),
-                                SizedBox(width: 6),
-                                Text('Total Amount ₹ $totalAmount',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14)),
-                                Expanded(child: Container()),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => PlaceOrderScreen("")));
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Text('Checkout',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 17)),
-                                      Icon(Icons.arrow_forward_ios,
-                                          color: Colors.white, size: 27),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ) : Container(),
-                        ],
-                      ),
-                    )
-                  : Container(),
-            ])));
+                        ),
+                        cartItemList?.length != 0 ? Container(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          height: 65,
+                          width: MediaQuery.of(context).size.width,
+                          color: kgreen,
+                          child: Row(
+                            children: [
+                              Text('${cartItemList?.length} item',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14)),
+                              SizedBox(width: 6),
+                              Container(
+                                  height: 20, width: 1, color: Colors.white),
+                              SizedBox(width: 6),
+                              Text('Total Amount ₹ $totalAmount',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14)),
+                              Expanded(child: Container()),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => PlaceOrderScreen(widget.user)));
+                                },
+                                child: Row(
+                                  children: [
+                                    Text('Checkout',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 17)),
+                                    Icon(Icons.arrow_forward_ios,
+                                        color: Colors.white, size: 27),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ) : Container(),
+                      ],
+                    ),
+                  )
+                : Container(),
+          ]),
+        ));
   }
 }
 
 class CartItem extends StatefulWidget {
   Map item;
-  User user;
+  final user;
   Function reloadData;
 
   CartItem(this.item, this.user, this.reloadData);
@@ -353,7 +316,7 @@ class _CartItemState extends State<CartItem> {
                                         _controller.forward();
 
                                         Services.addProductToCart(
-                                                widget.user.USER_ID!,
+                                              widget.user,
                                                 widget.item,
                                                 0,
                                                 'DELETE')
@@ -383,13 +346,13 @@ class _CartItemState extends State<CartItem> {
                         _controller.forward();
 
                         if (qty <= 0) {
-                          Services.addProductToCart(widget.user.USER_ID!,
+                          Services.addProductToCart(widget.user,
                                   widget.item, 0, 'DELETE')
                               .then((value) {
                             widget.reloadData();
                           });
                         } else {
-                          Services.addProductToCart(widget.user.USER_ID!,
+                          Services.addProductToCart(widget.user,
                                   widget.item, qty, 'UPDATE')
                               .then((value) {
                             widget.reloadData();
@@ -421,7 +384,7 @@ class _CartItemState extends State<CartItem> {
                         Util.animatedProgressDialog(context, _controller);
                         _controller.forward();
 
-                        Services.addProductToCart(widget.user.USER_ID!,
+                        Services.addProductToCart(widget.user,
                                 widget.item, qty, 'UPDATE')
                             .then((value) {
                           widget.reloadData();

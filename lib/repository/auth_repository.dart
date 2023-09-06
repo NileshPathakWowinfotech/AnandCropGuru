@@ -13,7 +13,9 @@ class AuthRepository{
   Future<dynamic> loginApi(dynamic data)async{
     try{
      dynamic response = await _apiServices.getPostResponse(AppUrls.MOBILEOTPLOGIN, data);
-     return response;
+     print(AppUrls.MOBILEOTPLOGIN);
+     print(data);
+     return response; 
     }catch(e){
       throw e;
     }
@@ -23,6 +25,8 @@ class AuthRepository{
   Future<dynamic> registerApi(dynamic data)async{
     try{
      dynamic response = await _apiServices.getPostResponse(AppUrls.Registration, data);
+      print(AppUrls.Registration);
+     print(data);
      return response;
     }catch(e){
       throw e;
@@ -33,6 +37,8 @@ class AuthRepository{
   Future<dynamic> userUpdateAddress(dynamic data)async{
     try{
      dynamic response = await _apiServices.getPostResponse(AppUrls.UpdateRegistration, data);
+      print(AppUrls.UpdateRegistration);
+     print(data);
      return response;
     }catch(e){
       throw e;

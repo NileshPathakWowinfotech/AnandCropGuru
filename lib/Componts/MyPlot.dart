@@ -1,5 +1,5 @@
-//
-//
+
+
 // import 'package:dr_crop_guru/Api/my_plot_api.dart';
 // import 'package:dr_crop_guru/Componts/SelectCrop.dart';
 // import 'package:dr_crop_guru/utils/Colors.dart';
@@ -7,44 +7,46 @@
 // import 'package:flutter/material.dart';
 // import 'package:html/parser.dart' ;
 // import 'package:flutter_html/flutter_html.dart';
-//
+
+// import '../utils/Colors.dart';
+
 // class MyPlot extends StatefulWidget {
 //   const MyPlot({Key? key}) : super(key: key);
-//
+
 //   @override
 //   State<MyPlot> createState() => _MyPlotState();
 // }
-//
+
 // class _MyPlotState extends State<MyPlot> {
-//
+
 //   String? str = jsonResponse?['ResponseMessage'];
 //       // .toString()
 //       // .replaceAll("<p>", "")
 //       // .replaceAll("<span", "");
-//
+
 //   @override
 //   void initState() {
-//
-//
+
+
 //     Myploat();
 //     main();
 //     // TODO: implement initState
 //     super.initState();
 //   }
-//
+
 //   void main() {
 //     var document = parse(
 //        jsonResponse['ResponseMessage']);
 //     print(document.head);
 //   }
-//
+
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
 //     body:
-//
-//
-//
+
+
+
 //         Column(
 //           children: [
 //             SizedBox(height: 30,),
@@ -52,7 +54,7 @@
 //               padding: const EdgeInsets.symmetric(horizontal: 22),
 //               child: Container(
 //                 height: 470,
-//
+
 //                 decoration: BoxDecoration(
 //                     color: Colors.white,
 //                     borderRadius: BorderRadius.circular(5),
@@ -70,10 +72,10 @@
 //                     mainAxisAlignment: MainAxisAlignment.start,
 //                     crossAxisAlignment: CrossAxisAlignment.start,
 //                     children: <Widget>[
-//
+
 //                       Center(child: Text("")
-//
-//
+
+
 //                       )]
 //                   ),
 //                 ),
@@ -87,11 +89,11 @@
 //                 },
 //                 child: Container(
 //                   height: 45,
-//
+
 //                   decoration: BoxDecoration(
 //                     color: kgreen,
 //                     borderRadius: BorderRadius.circular(5),
-//
+
 //                   ),
 //                   child: Center(
 //                     child: Text("OK", style: TextStyle(color: kWhite,
@@ -103,14 +105,14 @@
 //             )
 //           ],
 //         ));
-//
+
 //       }
-//
-//
+
+
 //   }
-//
+
 // // class HtmlTags {
-//
+
 // //   static void removeTag({ htmlString, callback }){
 // //     var document = parse(htmlString);
 // //     String parsedString = parse(document.body?.text).documentElement!.text;
@@ -123,4 +125,4 @@
 // //   }
 // //
 // // }
-//
+

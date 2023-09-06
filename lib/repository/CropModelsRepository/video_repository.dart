@@ -16,7 +16,9 @@ BaseApiServices  _apiServices = NetworkApiService();
      dynamic response = await _apiServices.getPostResponse(uri, data); 
 
     
-      print(response);
+        
+       print("vedio  Api ${uri}");
+     print("vedio Api ${data}");
      return response = VideoListModel.fromJson(response);
     }catch(e){
       throw e;
@@ -30,7 +32,8 @@ BaseApiServices  _apiServices = NetworkApiService();
      dynamic response = await _apiServices.getPostResponse(uri, data); 
 
     
-      print(response);
+     print("vedio playApi ${uri}");
+     print("vedio play Api ${data}");
      return response = VideoPlayListModel.fromJson(response);
     }catch(e){
       throw e;

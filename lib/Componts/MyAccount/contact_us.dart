@@ -15,19 +15,21 @@ class ContactUs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kWhite ,
 
       appBar:AppBar(
+        backgroundColor: kWhite,
         leading:  IconButton(
             onPressed: (){
               Navigator.pop(context);
             },
-            icon: Icon(Icons.arrow_back,size: 30,color: kWhite)
+            icon: Icon(Icons.arrow_back,size: 30,color: kgrey)
 
         ),
         title:  Text(
           "Contact Us",
           style: TextStyle(
-              color: kWhite,
+              color: kgrey,
               fontSize: 20,
               fontWeight: FontWeight.bold),
         ),

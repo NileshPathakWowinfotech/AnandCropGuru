@@ -12,8 +12,24 @@ class UserModel {
   String? distructName;
   String? talukaName;
   String? agronomist_ID;
+  String? stateName;
+  String? stateId;
+  String? districtId;
+  String? talukaId;
 
-  UserModel({required this.userId,required this.fullName,this.mobileNumber,this.address,this.email, required String destrict, required String taluke});
+  UserModel({
+    required this.userId,
+    required this.fullName,
+    this.mobileNumber,
+    this.address,
+    this.email,
+    required String destrict,
+    required String taluke,
+    required String stateId,
+    required String StateName,
+    required String districtId,
+    required String talukaId,
+  });
 
   UserModel.fromJson(Map<String, dynamic> json) {
     userId = json['USER_ID'];
@@ -27,6 +43,10 @@ class UserModel {
     distructName = json['DISTRICT_NAME'];
     talukaName = json['TALUKA_NAME'];
     agronomist_ID = json['agronomist_ID'];
+    stateId = json['STATE_ID'];
+    stateName = json['STATE_NAME'];
+    districtId = json['DISTRICT_ID'];
+    talukaId = json['TALUKA_ID'];
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -41,8 +61,11 @@ class UserModel {
     data['DISTRICT_NAME'] = this.distructName;
     data['TALUKA_NAME'] = this.talukaName;
     data['agronomist_ID'] = this.agronomist_ID;
+    data['STATE_ID'] = this.stateId;
+    data['STATE_NAME'] = this.stateName;
+    data['DISTRICT_ID'] = this.districtId;
+    data['TALUKA_ID'] = this.talukaId;
 
     return data;
   }
 }
-

@@ -308,6 +308,9 @@ class _BlogListState extends State<BlogList> {
                         },
                       ));
               }
-            })));
+            }
+            )
+            )
+            );
   }
 }

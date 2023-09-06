@@ -12,6 +12,10 @@ class UserViewModel with ChangeNotifier {
     sp.setString('address', user.address.toString());
     sp.setString('email', user.email.toString());
     sp.setString('taluka', user.email.toString());
+    sp.setString('statename', user.stateName.toString());
+    sp.setString('stateId', user.stateId.toString());
+    sp.setString('districtId', user.districtId.toString());
+    sp.setString('talukaId', user.districtId.toString());
     notifyListeners();
     return true;
   }
@@ -25,15 +29,23 @@ class UserViewModel with ChangeNotifier {
     final String email = sp.getString('email').toString();
     final String destrict = sp.getString('destrict').toString();
     final String taluke = sp.getString('taluka').toString();
+    final String statename = sp.getString('statename').toString();
+    final String stateId = sp.getString('stateId').toString();
+    final String districtId = sp.getString('districtId').toString();
+    final String talukaId = sp.getString('talukaId').toString();
 
     return UserModel(
         userId: token,
         fullName: fullName,
         mobileNumber: mobileNumber,
         address: address,
-        email: email, 
-        destrict:destrict,
-        taluke:taluke);
+        email: email,
+        destrict: destrict,
+        taluke: taluke,
+        StateName: statename,
+        stateId: stateId,
+        districtId: districtId,
+        talukaId: talukaId);
   }
 
   Future<bool> remove() async {

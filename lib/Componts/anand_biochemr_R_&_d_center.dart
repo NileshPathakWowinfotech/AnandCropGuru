@@ -32,117 +32,7 @@ class _AnandBiochemRandDCenterState extends State<AnandBiochemRandDCenter>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: kprimarygreen,
-        title: Image.asset(
-          Util.backgroundImage,
-          height: 40,
-        ),
-        actions: [
-          Container(
-            alignment: Alignment.center,
-            width: 130,
-            height: 38,
-            decoration: BoxDecoration(
-                color: klgreen, borderRadius: BorderRadius.circular(20)),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  height: 35,
-                  width: 40,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        left: 25,
-                        bottom: 15,
-                        child: Text(
-                          '0',
-                          style: TextStyle(
-                              color: kWhite,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Positioned(
-                          left: 8,
-                          top: 10,
-                          child: Image.asset(
-                            "assets/images/trophy.png",
-                            color: lgreen,
-                            height: 20,
-                          )),
-                    ],
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  height: 35,
-                  width: 40,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        left: 25,
-                        bottom: 15,
-                        child: Text(
-                          '0',
-                          style: TextStyle(
-                              color: kWhite,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Positioned(
-                        left: 8,
-                        top: 10,
-                        child: Icon(
-                          Icons.notifications,
-                          color: lgreen,
-                          size: 25,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  height: 35,
-                  width: 40,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        left: 25,
-                        bottom: 15,
-                        child: Text(
-                          '0',
-                          style: TextStyle(
-                              color: kWhite,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Positioned(
-                        left: 8,
-                        top: 10,
-                        child: Icon(
-                          Icons.shopping_cart_outlined,
-                          color: lgreen,
-                          size: 25,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          SizedBox(
-            width: 25,
-          ),
-        ],
-      ),
+     
       body: Container(
         decoration: BoxDecoration(
             image: DecorationImage(
@@ -163,14 +53,14 @@ class _AnandBiochemRandDCenterState extends State<AnandBiochemRandDCenter>
                           child: Text(value.movieslLists.message.toString()));
                     case Status.COMPLETED:
                       return GridView.builder(
-                        itemCount: value.movieslLists.data!.data.length,
+                        itemCount: value.movieslLists.data!.DATA!.length,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           childAspectRatio: 1.5,
                           crossAxisCount: 2, // Number of columns in the grid
                         ),
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
-                          dynamic item = value.movieslLists.data!.data[index];
+                          dynamic item = value.movieslLists.data!.DATA![index];
                           return Padding(
                             padding: const EdgeInsets.all(3.0),
                             child: Column(
@@ -192,8 +82,8 @@ class _AnandBiochemRandDCenterState extends State<AnandBiochemRandDCenter>
                                                 image: NetworkImage(value
                                                     .movieslLists
                                                     .data!
-                                                    .data[index]
-                                                    .testingImg
+                                                    .DATA![index]!
+                                                    .TESTING_IMG
                                                     .toString()),
                                                 fit: BoxFit.cover)),
                                       ),
@@ -209,8 +99,8 @@ class _AnandBiochemRandDCenterState extends State<AnandBiochemRandDCenter>
                                   height: 5,
                                 ),
                                 Text(
-                                  value.movieslLists.data!.data[index]
-                                      .testingTypeName
+                                  value.movieslLists.data!.DATA![index]!
+                                      .TESTING_TYPE_NAME
                                       .toString(),
                                   style: TextStyle(
                                       color: kblack,

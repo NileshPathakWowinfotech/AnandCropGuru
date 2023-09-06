@@ -44,8 +44,9 @@ class AuthViewModel with ChangeNotifier {
     setLoading(true);
     _myRepo.loginApi(data).then((value) {
       setLoading(false);
+      print(data);
       final userpreference = Provider.of<UserViewModel>(context, listen: false);
-      Util.flushBarErrorMessage("Login Successfull", context);
+      Util.flushBarErrorMessage("Login Successfully", context);
       alertbox().showAlertDialog(
           context, value['ID'], value['DATA'], mobileNumber, uesrName);
       setLoading(false);
@@ -81,6 +82,10 @@ class AuthViewModel with ChangeNotifier {
           email: data[0]['EMAIL'].toString(),
           destrict: data[0]['DISTRICT_NAME'].toString(),
           taluke: data[0]['TALUKA_NAME'].toString(),
+          stateId: data[0]['STATE_ID'].toString(),
+          StateName: data[0]['STATE_NAME'].toString(),
+          districtId: data[0]['DISTRICT_ID'].toString(),
+          talukaId: data[0]['TALUKA_ID'].toString(),
         ),
       );
       Navigator.popAndPushNamed(context, RoutesName.address);

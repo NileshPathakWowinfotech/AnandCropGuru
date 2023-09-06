@@ -83,4 +83,26 @@ class AppUrls {
  //Bannar blog Api 
  static var Bannar =  BASEURL+'Banner';
 
+ //Mart Apis
+  static var ShopForYourCrop =  BASEURL+'CropMaster'; 
+
+  static var ShopByCategory =  BASEURL+'Category'; 
+
+   //Bluk Order Apis
+  static var BulikOrder =  BASEURL+'CropMaster';   
+
+  //Bluk Order Apis
+  static var Schedule =  BASEURL+'Schedule?'; 
+
+  //ProductList
+  static var Product =  BASEURL+'ProductList'; 
+
+
+  //userFeedBack
+  static var userFeedBack =  BASEURL+'UserFeedback'; 
+  
+
+
+ 
+
 }

@@ -8,6 +8,7 @@ import 'package:flutter_application_1/utils/Colors.dart';
 import 'package:flutter_application_1/utils/util.dart';
 import 'package:flutter_application_1/widgets/ftechmvvmdemo.dart';
 
+import 'Componts/add_anand_bichem_r_d_center.dart';
 import 'Componts/anand_biochemr_R_&_d_center.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,7 +24,7 @@ class _HomePageState extends State<HomePage> {
     //HomeScreen(),
     Communitty(),
     Mart(),
-    MyPostApi(),
+   AnandBiochemRandDCenter(),
     Profile(),
   ];
 
@@ -48,102 +49,105 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         actions: [
-          Container(
-            alignment: Alignment.center,
-            width: 130,
-            height: 38,
-            decoration: BoxDecoration(
-                color: klgreen, borderRadius: BorderRadius.circular(20)),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  height: 35,
-                  width: 40,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        left: 25,
-                        bottom: 15,
-                        child: Text(
-                          '0',
-                          style: TextStyle(
-                              color: kWhite,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              alignment: Alignment.center,
+              width: 130,
+              height: 40,
+              decoration: BoxDecoration(
+                  color: klgreen, borderRadius: BorderRadius.circular(20)),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    height: 35,
+                    width: 40,
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          left: 25,
+                          bottom: 15,
+                          child: Text(
+                            '0',
+                            style: TextStyle(
+                                color: kWhite,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
-                      Positioned(
+                        Positioned(
+                            left: 8,
+                            top: 10,
+                            child: Image.asset(
+                              "assets/images/trophy.png",
+                              color: lgreen,
+                              height: 20,
+                            )),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    height: 35,
+                    width: 40,
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          left: 25,
+                          bottom: 15,
+                          child: Text(
+                            '0',
+                            style: TextStyle(
+                                color: kWhite,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Positioned(
                           left: 8,
                           top: 10,
-                          child: Image.asset(
-                            "assets/images/trophy.png",
+                          child: Icon(
+                            Icons.notifications,
                             color: lgreen,
-                            height: 20,
-                          )),
-                    ],
+                            size: 25,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  height: 35,
-                  width: 40,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        left: 25,
-                        bottom: 15,
-                        child: Text(
-                          '0',
-                          style: TextStyle(
-                              color: kWhite,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
+                  Container(
+                    height: 35,
+                    width: 40,
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          left: 25,
+                          bottom: 15,
+                          child: Text(
+                            '0',
+                            style: TextStyle(
+                                color: kWhite,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
-                      Positioned(
-                        left: 8,
-                        top: 10,
-                        child: Icon(
-                          Icons.notifications,
-                          color: lgreen,
-                          size: 25,
+                        Positioned(
+                          left: 8,
+                          top: 10,
+                          child: Icon(
+                            Icons.shopping_cart_outlined,
+                            color: lgreen,
+                            size: 25,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  height: 35,
-                  width: 40,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        left: 25,
-                        bottom: 15,
-                        child: Text(
-                          '0',
-                          style: TextStyle(
-                              color: kWhite,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Positioned(
-                        left: 8,
-                        top: 10,
-                        child: Icon(
-                          Icons.shopping_cart_outlined,
-                          color: lgreen,
-                          size: 25,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
           SizedBox(

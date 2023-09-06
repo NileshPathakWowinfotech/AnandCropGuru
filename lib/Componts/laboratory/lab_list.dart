@@ -8,7 +8,7 @@ import '../../view_model/home_view_model.dart';
 
 class lab_List extends StatefulWidget {
   const lab_List({super.key, required this.category});
-   final Datum category;
+   final SoilTestingTypeListModelDATA category;
 
   @override
   State<lab_List> createState() => _lab_ListState();
@@ -34,7 +34,7 @@ class _lab_ListState extends State<lab_List> {
                    case Status.ERROR:
                      return Center(child: Text(value.lablist.message.toString()));
                    case Status.COMPLETED:
-                     return ListView.builder(
+                     return value.lablist.data!.data.isEmpty ? Center(child: Text('Data Not Found'),): ListView.builder(
                        itemCount: value.lablist.data!.data.length,
                        shrinkWrap: true,
                        itemBuilder: (context, index) {

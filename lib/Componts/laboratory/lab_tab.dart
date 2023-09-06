@@ -8,7 +8,7 @@ import 'lab_list.dart';
 
 class Lab_tab extends StatelessWidget {
   Lab_tab({super.key, required this.category});
-  final Datum category;
+  final SoilTestingTypeListModelDATA category;
 
   @override
   Widget build(BuildContext context) {

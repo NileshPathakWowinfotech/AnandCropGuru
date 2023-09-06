@@ -371,7 +371,7 @@ class Services {
             "END": 500000000,
             "WORD": "NONE",
             "GET_DATA": "Get_MyCartList",
-            "ID1": userId,
+            "ID1":userId.toString(),
             "ID2": "",
             "ID3": "",
             "STATUS": "",

@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../data/Model/MyPlotModel.dart/my_plot_model.dart';
 import '../../utils/Colors.dart';
 import '../../utils/util.dart';
+import 'Schedule.dart';
 import 'diary.dart';
 import 'diary_details.dart';
 import 'faq.dart';
@@ -80,7 +81,7 @@ class MyCrop extends StatelessWidget {
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
-                          //   Get.to(Schedule(userId: userId,cropId: cropId, plotId:plotId ,));
+                            Get.to(Schedule(item: item,));
                         },
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,

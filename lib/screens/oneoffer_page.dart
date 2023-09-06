@@ -41,7 +41,10 @@ class _OneOfferPageState extends State<OneOfferPage> {
                   dynamic item = value.OfferList.data!.data[index];
                   return InkWell(
                     onTap: (){
-                      Get.to(ProductDetailsScreen(pSubCatId:value.OfferList.data!.data[index].psubcatId ,offerId: value.OfferList.data!.data[index].offerId,));
+                      Get.to(ProductDetailsScreen(
+                        ProductdId:value.OfferList.data!.data[index].productId ,
+                        
+                        pSubCatId:value.OfferList.data!.data[index].psubcatId ,offerId: value.OfferList.data!.data[index].offerId,));
                     },
                     child: Container(
                       height: 120,

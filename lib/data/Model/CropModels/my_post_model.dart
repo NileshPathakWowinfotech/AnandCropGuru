@@ -8,7 +8,7 @@ MyPostModel myPostModelFromJson(String str) => MyPostModel.fromJson(json.decode(
 
 String myPostModelToJson(MyPostModel data) => json.encode(data.toJson());
 
-class MyPostModel {
+class   MyPostModel {
     String responseCode;
     String responseMessage;
     dynamic id;
