@@ -9,8 +9,10 @@ import 'package:flutter_application_1/view_model/Mart/product_comment_view_model
 import 'package:flutter_application_1/view_model/MyAccount.dart/bulik_order_view_model.dart';
 import 'package:flutter_application_1/view_model/auth_view_model.dart';
 import 'package:flutter_application_1/view_model/home_view_model.dart';
+import 'package:flutter_application_1/view_model/myplot_view_model/Diary/Expense_view_model.dart';
 import 'package:flutter_application_1/view_model/myplot_view_model/crop_list_view_model.dart';
 import 'package:flutter_application_1/view_model/myplot_view_model/diary_view_model.dart';
+import 'package:flutter_application_1/view_model/myplot_view_model/purchesdrop_view_model.dart';
 import 'package:flutter_application_1/view_model/myplot_view_model/question_answer.dart';
 import 'package:flutter_application_1/view_model/myplot_view_model/reportmaster_view_model.dart';
 import 'package:flutter_application_1/view_model/user_view_model.dart';
@@ -44,6 +46,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CropAddListViewModel()),
         ChangeNotifierProvider(create: (_) => BlukOrderViewModel()),
         ChangeNotifierProvider(create: (_) => CommentProductViewViewModel()),
+        ChangeNotifierProvider(create: (_) => PurchesdropViewModel()),
+         ChangeNotifierProvider(create: (_) => ExpansesViewModel()),
+
+        
       ],
       child: GetMaterialApp(
         translations: Messages(),
@@ -62,7 +68,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         home: const SplashScreen(),
-        initialRoute: RoutesName.home,
+        initialRoute: RoutesName.splash,
         onGenerateRoute: Routes.generateRoute,
       ),
     );

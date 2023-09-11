@@ -40,7 +40,7 @@ class _CommunittyState extends State<Communitty> with TickerProviderStateMixin {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-            height: 100,
+            height: 70,
             decoration: BoxDecoration(
             image: DecorationImage( 
               image: AssetImage(Util.backgroundImage),
@@ -50,7 +50,7 @@ class _CommunittyState extends State<Communitty> with TickerProviderStateMixin {
             child: Column(
               children: [
                 SizedBox(
-                  height: 55,
+                  height: 30,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -64,7 +64,7 @@ class _CommunittyState extends State<Communitty> with TickerProviderStateMixin {
                         "Krushi Charcha",
                         style: TextStyle(
                             color: kgrey,
-                            fontSize: 20,
+                            fontSize: 16,
                             fontWeight: FontWeight.bold),
                       ),
                       InkWell(

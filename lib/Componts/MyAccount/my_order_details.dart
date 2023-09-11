@@ -29,7 +29,7 @@ class MyOrderDetails extends StatelessWidget {
         title: Text(
           "Order Details",
           style: TextStyle(
-              color: kgrey, fontSize: 18, fontWeight: FontWeight.bold),
+              color: kgrey, fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
       body: Padding(
@@ -49,11 +49,11 @@ class MyOrderDetails extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      "Pyment Methold",
+                      "Payment Method",
                       style: TextStyle(
                           color: kgreen,
                           fontWeight: FontWeight.bold,
-                          fontSize: 17),
+                          fontSize: 15),
                     ),
                     SizedBox(
                       width: 6,
@@ -63,7 +63,7 @@ class MyOrderDetails extends StatelessWidget {
                       style: TextStyle(
                           color: klblue,
                           fontWeight: FontWeight.bold,
-                          fontSize: 16),
+                          fontSize: 14),
                     )
                   ],
                 ),
@@ -75,13 +75,14 @@ class MyOrderDetails extends StatelessWidget {
                 color: kblack,
               ),
               Text(
-                "Pyment Methold",
+                "Delivery address",
                 style: TextStyle(
-                    color: kgreen, fontWeight: FontWeight.bold, fontSize: 17),
+                    color: kgreen, fontWeight: FontWeight.bold, fontSize: 15),
               ),
+              SizedBox(height: 5,),
               Text(
                 myorder.orderAddress,
-                style: TextStyle(color: kgrey, fontSize: 16),
+                style: TextStyle(color: kgrey, fontSize: 14),
               ),
               SizedBox(height: 15),
               Row(
@@ -91,7 +92,7 @@ class MyOrderDetails extends StatelessWidget {
                     style: TextStyle(
                         color: kgreen,
                         fontWeight: FontWeight.bold,
-                        fontSize: 17),
+                        fontSize: 15),
                   ),
                   Text(
                     myorder.regDate,
@@ -111,7 +112,7 @@ class MyOrderDetails extends StatelessWidget {
               Text(
                 "Billing details",
                 style: TextStyle(
-                    color: kgreen, fontWeight: FontWeight.bold, fontSize: 17),
+                    color: kgreen, fontWeight: FontWeight.bold, fontSize: 15),
               ),
               SizedBox(
                 height: 5,
@@ -214,11 +215,11 @@ class MyOrderDetails extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Pyment Methold",
+                    "Payment Method",
                     style: TextStyle(
                         color: kgreen,
                         fontWeight: FontWeight.bold,
-                        fontSize: 20),
+                        fontSize: 15),
                   ),
                   SizedBox(
                     width: 6,
@@ -228,7 +229,7 @@ class MyOrderDetails extends StatelessWidget {
                     style: TextStyle(
                         color: kgreen,
                         fontWeight: FontWeight.bold,
-                        fontSize: 20),
+                        fontSize: 15),
                   )
                 ],
               ),
@@ -590,7 +591,7 @@ class _ProdactivityListState extends State<ProdactivityList> {
                     itemBuilder: (context, index) {
                       dynamic item = value.myOrderDetailsProductList.data!.DATA![index];
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -614,9 +615,10 @@ class _ProdactivityListState extends State<ProdactivityList> {
                             value.myOrderDetailsProductList.data!.DATA![index]!.QTY.toString(),
                               style: TextStyle(
                                   color: kgrey,
-                                  fontSize: 14,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.bold),
                             ),
+                            SizedBox(width: 5,),
                             Text(
                               "₹ ${value.myOrderDetailsProductList.data!.DATA![index]!.PRICE.toString()}",
                               style: TextStyle(

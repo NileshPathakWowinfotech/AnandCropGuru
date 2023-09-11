@@ -201,7 +201,7 @@ class _AddDiaryFromState extends State<AddDiaryFrom> {
                         ),
                           SizedBox(height: 8,),
                         Text(
-                          "Enter Question :",
+                          " Enter Question :",
                           style: TextStyle(
                               color: kblack,
                               fontSize: 15,

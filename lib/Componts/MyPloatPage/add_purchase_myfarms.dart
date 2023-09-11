@@ -280,7 +280,7 @@ class _AddPurchasesState extends State<AddPurchases> {
                     _showPopupMenu(details.globalPosition);
                   },
                   child: Text(
-                    'Add Purchase',
+                    'Add Purichase',
                     style: TextStyle(
                         color: kWhite, fontSize: 25, fontWeight: FontWeight.bold),
                   ),

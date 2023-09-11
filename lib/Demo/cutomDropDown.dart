@@ -25,11 +25,8 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     DateTime selectedDate = context.watch<SelectedDateProvider>().selectedDate;
   String dattime;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Date Picker Provider Example'),
-      ),
-      body: Center(
+    return 
+     Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -55,7 +52,7 @@ class MyHomePage extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
+      );
+    
   }
 }

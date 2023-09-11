@@ -14,7 +14,7 @@ BaseApiServices  _apiServices = NetworkApiService();
   Future<ReferralProgramModel> reffrealProgramApi(dynamic data)async{
     try{
      dynamic response = await _apiServices.getPostResponse(AppUrls.GetData, data); 
-      print(response);
+      // print(response);
      return response = ReferralProgramModel.fromJson(response);
     }catch(e){
       throw e;

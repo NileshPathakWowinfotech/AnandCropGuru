@@ -23,12 +23,12 @@ class UserModel {
     this.mobileNumber,
     this.address,
     this.email,
-    required String destrict,
-    required String taluke,
-    required String stateId,
-    required String StateName,
-    required String districtId,
-    required String talukaId,
+    required  this.distructName,
+    required  taluke,
+    required  stateId,
+    required  stateName,
+    required  districtId,
+    required  talukaId,
   });
 
   UserModel.fromJson(Map<String, dynamic> json) {

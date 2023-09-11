@@ -18,6 +18,7 @@ import '../Componts/MyAccount/privacy_policy.dart';
 import '../Componts/MyAccount/return_policy.dart';
 import '../Componts/MyAccount/rewards.dart';
 import '../Componts/MyAccount/terms_&_conditions.dart';
+import '../Demo/reel.dart';
 import '../data/Model/user_model.dart';
 import '../utils/Colors.dart';
 import '../utils/dummy_data.dart';
@@ -80,24 +81,29 @@ class _ProfileState extends State<Profile> {
                   SizedBox(
                     height: 30,
                   ),
-                  Container(
-                    height: 110,
-                    width: 110,
-                    decoration: BoxDecoration(
-                        border: Border.all(width: 0.2, color: Colors.black),
-                        borderRadius: BorderRadius.circular(60)),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(63),
-                      child: Image.network(
-                        'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
-                        fit: BoxFit.cover,
+                  InkWell(
+                    onTap: (){
+                       profileViewModel.userDetails();
+                    },
+                    child: Container(
+                      height: 110,
+                      width: 110,
+                      decoration: BoxDecoration(
+                          border: Border.all(width: 0.2, color: Colors.black),
+                          borderRadius: BorderRadius.circular(60)),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(63),
+                        child: Image.network(
+                          'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
                 
       
                   SizedBox(height: 15),
-                  Text(profileViewModel.fullName ?? 'No Name',
+                  Text(profileViewModel.fullName.toString(),
                       style: TextStyle(
                           fontWeight: FontWeight.bold, color:kblack)),
                   Text('+91${profileViewModel.mobilenumber}',
@@ -117,13 +123,13 @@ class _ProfileState extends State<Profile> {
               profileOption(DummyData.profileOptions[1], () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyOrdersScreen('91'),));
               }),
-              profileOption(DummyData.profileOptions[2], () {
+              profileOption(DummyData.profileOptions[2], () { 
                Get.to(BulkOrder());
                 
               }
               ),
               profileOption(DummyData.profileOptions[3], () {}),
-              profileOption(DummyData.profileOptions[6], () {Get.to(RefrealProgram());}),
+              profileOption(DummyData.profileOptions[6], () {Get.to(PopupMenuWidget());}),
               profileOption(DummyData.profileOptions[4], () { Get.to(Rewards());}),
               profileOption(DummyData.profileOptions[5], () {
                 Share.share('Dear Farmer Brothers, I am Wow Infotech Tester taking quality products with accurate guidance received on time along with expert and experienced consultants advice on how to do organic farming along with farming problems using Anand Crop Guru application.So you can download this application today and take full advantage of this application and ask your farmer friends and relatives to download the application today.\n https://play.google.com/store/apps/details?id=com.cropguru&hl', subject: 'Dear Farmer Brothers, I am Wow Infotech Tester taking quality products with accurate guidance received on time along with expert and experienced consultants advice on how to do organic farming along with farming problems using Anand Crop Guru application.So you can download this application today and take full advantage of this application and ask your farmer friends and relatives to download the application today. ',);
@@ -381,8 +387,8 @@ class profileOption extends StatelessWidget {
       },
       child: ListTile(
         leading: element['icon'],
-        title: Text(element['title']),
-        trailing: Icon(Icons.arrow_forward_ios),
+        title: Text(element['title'],style: TextStyle(color: kprimarygreen)),
+        trailing: Icon(Icons.arrow_forward_ios, color: kprimarygreen,),
       ),
     );
   }

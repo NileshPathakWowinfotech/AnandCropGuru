@@ -7,10 +7,11 @@ import '../utils/app_urls.dart';
 class MYPlotRepository {
   BaseApiServices _myPlotServices = NetworkApiService();
 
-  Future<MyPloatModel> myPlotApi(dynamic data , String userId) async {
+  Future<MyPloatModel> myPlotApi(dynamic data , String uri) async {
     try {
       dynamic response =
-          await _myPlotServices.getPostResponse('https://mycropguruapiwow.cropguru.in/api/PlotList?&SALESTEAM_USER_ID=21013&TYPE=ALL', data);
+          await _myPlotServices.getPostResponse(uri, data);
+          print(uri);
 
       print(response);
       return response = MyPloatModel.fromJson(response);

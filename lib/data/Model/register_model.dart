@@ -186,16 +186,3 @@ class Data {
 } 
 
 
-// // Convert JSON data to a model instance
-// String jsonData = '{"ResponseCode": "200", "ResponseMessage": "Success", "ID": 123, "DATA": [{"USER_ID": 1, "FULL_NAME": "John Doe", "EMAIL": "john@example.com"}], "DATA1": "Additional data"}';
-// Map<String, dynamic> jsonMap = json.decode(jsonData);
-// var model = RegisterSherPreffranceModel.fromJson(jsonMap);
-
-// // Access the properties
-// print(model.responseCode); // Output: 200
-// print(model.data?.first?.fullName); // Output: John Doe
-
-// // Convert the model instance to JSON
-// var jsonResult = model.toJson();
-// String jsonString = json.encode(jsonResult);
-// print(jsonString.); // Output: {"ResponseCode":"200","ResponseMessage":"Success","ID":123,"DATA":[{"USER_ID":1,"FULL_NAME":"John Doe","EMAIL":"john@example.com"}],"DATA1":"Additional data"}

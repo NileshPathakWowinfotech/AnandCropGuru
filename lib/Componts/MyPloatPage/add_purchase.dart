@@ -1,47 +1,53 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:provider/provider.dart';
+import '../../data/response/status.dart';
 import '../../utils/Colors.dart';
 import '../../utils/util.dart';
 import 'package:http/http.dart' as http;
-
+import '../../view_model/myplot_view_model/purchesdrop_view_model.dart';
 import '../Purchase.dart';
+import 'full_size_image.dart';
 
 class AddPurchases extends StatefulWidget {
-  AddPurchases({Key? key}) : super(key: key);
+ const AddPurchases({Key? key, this.cropID, this.userID, this.plotId})
+      : super(key: key);
+  final cropID;
+  final userID;
+  final plotId;
+
 
   @override
   State<AddPurchases> createState() => _AddPurchasesState();
 }
 
 class _AddPurchasesState extends State<AddPurchases> {
+  PurchesdropViewModel purchesdropViewModel = PurchesdropViewModel();
   int? _value2;
   int? _value3;
   int? _value5;
   double size = 14;
   double Fromsize = 15;
-
-  //category api
-  late Map catmapresponse;
-  List? catlistresponse;
-
-  //product api
-  late Map productmapresponse;
-  List? productlistresponse;
-
-  //unit api
-  late Map unitmapresponse;
-  List? unitlistresponse;
+  String SelectOption = 'Select Option';
+  String SelectProduct = 'Select Product';
+  String Selectunit = 'Unit';
+  int? catID;
+  int? productId;
+  int? unitId;
 
   final timedate_Controller = TextEditingController();
   var jsonResponse;
   DateTime? dateTiming;
   File? image;
   var addProduct_Controller = TextEditingController();
+  var paking_Controller = TextEditingController();
+  var priceController = TextEditingController();
+  var qantity_Controller = TextEditingController();
+  var remark_Controller = TextEditingController();
 
   DateTime _dateTime = DateTime.now();
   String? salectedDatebackundDevloper;
@@ -74,106 +80,14 @@ class _AddPurchasesState extends State<AddPurchases> {
       setState(() {
         _dateTime = dateTiming!;
         salectedDatebackundDevloper =
-        "${_dateTime.day}/${_dateTime.month}/${_dateTime.year}";
+            "${_dateTime.day}/${_dateTime.month}/${_dateTime.year}";
         timedate_Controller.text = salectedDatebackundDevloper.toString();
         print("Date $salectedDatebackundDevloper");
       });
     }
   }
 
-  bool isLoaded = false;
-
-  Future categoryname() async {
-    isLoaded = true;
-    http.Response response;
-    response = await http.post(
-        Uri.parse('http://mycropguruapiwow.cropguru.in/api/PurchaseCategory/1'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(<String, String>{
-          "START": "1",
-          "END": "1000",
-          "WORD": "",
-          "EXTRA1": "",
-          "EXTRA2": "",
-          "EXTRA3": "",
-          "LANG_ID": "1",
-          "USER_ID": "60640"
-        }));
-    jsonResponse = json.decode(response.body);
-    print(jsonResponse["ResponseMessage"]);
-    if (response.statusCode == 200) {
-      print(response.body);
-
-      catmapresponse = json.decode(response.body);
-      catlistresponse = catmapresponse["DATA"];
-      isLoaded = true;
-    }
-  }
-
-  Future unitapi() async {
-    isLoaded = true;
-    http.Response response;
-    response = await http.post(
-        Uri.parse(
-            'http://mycropguruapiwow.cropguru.in/api/Get_DataPlotPurchase'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(<String, String>{
-          "START": "1",
-          "END": "1000",
-          "WORD": "",
-          "GET_DATA": "Get_ExpencesUnitMasterList",
-          "ID1": "17",
-          "ID2": "21013",
-          "ID3": "",
-          "STATUS": "",
-          "START_DATE": "",
-          "END_DATE": "",
-          "EXTRA1": "",
-          "EXTRA2": "",
-          "EXTRA3": "",
-          "LANG_ID": "1"
-        }));
-    jsonResponse = json.decode(response.body);
-    print(jsonResponse["ResponseMessage"]);
-    if (response.statusCode == 200) {
-      print(response.body);
-
-      unitmapresponse = json.decode(response.body);
-      unitlistresponse = unitmapresponse["DATA"];
-      isLoaded = true;
-    }
-  }
-
-  Future productname() async {
-    Map<String, dynamic> data = {
-      "START": "1",
-      "END": "1000",
-      "WORD": "",
-      "EXTRA1": "",
-      "EXTRA2": "",
-      "EXTRA3": "",
-      "LANG_ID": "1",
-      "USER_ID": "60640",
-      "CAT_ID": _value2
-    };
-    http.Response response;
-    response = await http.post(
-        Uri.parse('http://mycropguruapiwow.cropguru.in/api/PurchaseProduct/1'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(data));
-    jsonResponse = json.decode(response.body);
-    print(jsonResponse["ResponseMessage"]);
-    if (response.statusCode == 200) {
-      print(data);
-
-      productmapresponse = json.decode(response.body);
-      productlistresponse = productmapresponse["DATA"];
-      isLoaded = true;
-    }
-  }
-
   void addProduct() async {
-    isLoaded = false;
     Map<String, dynamic> data = {
       "CAT_ID": "32",
       "USER_ID": "60640",
@@ -195,11 +109,8 @@ class _AddPurchasesState extends State<AddPurchases> {
       var jsonResponse = json.decode(response.body);
 
       if (jsonResponse["ResponseCode"] == "0") {
-        isLoaded = false;
-
         print("sucsess");
       } else if (jsonResponse["ResponseCode"] == "1") {
-        isLoaded = false;
         print("failed");
       }
     } catch (e) {
@@ -209,21 +120,10 @@ class _AddPurchasesState extends State<AddPurchases> {
 
   @override
   void initState() {
-    setState(() {});
-    categoryname().then((value) {
-      setState(() {});
-
-      productname().then((value) {
-        setState(() {});
-        return value;
-      });
-      unitapi().then((value) {
-        setState(() {});
-        return value;
-      });
-
-      return value;
-    });
+    purchesdropViewModel.categoryListView(widget.userID);
+    purchesdropViewModel.productListView(33,widget.userID);
+    purchesdropViewModel.productListView(33,widget.userID);
+    purchesdropViewModel.purshesListView(widget.userID);
 
     // TODO: implement initState
     super.initState();
@@ -231,65 +131,36 @@ class _AddPurchasesState extends State<AddPurchases> {
 
   @override
   Widget build(BuildContext context) {
+    final purchaseviewmodel =
+        Provider.of<PurchesdropViewModel>(context, listen: false);
     return Scaffold(
-      appBar: PreferredSize(
-          preferredSize: Size.fromHeight(60.0),
-          child: Container(
-              child: AppBar(
-                flexibleSpace: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30.0),
-                      bottomRight: Radius.circular(30.0),
-                    ),
-                    gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [Util.newHomeColor, Util.endColor]),
-                  ),
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(25.0),
-                    bottomRight: Radius.circular(25.0),
-                  ),
-                ),
-                elevation: 0,
-                backgroundColor: Colors.green,
-                leading: Builder(
-                  builder: (context) => IconButton(
-                    icon: InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(
-                        Icons.arrow_back,
-                        color: kWhite,
-                      ),
-                    ),
-                    onPressed: () {
-                      Scaffold.of(context).openDrawer();
-                    },
-                    tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-                  ),
-                ),
-                title: GestureDetector(
-                  onTapDown: (TapDownDetails details) {
-                    _showPopupMenu(details.globalPosition);
-                  },
-                  child: Text(
-                    'Add Purchase',
-                    style: TextStyle(
-                        color: kWhite, fontSize: 25, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ))),
+      appBar: AppBar(
+        flexibleSpace: Image.asset(Util.backgroundImage, fit: BoxFit.cover),
+        elevation: 0,
+        leading: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(
+            Icons.arrow_back,
+            color: kgrey,
+          ),
+        ),
+        title: GestureDetector(
+          onTapDown: (TapDownDetails details) {
+            _showPopupMenu(details.globalPosition);
+          },
+          child: Text(
+            'Add Purchase',
+            style: TextStyle(
+                color: kgrey, fontSize: 17, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 20,),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Container(
@@ -326,9 +197,7 @@ class _AddPurchasesState extends State<AddPurchases> {
                       height: 5,
                     ),
                     InkWell(
-                      onTap: () {
-                        productname();
-                      },
+                      onTap: () {},
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: SizedBox(height: 30, child: CityDrropDown()),
@@ -352,7 +221,6 @@ class _AddPurchasesState extends State<AddPurchases> {
                     ),
                     InkWell(
                       onTapDown: (TapDownDetails details) {
-                        productname();
                         _showPopupMenu(details.globalPosition);
                       },
                       child: Padding(
@@ -372,17 +240,17 @@ class _AddPurchasesState extends State<AddPurchases> {
                               color: lightgreen,
                               child: Padding(
                                 padding:
-                                const EdgeInsets.symmetric(horizontal: 3),
+                                    const EdgeInsets.symmetric(horizontal: 3),
                                 child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Expanded(
                                       child: Column(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.start,
+                                            MainAxisAlignment.start,
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: [
                                           SizedBox(
                                             height: 5,
@@ -403,16 +271,17 @@ class _AddPurchasesState extends State<AddPurchases> {
                                             child: Container(
                                               color: kWhite,
                                               child: TextField(
-                                                keyboardType: TextInputType.number,
+                                                controller: paking_Controller,
+                                                keyboardType:
+                                                    TextInputType.number,
                                                 inputFormatters: [
-                                                  LengthLimitingTextInputFormatter(6),
+                                                  LengthLimitingTextInputFormatter(
+                                                      6),
                                                 ],
                                                 // controller: _mobile,
                                                 style: TextStyle(fontSize: 15),
                                                 decoration: InputDecoration(
-
                                                   hintStyle: TextStyle(
-
                                                       color: kgreyy,
                                                       fontSize: 13),
                                                   contentPadding: EdgeInsets.only(
@@ -421,16 +290,15 @@ class _AddPurchasesState extends State<AddPurchases> {
                                                       left: 6,
                                                       right: 6),
                                                   // errorText: _mobileValidated ? null : _mobileError,
-
+      
                                                   hintText: 'Packing',
                                                   border: OutlineInputBorder(
-
                                                     borderSide: BorderSide(
                                                       color: Util.colorPrimary,
                                                       width: 1.0,
                                                     ),
                                                     borderRadius:
-                                                    BorderRadius.circular(2),
+                                                        BorderRadius.circular(2),
                                                   ),
                                                 ),
                                               ),
@@ -445,9 +313,9 @@ class _AddPurchasesState extends State<AddPurchases> {
                                     Expanded(
                                       child: Column(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.start,
+                                            MainAxisAlignment.start,
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: [
                                           SizedBox(
                                             height: 5,
@@ -488,17 +356,17 @@ class _AddPurchasesState extends State<AddPurchases> {
                               color: lightgreen,
                               child: Padding(
                                 padding:
-                                const EdgeInsets.symmetric(horizontal: 3),
+                                    const EdgeInsets.symmetric(horizontal: 3),
                                 child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Expanded(
                                       child: Column(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.start,
+                                            MainAxisAlignment.start,
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: [
                                           SizedBox(
                                             height: 5,
@@ -519,10 +387,13 @@ class _AddPurchasesState extends State<AddPurchases> {
                                             child: Container(
                                               color: kWhite,
                                               child: TextField(
+                                                controller: qantity_Controller,
                                                 style: TextStyle(fontSize: 15),
-                                                keyboardType: TextInputType.number,
+                                                keyboardType:
+                                                    TextInputType.number,
                                                 inputFormatters: [
-                                                  LengthLimitingTextInputFormatter(6),
+                                                  LengthLimitingTextInputFormatter(
+                                                      6),
                                                 ],
                                                 // controller: _mobile,
                                                 decoration: InputDecoration(
@@ -535,7 +406,7 @@ class _AddPurchasesState extends State<AddPurchases> {
                                                       left: 6,
                                                       right: 6),
                                                   // errorText: _mobileValidated ? null : _mobileError,
-
+      
                                                   hintText: 'QTY',
                                                   border: OutlineInputBorder(
                                                     borderSide: BorderSide(
@@ -543,7 +414,7 @@ class _AddPurchasesState extends State<AddPurchases> {
                                                       width: 1.0,
                                                     ),
                                                     borderRadius:
-                                                    BorderRadius.circular(2),
+                                                        BorderRadius.circular(2),
                                                   ),
                                                 ),
                                               ),
@@ -558,9 +429,9 @@ class _AddPurchasesState extends State<AddPurchases> {
                                     Expanded(
                                       child: Column(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.start,
+                                            MainAxisAlignment.start,
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: [
                                           SizedBox(
                                             height: 5,
@@ -581,11 +452,13 @@ class _AddPurchasesState extends State<AddPurchases> {
                                             child: Container(
                                               color: kWhite,
                                               child: TextField(
-                                                // controller: _mobile,
+                                                controller: priceController,
                                                 style: TextStyle(fontSize: 15),
-                                                keyboardType: TextInputType.number,
+                                                keyboardType:
+                                                    TextInputType.number,
                                                 inputFormatters: [
-                                                  LengthLimitingTextInputFormatter(6),
+                                                  LengthLimitingTextInputFormatter(
+                                                      6),
                                                 ],
                                                 decoration: InputDecoration(
                                                   hintStyle: TextStyle(
@@ -597,7 +470,7 @@ class _AddPurchasesState extends State<AddPurchases> {
                                                       left: 6,
                                                       right: 6),
                                                   // errorText: _mobileValidated ? null : _mobileError,
-
+      
                                                   hintText: 'Price(Rs.)',
                                                   border: OutlineInputBorder(
                                                     borderSide: BorderSide(
@@ -605,7 +478,7 @@ class _AddPurchasesState extends State<AddPurchases> {
                                                       width: 1.0,
                                                     ),
                                                     borderRadius:
-                                                    BorderRadius.circular(2),
+                                                        BorderRadius.circular(2),
                                                   ),
                                                 ),
                                               ),
@@ -664,11 +537,11 @@ class _AddPurchasesState extends State<AddPurchases> {
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintStyle:
-                                    TextStyle(color: kgreyy, fontSize: 13),
+                                        TextStyle(color: kgreyy, fontSize: 13),
                                     contentPadding: EdgeInsets.only(
                                         top: 0, bottom: 16, left: 6, right: 6),
                                     // errorText: _mobileValidated ? null : _mobileError,
-
+      
                                     hintText: 'Enter date',
                                   ),
                                 ),
@@ -760,7 +633,7 @@ class _AddPurchasesState extends State<AddPurchases> {
                                               )),
                                         ],
                                         mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                            MainAxisAlignment.spaceEvenly,
                                       ),
                                       SizedBox(
                                         height: 25,
@@ -771,15 +644,15 @@ class _AddPurchasesState extends State<AddPurchases> {
                                         decoration: BoxDecoration(
                                             color: kgreen,
                                             borderRadius:
-                                            BorderRadius.circular(5)),
+                                                BorderRadius.circular(5)),
                                         child: Center(
                                             child: Text(
-                                              "Cancel",
-                                              style: TextStyle(
-                                                  color: kWhite,
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold),
-                                            )),
+                                          "Cancel",
+                                          style: TextStyle(
+                                              color: kWhite,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                        )),
                                       )
                                     ],
                                   ),
@@ -793,10 +666,10 @@ class _AddPurchasesState extends State<AddPurchases> {
                               borderRadius: BorderRadius.circular(5)),
                           child: Center(
                               child: Icon(
-                                Icons.camera_alt_outlined,
-                                color: kgreen,
-                                size: 30,
-                              )),
+                            Icons.camera_alt_outlined,
+                            color: kgreen,
+                            size: 30,
+                          )),
                         ),
                       ),
                     ),
@@ -821,13 +694,13 @@ class _AddPurchasesState extends State<AddPurchases> {
                         child: SizedBox(
                           height: 60,
                           child: TextField(
-                            // controller: _mobile,
+                             controller: remark_Controller,
                             decoration: InputDecoration(
                               hintStyle: TextStyle(color: kgreyy, fontSize: 13),
                               contentPadding: EdgeInsets.only(
                                   top: 1, bottom: 0, left: 6, right: 6),
                               // errorText: _mobileValidated ? null : _mobileError,
-
+      
                               hintText: 'Remark',
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(
@@ -840,34 +713,83 @@ class _AddPurchasesState extends State<AddPurchases> {
                           ),
                         )),
                     Center(
-                      child: Container(
-                        height: 40,
-                        width: 150,
-
-                        decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 2,
-                                blurRadius: 5,
-                                offset: Offset(0, 3), // changes position of shadow
-                              ),
-                            ],
-                            border: Border.all(width: 1,color: kWhite),
-                            color: kgreen,
-                            borderRadius: BorderRadius.circular(8)
-
+                      child: InkWell(
+                        onTap: () {
+                          if (SelectOption == 'Select Option') {
+                            Util.flushBarErrorMessage(
+                                'please Select Category', context);
+                          } else if (SelectProduct == ' pleaseSelect Product') {
+                            Util.flushBarErrorMessage(
+                                ' pleaseSelect Product', context);
+                          } else if (Selectunit == 'Unit') {
+                            Util.flushBarErrorMessage(
+                                'please Select Unit', context);
+                          } else if (paking_Controller.text.isEmpty) {
+                            Util.flushBarErrorMessage(
+                                'please Enter Paking Size', context);
+                          } else if (qantity_Controller.text.isEmpty) {
+                            Util.flushBarErrorMessage(
+                                'please Enter Quantity ', context);
+                          } else if (paking_Controller.text.isEmpty) {
+                          } else {
+                            final data = jsonEncode({
+                              "CAT_ID": catID,
+                              "PRODUCT_NAME": SelectProduct,
+                              "USER_ID": "21013",
+                              "PRODUCT_ID": productId,
+                              "QUANTITY": qantity_Controller.text,
+                              "UNIT_ID": unitId,
+                              "PRICE": priceController.text,
+                              "REMARK":remark_Controller.text,
+                              "SIZE": paking_Controller.text,
+                              "EXTRA1": "",
+                              "EXTRA2": "",
+                              "TASK": "ADD",
+                              "PURCHASE_DATE": timedate_Controller.text,
+                              "FP_ID": "",
+                              "BILL_PHOTO": imageData
+                            });
+                            print(data);
+                            purchesdropViewModel.addPurchase(data, context);
+                             purchesdropViewModel.purshesListView(widget.userID);
+                          }
+                        },
+                        child: Container(
+                          height: 40,
+                          width: 150,
+                          decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset:
+                                      Offset(0, 3), // changes position of shadow
+                                ),
+                              ],
+                              border: Border.all(width: 1, color: kWhite),
+                              color: kgreen,
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Center(
+                              child: Text(
+                            "Submit",
+                            style: TextStyle(
+                                color: kWhite,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                          )),
                         ),
-                        child: Center(child: Text("Submit",style: TextStyle(color: kWhite,fontSize: 18,fontWeight: FontWeight.bold),)),
                       ),
                     ),
-                    SizedBox(height: 23,)
+                    SizedBox(
+                      height: 23,
+                    )
                   ],
                 ),
               ),
             ),
-            Purchase(),
-
+         SizedBox(height: 10,),
+           list()
           ],
         ),
       ),
@@ -876,98 +798,1097 @@ class _AddPurchasesState extends State<AddPurchases> {
 
   Widget CityDrropDown() {
     // final cityapi = Provider.of<CityApiProvider>(context);
-    return DropdownButtonHideUnderline(
-      child: ButtonTheme(
-          alignedDropdown: true,
-          child: DropdownButtonFormField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                contentPadding:
-                EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-              ),
-              value: _value2,
-              hint: Text(
-                "Select Category",
-                style: TextStyle(fontSize: 12, color: kgreyy),
-              ),
-              isExpanded: true,
-              items: catlistresponse?.map((cityOne) {
-                return DropdownMenuItem(
-                  child: Text(cityOne["CAT_NAME"]),
-                  value: cityOne["CAT_ID"],
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _value2 = value as int;
-                });
-                print("Selected city is $_value2");
-              })),
-    );
+    return ChangeNotifierProvider<PurchesdropViewModel>(
+        create: (BuildContext context) => purchesdropViewModel,
+        child: Consumer<PurchesdropViewModel>(builder: (context, value, _) {
+          switch (value.categoryList.status!) {
+            case Status.LOADING:
+              return Container(
+                width: double.infinity,
+                decoration:
+                    BoxDecoration(border: Border.all(width: 1, color: kgreyy)),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(SelectOption),
+                      Icon(Icons.keyboard_arrow_down)
+                    ],
+                  ),
+                ),
+              );
+            case Status.ERROR:
+              return Center(child: Text(value.categoryList.message.toString()));
+            case Status.COMPLETED:
+              return Container(
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage(Util.backgroundImage))),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        SelectOption;
+                        catID;
+                      });
+                      showMenu(
+                        context: context,
+                        position: RelativeRect.fromLTRB(
+                            MediaQuery.of(context).size.width / 12,
+                            MediaQuery.of(context).size.height / 6,
+                            MediaQuery.of(context).size.width / 3,
+                            MediaQuery.of(context).size.height / 2),
+                        items: value.categoryList.data!.data.map((option) {
+                          print(SelectOption = option.catName);
+                          return PopupMenuItem<String>(
+                            value: option.catId.toString(),
+                            child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    SelectOption = option.catName;
+                                    catID = option.catId;
+                                    purchesdropViewModel
+                                        .productListView(option.catId,widget.userID);
+                                    SelectProduct = 'Select Product';
+                                    Selectunit = 'Unit';
+                                    Navigator.pop(context);
+                                  });
+                                  print(SelectOption = option.catName);
+                                  // SelectOption = option.catName;
+                                },
+                                child: Container(
+                                    height: 30,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Text(option.catName))),
+                          );
+                        }).toList(),
+                      );
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          border: Border.all(width: 1, color: kgreyy)),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(SelectOption),
+                            Icon(Icons.keyboard_arrow_down)
+                          ],
+                        ),
+                      ),
+                    ),
+                  ));
+          }
+        }));
   }
 
   Widget unitDrropDown() {
     // final cityapi = Provider.of<CityApiProvider>(context);
-    return DropdownButtonHideUnderline(
-      child: ButtonTheme(
-          alignedDropdown: true,
-          child: DropdownButtonFormField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                contentPadding:
-                EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-              ),
-              value: _value5,
-              hint: Text(
-                "Unit",
-                style: TextStyle(fontSize: 12, color: kgreyy),
-              ),
-              isExpanded: true,
-              items: unitlistresponse?.map((cityOne) {
-                return DropdownMenuItem(
-                  child: Text(cityOne["UL_NAME"]),
-                  value: cityOne["UNIT_ID"],
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _value5 = value as int;
-                });
-                print("Selected city is $_value5");
-              })),
-    );
+    return ChangeNotifierProvider<PurchesdropViewModel>(
+        create: (BuildContext context) => purchesdropViewModel,
+        child: Consumer<PurchesdropViewModel>(builder: (context, value, _) {
+          switch (value.unitList.status!) {
+            case Status.LOADING:
+              return Container(
+                width: double.infinity,
+                decoration:
+                    BoxDecoration(border: Border.all(width: 1, color: kgreyy)),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(Selectunit),
+                      Icon(Icons.keyboard_arrow_down)
+                    ],
+                  ),
+                ),
+              );
+            case Status.ERROR:
+              return Center(child: Text(value.unitList.message.toString()));
+            case Status.COMPLETED:
+              return Container(
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage(Util.backgroundImage))),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        Selectunit;
+                        unitId;
+                      });
+                      print('hello world');
+                      showMenu(
+                        context: context,
+                        position: RelativeRect.fromLTRB(
+                            MediaQuery.of(context).size.width / 10,
+                            MediaQuery.of(context).size.height / 3,
+                            MediaQuery.of(context).size.width / 3,
+                            MediaQuery.of(context).size.height / 5),
+                        items: value.unitList.data!.data.map((option) {
+                          print(Selectunit = option.ulName);
+                          return PopupMenuItem<String>(
+                            value: option.ulId.toString(),
+                            child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    Selectunit = option.ulName;
+                                    unitId = option.unitId;
+
+                                    Navigator.pop(context);
+                                  });
+                                  print(Selectunit = option.ulName);
+                                  // SelectOption = option.catName;
+                                },
+                                child: Container(
+                                    height: 30, child: Text(option.ulName))),
+                          );
+                        }).toList(),
+                      );
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          border: Border.all(width: 1, color: kgreyy)),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(Selectunit),
+                            Icon(Icons.keyboard_arrow_down)
+                          ],
+                        ),
+                      ),
+                    ),
+                  ));
+          }
+        }));
+  }
+
+  Widget list(){
+    return  ChangeNotifierProvider<PurchesdropViewModel>(
+        create: (BuildContext context) => purchesdropViewModel,
+        child: Consumer<PurchesdropViewModel>(builder: (context, value, _) {
+          switch (value.purchaseList.status!) {
+            case Status.LOADING:
+              return Center(child:CircularProgressIndicator());
+            case Status.ERROR:
+              return Center(child:Text(value.purchaseList.message.toString()));
+            case Status.COMPLETED:
+              return Container(
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage(Util.backgroundImage))),
+                  child: ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                      itemCount: value.purchaseList.data!.DATA!.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        final imagelist =
+                            value.purchaseList.data!.DATA![index]!.BILL_PHORO;
+                        final purchasedate =
+                            value.purchaseList.data!.DATA![index]!.PURCHASE_DATE;
+                        final remark =
+                            value.purchaseList.data!.DATA![index]!.REMARK; 
+                            dynamic  total =  double.parse(value.purchaseList.data!.DATA![index]!.PRICE.toString()) * double.parse(value.purchaseList.data!.DATA![index]!.QUANTITY.toString());
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 3),
+                          child: InkWell(
+                            onTap: () {
+                              showDialog<void>(
+                                barrierDismissible: true,
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return SingleChildScrollView(
+                                    child: new Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: MediaQuery.of(context)
+                                                          .orientation ==
+                                                      Orientation.portrait
+                                                  ? 15
+                                                  : 100,
+                                              vertical: 15),
+                                          child: new Container(
+                                            decoration: BoxDecoration(
+                                                color: kWhite,
+                                                borderRadius:
+                                                    BorderRadius.circular(5)),
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: new Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Container(
+                                                    width: double.infinity,
+                                                    color: pgreen,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 15),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        // crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          Center(
+                                                              child: Text(
+                                                            "",
+                                                            style: TextStyle(
+                                                                color: kWhite,
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          )),
+                                                          Center(
+                                                              child: Text(
+                                                            "Product Details",
+                                                            style: TextStyle(
+                                                                color: kWhite,
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          )),
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .centerRight,
+                                                            child: Material(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              child: InkWell(
+                                                                onTap: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                child: Icon(
+                                                                  Icons.cancel,
+                                                                  size: 25,
+                                                                  color: kWhite,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 10),
+                                                  child: Text(
+                                                    "Product Name",
+                                                    style: TextStyle(
+                                                        color: kblack,
+                                                        fontSize: Fromsize),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                TextfildForms(
+                                                  name: value.purchaseList.data!
+                                                      .DATA![index]!.PRODUCT_NAME,
+                                                ),
+                                                SizedBox(
+                                                  height: 8,
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 10),
+                                                  child: Text(
+                                                    "Category Name",
+                                                    style: TextStyle(
+                                                        color: kblack,
+                                                        fontSize: Fromsize),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                TextfildForms(
+                                                  name: value.purchaseList.data!
+                                                      .DATA![index]!.CAT_NAME,
+                                                ),
+                                                SizedBox(
+                                                  height: 8,
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 12),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.end,
+                                                    children: [
+                                                      Text(
+                                                        "Paking",
+                                                        style: TextStyle(
+                                                            color: kblack,
+                                                            fontSize: Fromsize),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                right: 120),
+                                                        child: Text(
+                                                          "Unit",
+                                                          style: TextStyle(
+                                                              color: kblack,
+                                                              fontSize:
+                                                                  Fromsize),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 10),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Container(
+                                                        height: 35,
+                                                        width: 150,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: pgrey,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                        ),
+                                                        child: Row(
+                                                          children: [
+                                                            Padding(
+                                                              padding: const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      5),
+                                                              child: Text(
+                                                                value
+                                                                    .purchaseList
+                                                                    .data!
+                                                                    .DATA![index]!
+                                                                    .SIZE.toString(),
+                                                                style: TextStyle(
+                                                                    color:
+                                                                        kblack,
+                                                                    fontSize:
+                                                                        15),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        height: 35,
+                                                        width: 150,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: pgrey,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                        ),
+                                                        child: Row(
+                                                          children: [
+                                                            Padding(
+                                                              padding: const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      5),
+                                                              child: Text(
+                                                                value
+                                                                    .purchaseList
+                                                                    .data!
+                                                                    .DATA![index]!
+                                                                    .UNIT_NAME.toString(),
+                                                                style: TextStyle(
+                                                                    color:
+                                                                        kblack,
+                                                                    fontSize:
+                                                                        15),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 12),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.end,
+                                                    children: [
+                                                      Text(
+                                                        "Price(Rs)",
+                                                        style: TextStyle(
+                                                            color: kblue,
+                                                            fontSize: Fromsize),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                right: 100),
+                                                        child: Text(
+                                                          "Quantity",
+                                                          style: TextStyle(
+                                                              color: kblack,
+                                                              fontSize:
+                                                                  Fromsize),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 8,
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 10),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Container(
+                                                        height: 35,
+                                                        width: 150,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: pgrey,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                        ),
+                                                        child: Row(
+                                                          children: [
+                                                            Padding(
+                                                              padding: const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      5),
+                                                              child: Text(
+                                                                value
+                                                                    .purchaseList
+                                                                    .data!
+                                                                    .DATA![index]!.PRICE
+                                                                    .toString(),
+                                                                style: TextStyle(
+                                                                    color:
+                                                                        kblack,
+                                                                    fontSize:
+                                                                        15),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        height: 35,
+                                                        width: 150,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: pgrey,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                        ),
+                                                        child: Row(
+                                                          children: [
+                                                            Padding(
+                                                              padding: const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      5),
+                                                              child: Text(
+                                                                value
+                                                                    .purchaseList
+                                                                    .data!
+                                                                    .DATA![index]!
+                                                                    .QUANTITY.toString()
+                                                                    .toString(),
+                                                                style: TextStyle(
+                                                                    color:
+                                                                        kblack,
+                                                                    fontSize:
+                                                                        15),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 8,
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 10),
+                                                  child: Text(
+                                                    "Purchase Date",
+                                                    style: TextStyle(
+                                                        color: kblack,
+                                                        fontSize: Fromsize),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 10),
+                                                  child: Container(
+                                                    height: 35,
+                                                    decoration: BoxDecoration(
+                                                      color: pgrey,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                    ),
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 5),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        5),
+                                                            child: Text(
+                                                              purchasedate.toString(),
+                                                              style: TextStyle(
+                                                                  color: kblack,
+                                                                  fontSize: 15),
+                                                            ),
+                                                          ),
+                                                          Icon(
+                                                            Icons
+                                                                .calendar_month,
+                                                            color: Util
+                                                                .newHomeColor,
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 8,
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 10),
+                                                  child: imagelist == ""
+                                                      ? Text("")
+                                                      : Text(
+                                                          "Bill photo",
+                                                          style: TextStyle(
+                                                              color: kblack,
+                                                              fontSize:
+                                                                  Fromsize),
+                                                        ),
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Padding(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        horizontal: 10),
+                                                    child: imagelist == ""
+                                                        ? Text("")
+                                                        : Material(
+                                                            child: InkWell(
+                                                              onTap: () {
+                                                                Get.to(FullSizeImage(
+                                                                    image:
+                                                                        imagelist));
+                                                              },
+                                                              child: Material(
+                                                                child: Container(
+                                                                    alignment: Alignment.center,
+                                                                    height: 150,
+                                                                    decoration: BoxDecoration(
+                                                                      color:
+                                                                          kWhite,
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5),
+                                                                    ),
+                                                                    child: value.purchaseList.data!.DATA![index]!.BILL_PHORO.toString() == " "
+                                                                        ? Center(
+                                                                            child:
+                                                                                Icon(
+                                                                              Icons.camera_alt_sharp,
+                                                                              color: lgreen,
+                                                                              size: 30,
+                                                                            ),
+                                                                          )
+                                                                        : Stack(
+                                                                            children: [
+                                                                              Image.network(
+                                                                                fit: BoxFit.fill,
+                                                                                height: 200,
+                                                                                width: MediaQuery.of(context).size.width,
+                                                                                value.purchaseList.data!.DATA![index]!.BILL_PHORO.toString(),
+                                                                                errorBuilder: (context, error, stackTrace) {
+                                                                                  return Center(
+                                                                                      child: Image.asset(
+                                                                                    "assets/images/noimage.png",
+                                                                                    height: 200,
+                                                                                  ));
+                                                                                },
+                                                                              ),
+                                                                              Center(
+                                                                                child: Icon(Icons.camera_alt, size: 28, color: kgreen),
+                                                                              )
+                                                                            ],
+                                                                          )),
+                                                              ),
+                                                            ),
+                                                          )),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 10),
+                                                  child: Text(
+                                                    "Remark",
+                                                    style: TextStyle(
+                                                        color: kblack,
+                                                        fontSize: Fromsize),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 10),
+                                                  child: Container(
+                                                    height: 60,
+                                                    decoration: BoxDecoration(
+                                                      color: pgrey,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                    ),
+                                                    child: Row(
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      5),
+                                                          child: Text(
+                                                            value
+                                                                        .purchaseList
+                                                                        .data!
+                                                                        .DATA![
+                                                                            index]!
+                                                                        .REMARK ==
+                                                                    null
+                                                                ? ""
+                                                                : remark.toString(),
+                                                            style: TextStyle(
+                                                                color: kblack,
+                                                                fontSize: 15),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 8,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                      // offset: const Offset(3.0, 3.0),
+                                      blurRadius: 1.0,
+                                      spreadRadius: 0.0,
+                                      color: kgrey),
+                                ],
+                                color: kWhite,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Product Name -",
+                                              style: TextStyle(
+                                                  color: kgrey, fontSize: size),
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                              value.purchaseList.data!
+                                                  .DATA![index]!.PRODUCT_NAME.toString(),
+                                              style: TextStyle(
+                                                  color: kblack,
+                                                  fontSize: size),
+                                            ),
+                                          ],
+                                        ),
+                                        Icon(
+                                          Icons.arrow_right_alt_rounded,
+                                          size: 30,
+                                          color: kgreen,
+                                        )
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 25),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "Packing -",
+                                                style: TextStyle(
+                                                    color: kgrey,
+                                                    fontSize: size),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                value.purchaseList.data!
+                                                    .DATA![index]!.SIZE.toString(),
+                                                style: TextStyle(
+                                                    color: kgrey,
+                                                    fontSize: size),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "Unit -",
+                                                style: TextStyle(
+                                                    color: kgrey,
+                                                    fontSize: size),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                value.purchaseList.data!
+                                                    .DATA![index]!.UNIT_NAME.toString(),
+                                                style: TextStyle(
+                                                    color: kgrey,
+                                                    fontSize: size),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "Quantity -",
+                                                style: TextStyle(
+                                                    color: kgrey,
+                                                    fontSize: size),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                value.purchaseList.data!
+                                                    .DATA![index]!.QUANTITY
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    color: kgrey,
+                                                    fontSize: size),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 6,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Price(Rs) -",
+                                          style: TextStyle(
+                                              color: kblack, fontSize: size),
+                                        ),
+                                        Text(
+                                          "${value.purchaseList.data!
+                                                    .DATA![index]!.PRICE
+                                                    .toString()} x ${value.purchaseList.data!
+                                                    .DATA![index]!.QUANTITY
+                                                    .toString()} ",
+                                          style: TextStyle(
+                                              color: kblack, fontSize: size),
+                                        ),
+                                        Text(
+                                          "Total ₹",
+                                          style: TextStyle(
+                                              color: kblack, fontSize: size),
+                                        ),
+                                        Text(
+                                           total.toString(),
+                                          style: TextStyle(
+                                              color: kblack, fontSize: size),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Available Stock - ",
+                                          style: TextStyle(
+                                              color: kgreen, fontSize: size),
+                                        ),
+                                        Text(
+                                          value.purchaseList.data!.DATA![index]!
+                                              .AVL_STOCK.toString()
+                                              .toString(),
+                                          style: TextStyle(
+                                              color: kgreen, fontSize: size),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 3,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Remark - ",
+                                                style: TextStyle(
+                                                    color: kblack,
+                                                    fontSize: size),
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                  value.purchaseList.data!
+                                                              .DATA![index]!.REMARK ==
+                                                          null
+                                                      ? ""
+                                                      : value.purchaseList.data!
+                                                          .DATA![index]!.REMARK
+                                                          .toString(),
+                                                  style: TextStyle(
+                                                      color: kgrey, fontSize: size),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        CircleAvatar(
+                                          radius: 12,
+                                          backgroundColor:kgreen,
+                                          child: Center(
+                                            child: Icon(
+                                              Icons.add,
+                                              color: kWhite,
+                                              size: 17,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                      )
+                      );
+          }
+          return Container();
+        }),
+      );
   }
 
   Widget productName() {
     // final cityapi = Provider.of<CityApiProvider>(context);
-    return DropdownButtonHideUnderline(
-      child: ButtonTheme(
-          alignedDropdown: true,
-          child: DropdownButtonFormField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                contentPadding:
-                EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-              ),
-              value: _value3,
-              hint: Text(
-                "Select Category",
-                style: TextStyle(fontSize: 12, color: kgreyy),
-              ),
-              isExpanded: true,
-              items: productlistresponse?.map((product) {
-                return DropdownMenuItem(
-                  child: Text(product["PRODUCT_NAME"]),
-                  value: product["PRODUCT_ID"],
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _value3 = value as int;
-                });
-                print("Selected city is $_value3");
-              })),
-    );
+    return ChangeNotifierProvider<PurchesdropViewModel>(
+        create: (BuildContext context) => purchesdropViewModel,
+        child: Consumer<PurchesdropViewModel>(builder: (context, value, _) {
+          switch (value.productList.status!) {
+            case Status.LOADING:
+              return Container(
+                width: double.infinity,
+                decoration:
+                    BoxDecoration(border: Border.all(width: 1, color: kgreyy)),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(SelectProduct),
+                      Icon(Icons.keyboard_arrow_down)
+                    ],
+                  ),
+                ),
+              );
+            case Status.ERROR:
+              return Center(child: Text(value.productList.message.toString()));
+            case Status.COMPLETED:
+              return Container(
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage(Util.backgroundImage))),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        SelectProduct;
+                      });
+                      showMenu(
+                        context: context,
+                        position: RelativeRect.fromLTRB(
+                            MediaQuery.of(context).size.width / 12,
+                            MediaQuery.of(context).size.height / 6,
+                            MediaQuery.of(context).size.width / 3,
+                            MediaQuery.of(context).size.height / 2),
+                        items: value.productList.data!.data.map((option) {
+                          return PopupMenuItem<String>(
+                            value: option.productId.toString(),
+                            child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    SelectProduct =
+                                        option.productName.toString();
+                                        productId =option.productId;
+                                        
+                                    purchesdropViewModel
+                                        .unitListView(option.productId,widget.userID);
+                                    Selectunit = 'Unit';
+                                    Navigator.pop(context);
+                                  });
+                                  // print(  SelectOption = option.catName);
+                                  // SelectOption = option.catName;
+                                },
+                                child: Container(
+                                    height: 30,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: option.productName == null
+                                        ? SizedBox()
+                                        : Text(option.productName.toString()))),
+                          );
+                        }).toList(),
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              border: Border.all(width: 1, color: kgreyy)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(SelectProduct),
+                                Icon(Icons.keyboard_arrow_down)
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ));
+          }
+        }));
   }
 
   _showPopupMenu(Offset offset) async {
@@ -1007,24 +1928,24 @@ class _AddPurchasesState extends State<AddPurchases> {
                                           horizontal: 12),
                                       child: Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Center(
                                               child: Text(
-                                                "",
-                                                style: TextStyle(
-                                                    color: kWhite,
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold),
-                                              )),
+                                            "",
+                                            style: TextStyle(
+                                                color: kWhite,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold),
+                                          )),
                                           Center(
                                               child: Text(
-                                                "Add New Product",
-                                                style: TextStyle(
-                                                    color: kWhite,
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold),
-                                              )),
+                                            "Add New Product",
+                                            style: TextStyle(
+                                                color: kWhite,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold),
+                                          )),
                                           Align(
                                             alignment: Alignment.centerRight,
                                             child: Material(
@@ -1069,7 +1990,7 @@ class _AddPurchasesState extends State<AddPurchases> {
                                       height: 40,
                                       child: Form(
                                         key: _addProduct,
-                                        child:  TextFormField(
+                                        child: TextFormField(
                                           controller: addProduct_Controller,
                                           decoration: InputDecoration(
                                             // errorText: _mobileValidated ? null : _mobileError,
@@ -1085,10 +2006,10 @@ class _AddPurchasesState extends State<AddPurchases> {
                                                 width: 1.0,
                                               ),
                                               borderRadius:
-                                              BorderRadius.circular(6),
+                                                  BorderRadius.circular(6),
                                             ),
                                           ),
-                                          validator:  (text) {
+                                          validator: (text) {
                                             if (text!.isEmpty) {
                                               return "Please enter Product Name";
                                             }
@@ -1101,58 +2022,33 @@ class _AddPurchasesState extends State<AddPurchases> {
                                   SizedBox(
                                     height: 15,
                                   ),
-                                  Center(
-                                    child: InkWell(
-                                      onTap: () {
-                                        print("hello ");
-                                        if (_addProduct.currentState!.validate()) {
-                                          addProduct();
+                                  InkWell(
+                                    onTap: () {
+                                      print("hello ");
+                                      if (_addProduct.currentState!
+                                          .validate()) {
+                                        addProduct();
 
-                                          // _addProduct.userRegistration(questtionansController.text,imageData.toString());
-                                        }else{
-
-                                        }
-
-                                      },
-                                      child: Container(
-                                        height: 40,
-                                        width: 130,
-                                        decoration: BoxDecoration(
-                                            color: kgreen,
-                                            borderRadius:
-                                            BorderRadius.circular(5)),
-                                        child: Center(
-                                            child: isLoaded == true
-                                                ? Text(
-                                              "Send",
-                                              style: TextStyle(
-                                                  color: kWhite,
-                                                  fontSize: Fromsize,
-                                                  fontWeight:
-                                                  FontWeight.bold),
-                                            )
-                                                : Center(
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(3.0),
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                      SizedBox(
-                                                        height: 15,
-                                                        width: 15,
-                                                        child: CircularProgressIndicator(
-                                                            strokeWidth:2,
-                                                            color:
-                                                            kWhite),
-                                                      ),
-                                                      SizedBox( width: 13,),
-                                                      Text("Please Wait...",  style: TextStyle(
-                                                        color: Colors.white,
-                                                      ),)
-                                                    ],
-                                                  ),
-                                                ))),
-                                      ),
+                                        // _addProduct.userRegistration(questtionansController.text,imageData.toString());
+                                      } else {}
+                                    },
+                                    child: Container(
+                                      height: 40,
+                                      width: 130,
+                                      decoration: BoxDecoration(
+                                          color: kgreen,
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: Center(
+                                          child: Text(
+                                        "Send",
+                                        style: TextStyle(
+                                            color: kWhite,
+                                            fontSize: Fromsize,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                          //
+                                          ),
                                     ),
                                   )
                                 ],
@@ -1172,5 +2068,3 @@ class _AddPurchasesState extends State<AddPurchases> {
     );
   }
 }
-
-

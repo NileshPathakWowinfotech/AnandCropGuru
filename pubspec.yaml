@@ -64,6 +64,9 @@ dependencies:
   flutter_popup_menu_button: ^0.0.1+5
   custom_pop_up_menu: ^1.2.4
   youtube_player_iframe: ^4.0.4
+  video_player: ^2.7.1
+  youtube_player_flutter: ^8.1.2
+  chewie: ^1.7.0
 
 dev_dependencies:
   flutter_test:

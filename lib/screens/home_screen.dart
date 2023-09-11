@@ -636,7 +636,7 @@ class SerachBarHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Get.to(Demoomy());
+        Get.to(SearchProduct());
       },
       child: Container(
           color: kprimarygreen,

@@ -6,9 +6,6 @@ import 'package:flutter_application_1/screens/mart.dart';
 import 'package:flutter_application_1/screens/profile.dart';
 import 'package:flutter_application_1/utils/Colors.dart';
 import 'package:flutter_application_1/utils/util.dart';
-import 'package:flutter_application_1/widgets/ftechmvvmdemo.dart';
-
-import 'Componts/add_anand_bichem_r_d_center.dart';
 import 'Componts/anand_biochemr_R_&_d_center.dart';
 
 class HomePage extends StatefulWidget {
@@ -40,6 +37,7 @@ class _HomePageState extends State<HomePage> {
       children: [
         Scaffold(
            appBar: AppBar(
+            automaticallyImplyLeading: false,
         backgroundColor: kprimarygreen,
         title: InkWell(
           onTap: () {},

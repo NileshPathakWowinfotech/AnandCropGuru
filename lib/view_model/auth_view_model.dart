@@ -40,7 +40,7 @@ class AuthViewModel with ChangeNotifier {
   }
 
   Future<void> loginApi(
-      dynamic data, BuildContext context, mobileNumber, uesrName) async {
+      dynamic data, BuildContext context, mobileNumber, uesrName,reffrealId) async {
     setLoading(true);
     _myRepo.loginApi(data).then((value) {
       setLoading(false);
@@ -48,7 +48,7 @@ class AuthViewModel with ChangeNotifier {
       final userpreference = Provider.of<UserViewModel>(context, listen: false);
       Util.flushBarErrorMessage("Login Successfully", context);
       alertbox().showAlertDialog(
-          context, value['ID'], value['DATA'], mobileNumber, uesrName);
+          context, value['ID'], value['DATA'], mobileNumber, uesrName,reffrealId );
       setLoading(false);
       if (kDebugMode) {
         print(value.toString());
@@ -64,32 +64,40 @@ class AuthViewModel with ChangeNotifier {
 
   // registerapi UP API
   Future<void> registerApi(
-    dynamic data,
+    dynamic dataa,
     BuildContext context,
   ) async {
     setsignUpLoading(true);
     setsignUpLoading(true);
-    _myRepo.registerApi(data).then((value) {
-      List data = value['DATA'];
+    _myRepo.registerApi(dataa).then((value) {
+      List dataList = value['DATA'];
       setAddressLoading(false);
       final userpreference = Provider.of<UserViewModel>(context, listen: false);
       userpreference.saveUser(
         UserModel(
-          userId: data[0]['USER_ID'].toString(),
-          fullName: data[0]['FULL_NAME'].toString(),
-          mobileNumber: data[0]['MOBILE_NO'].toString(),
-          address: data[0]['ADDRESS'].toString(),
-          email: data[0]['EMAIL'].toString(),
-          destrict: data[0]['DISTRICT_NAME'].toString(),
-          taluke: data[0]['TALUKA_NAME'].toString(),
-          stateId: data[0]['STATE_ID'].toString(),
-          StateName: data[0]['STATE_NAME'].toString(),
-          districtId: data[0]['DISTRICT_ID'].toString(),
-          talukaId: data[0]['TALUKA_ID'].toString(),
+          userId: dataList[0]['USER_ID'].toString(),
+          fullName: dataList[0]['FULL_NAME'].toString(),
+          distructName: dataList[0]['DISTRICT_NAME'].toString(),
+          mobileNumber: dataList[0]['MOBILE_NO'].toString(),
+          address: dataList[0]['ADDRESS'].toString(),
+          email: dataList[0]['EMAIL'].toString(),
+          taluke: dataList[0]['TALUKA_NAME'].toString(),
+          stateId: dataList[0]['STATE_ID'].toString(),
+          stateName: dataList[0]['STATE_NAME'].toString(),
+          districtId: dataList[0]['DISTRICT_ID'].toString(),
+          talukaId: dataList[0]['TALUKA_ID'].toString(),
         ),
-      );
-      Navigator.popAndPushNamed(context, RoutesName.address);
-      Util.flushBarErrorMessage("SignUp Successful", context);
+      ); 
+      // print('fddff ${dataList[0]['DISTRICT_NAME'].toString()}');
+      
+      if(dataList[0]['STATE_NAME'].toString() == 'null'){
+         Navigator.popAndPushNamed(context, RoutesName.address);
+      }else{
+        print(dataList[0]['STATE_NAME'].toString());
+        Navigator.popAndPushNamed(context, RoutesName.home);
+      }
+     
+     // Util.flushBarErrorMessage("SignUp Successful", context);
       setAddressLoading(false);
       if (kDebugMode) {}
     }).onError((error, stackTrace) {

@@ -24,15 +24,15 @@ class RefrealProgramViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  ApiResponse<ReferralProgramModel> myOrderList = ApiResponse.loading();
+  ApiResponse<ReferralProgramModel> refrealProgramList = ApiResponse.loading();
 
   setmyOrder(ApiResponse<ReferralProgramModel> response) {
-    myOrderList = response;
+    refrealProgramList = response;
     print('Report data $response');
     notifyListeners();
   }
 
-  Future<void> myOrderListAPi() async {
+  Future<void> reffrealProgramListAPi() async {
     getUserData().then((value) async {
       print(value.userId);
       final data = jsonEncode({
@@ -46,14 +46,15 @@ class RefrealProgramViewModel with ChangeNotifier {
         "STATUS": "",
         "START_DATE": "",
         "END_DATE": "",
-        "EXTRA1": "9730201227",
+        "EXTRA1": value.mobileNumber.toString(),
         "EXTRA2": "",
         "EXTRA3": "",
         "LANG_ID": "1",
-        "USER_ID": "21013",
+        "USER_ID":value.userId.toString(),
         "CAT_ID": "",
         "PLOT_ID": ""
       });
+      print("reffreal data $data");
       setmyOrder(ApiResponse.loading());
       _myRepo.reffrealProgramApi(data).then((value) {
         setmyOrder(ApiResponse.completed(value));

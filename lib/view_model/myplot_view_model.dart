@@ -7,6 +7,7 @@ import '../data/Model/MyPlotModel.dart/my_plot_model.dart';
 import '../data/Model/user_model.dart';
 import '../data/response/api_response.dart';
 import '../repository/my_plot_repository.dart';
+import '../utils/app_urls.dart';
 
 class MYPlotViewModel with ChangeNotifier {
   final _myRepo = MYPlotRepository();
@@ -36,9 +37,15 @@ class MYPlotViewModel with ChangeNotifier {
         "LANG_ID": "3",
         "ACCESS_TOKEN": "123456"
       });
+
+      Map<String, String> queryParams = {
+        "SALESTEAM_USER_ID": value.userId.toString(),
+        "TYPE": "ALL",
+      };
+      Uri uri = Uri.parse(AppUrls.Plot).replace(queryParameters: queryParams);
       print(listData);
       setMyPlotList(ApiResponse.loading());
-      _myRepo.myPlotApi(listData,'21013').then((value) {
+      _myRepo.myPlotApi(listData, uri.toString()).then((value) {
         setMyPlotList(ApiResponse.completed(value));
       }).onError((error, stackTrace) {
         print('error this $error');

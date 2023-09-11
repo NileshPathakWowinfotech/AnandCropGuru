@@ -1,11 +1,8 @@
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_application_1/view_model/user_view_model.dart';
 import '../../data/Model/user_model.dart';
-import '../../data/response/api_response.dart';
-import '../data/Model/searchproduct_model.dart';
 import '../repository/searchproduct_repository.dart';
 
 class ProfileViewModel with ChangeNotifier {
@@ -26,15 +23,13 @@ class ProfileViewModel with ChangeNotifier {
   }
 
   Future<void> userDetails()async  {
-    getUserData().then((value)async {
-      await  value.fullName;
+    getUserData().then((value) {
+      fullName=  value.fullName;
       address = value.address;
       mobilenumber = value.mobileNumber;
       districtname = value.distructName;
        talukaname = value.talukaName;
        stateName = value.stateName;
-       
-    
     });
      notifyListeners();
   }

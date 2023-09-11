@@ -47,6 +47,24 @@ class _LoginScreenState extends State<LoginScreen>
               SizedBox(
                 height: 70,
               ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  InkWell(
+                    onTap: (){
+                       Navigator.popAndPushNamed(context, RoutesName.home);
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 25,
+                      width: 60,
+                      color: kgreen,
+                      
+                      child: Text("Skip",style: TextStyle(color: kWhite),)),
+                  ),
+                ],
+              ),
               Container(
                 height: 200,
                 decoration: BoxDecoration(
@@ -74,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen>
                             height: 50,
                             decoration: BoxDecoration(
                                 border:
-                                    Border.all(color: Util.colorCustomPrimary),
+                                    Border.all(color: kgreen),
                                 borderRadius: BorderRadius.circular(5)),
                             padding: EdgeInsets.symmetric(horizontal: 10),
                             margin: EdgeInsets.symmetric(
@@ -91,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen>
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 suffixIcon: Icon(Icons.person,
-                                    color: Util.colorPrimary),
+                                    color:kgreen),
                                 hintText: 'Your name',
                               ),
                             ),
@@ -100,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen>
                             height: 52,
                             decoration: BoxDecoration(
                                 border:
-                                    Border.all(color: Util.colorCustomPrimary),
+                                    Border.all(color: kgreen),
                                 borderRadius: BorderRadius.circular(5)),
                             padding: EdgeInsets.symmetric(horizontal: 10),
                             margin: EdgeInsets.symmetric(
@@ -120,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen>
                               controller: _mobile,
                               decoration: InputDecoration(
                                 suffixIcon:
-                                    Icon(Icons.call, color: Util.colorPrimary),
+                                    Icon(Icons.call, color: kgreen),
                                 hintText: 'Mobile no',
                                 border: InputBorder.none,
                               ),
@@ -130,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen>
                             height: 52,
                             decoration: BoxDecoration(
                                 border:
-                                    Border.all(color: Util.colorCustomPrimary),
+                                    Border.all(color: kgreen),
                                 borderRadius: BorderRadius.circular(5)),
                             padding: EdgeInsets.symmetric(horizontal: 10),
                             margin: EdgeInsets.symmetric(
@@ -154,9 +172,9 @@ class _LoginScreenState extends State<LoginScreen>
                             children: [
                               Checkbox(
                                 checkColor: Colors.white,
-                                activeColor: Util.colorPrimary,
+                                activeColor: kgreen,
                                 side: BorderSide(
-                                    width: 2, color: Util.colorPrimary),
+                                    width: 2, color: kgreen),
                                 value: isChecked,
                                 onChanged: (value) {
                                   setState(() {
@@ -170,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen>
                                 },
                                 child: Text('I agree to Terms & Conditions',
                                     style: TextStyle(
-                                      color: Util.colorPrimary,
+                                      color:kgreen,
                                       fontWeight: FontWeight.bold,
                                     )),
                               ),
@@ -188,14 +206,7 @@ class _LoginScreenState extends State<LoginScreen>
                                   offset: Offset(0.0, 1.0),
                                 ),
                               ],
-                              gradient: LinearGradient(
-                                colors: [
-                                  Colors.green,
-                                  Util.endColor,
-                                ],
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                              ),
+                              color: Colors.orange
                             ),
                             child: SizedBox(
                               height: 45,
@@ -205,6 +216,14 @@ class _LoginScreenState extends State<LoginScreen>
                                   if (_name.text.isEmpty) {
                                     Util.flushBarErrorMessage(
                                         "Enter your name", context);
+                                  } else if (_name.text.length < 3) {
+                                    Util.flushBarErrorMessage(
+                                        "Full name should be more than 3 words",
+                                        context);
+                                  } else if (_mobile.text.length < 10) {
+                                    Util.flushBarErrorMessage(
+                                        "Enter 10 digit mobile number.",
+                                        context);
                                   } else if (_mobile.text.isEmpty) {
                                     Util.flushBarErrorMessage(
                                         "Enter mobile number.", context);
@@ -215,8 +234,12 @@ class _LoginScreenState extends State<LoginScreen>
                                     final data = jsonEncode({
                                       "MOBILE_NUMBER": _mobile.text,
                                     });
-                                    authViewMode.loginApi(data, context,
-                                        _mobile.text, _name.text.toString());
+                                    authViewMode.loginApi(
+                                        data,
+                                        context,
+                                        _mobile.text,
+                                        _name.text.toString(),
+                                        _enterRefrralCode.text.toString());
                                   }
                                 },
                                 child: Text(
@@ -260,8 +283,8 @@ class alertbox {
     isTimerOn = !isTimerOn;
   }
 
-  void showAlertDialog(
-      BuildContext context, randomOtp, mastrOtp, mobileNumber, userName) {
+  void showAlertDialog(BuildContext context, randomOtp, mastrOtp, mobileNumber,
+      userName, reffrealId) {
     final authViewMode = Provider.of<AuthViewModel>(context, listen: false);
     showDialog(
       context: context,
@@ -281,7 +304,8 @@ class alertbox {
                         height: 5,
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -367,7 +391,7 @@ class alertbox {
                                 "USER_ID": "1",
                                 "FULL_NAME": userName,
                                 "MOBILE_NO": mobileNumber,
-                                "REFERANCE_NO": "",
+                                "REFERANCE_NO": reffrealId.toString(),
                                 "ADDRESS": "",
                                 "EMAIL": "",
                                 "LATITUDE": "",
@@ -389,7 +413,8 @@ class alertbox {
                                   border: Border.all(width: 1, color: kgrey)),
                               child: authViewMode.signUpLoading
                                   ? Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         SizedBox(
                                             height: 20,

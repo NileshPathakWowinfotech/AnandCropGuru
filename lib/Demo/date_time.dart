@@ -59,9 +59,7 @@ class _MyHomePageeeState extends State<MyHomePageee> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Center(
+    return  Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
@@ -75,7 +73,7 @@ class _MyHomePageeeState extends State<MyHomePageee> {
             ),
           ],
         ),
-      ),
-    );
+      );
+    
   }
 }

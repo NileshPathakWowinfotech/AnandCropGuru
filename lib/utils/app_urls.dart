@@ -99,7 +99,43 @@ class AppUrls {
 
 
   //userFeedBack
-  static var userFeedBack =  BASEURL+'UserFeedback'; 
+  static var userFeedBack =  BASEURL+'UserFeedback';  
+
+ //  ploat list
+  static var Plot =  BASEURL+'PlotList?'; 
+
+ //  Farmer purchase list
+  static var purchase =  BASEURL+'FarmerPurchase/1';   
+
+
+  // Pursches purchase list
+  static var purchasecategory =  BASEURL+'PurchaseCategory/1';  
+
+   // Product purchase list
+  static var ProductCategory =  BASEURL+'PurchaseProduct/1';    
+
+
+  // Unit  purchase list
+  static var Unit =  BASEURL+'Get_DataPlotPurchase';  
+
+  // Add  purchase list
+  static var AddPurchase =  BASEURL+'FarmerPurchase';  
+
+    // Unit Count  purchase list
+  static var UnitCount =  BASEURL+'UserProductUnit';  
+
+
+  // Add  Expenses post 
+  static var Expance =  BASEURL+'FarmerPlotExpence';  
+
+    // Total Expanse 
+  static var TotalExpanse =  BASEURL+'FarmerPlotExpence/1'; 
+
+
+ 
+
+
+ 
   
 
 

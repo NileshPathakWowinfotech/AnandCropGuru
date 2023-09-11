@@ -22,8 +22,8 @@ class NetworkApiService extends BaseApiServices {
  // POST API MODEL
   @override
   Future getPostResponse(String url,dynamic data)async {
-    print("Api data $url");
-    print("print data $data");
+    // print("Api data $url");
+    // print("print data $data");
    dynamic responseJson;
     try {
      Response response = await post(

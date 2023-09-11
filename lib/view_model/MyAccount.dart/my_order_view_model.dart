@@ -49,6 +49,8 @@ class MyOrderViewModel with ChangeNotifier {
         "EXTRA3": "",
         "LANG_ID": ""
       });
+      print(value.distructName .toString());
+       print(' dfff ${value.distructName.toString()}');
       setmyOrder(ApiResponse.loading());
       _myRepo.myOrderListApi(data).then((value) {
         setmyOrder(ApiResponse.completed(value));
