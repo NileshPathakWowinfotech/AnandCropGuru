@@ -35,15 +35,14 @@ class _ExpensesState extends State<Expenses> with TickerProviderStateMixin {
   bool isOpen = false;
   String SelectOption = ' ';
   int? _value2;
-  int? _value3;
-  int? _value5;
-  bool isVisible = false;
+  bool isVisible = true;
   String cropNameGlobal = '';
   String cropId = "";
   double size = 14;
   double Fromsize = 15;
   dynamic selectDate = '';
   dynamic? quantity;
+  double? totalExpance;
 
   String SelectCategory = 'Select Category';
   String SelectProduct = 'Select Product';
@@ -144,7 +143,13 @@ class _ExpensesState extends State<Expenses> with TickerProviderStateMixin {
     // TODO: implement initState
     super.initState();
   }
-
+ @override
+  void dispose() {
+   
+     
+    // TODO: implement dispose
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +175,9 @@ class _ExpensesState extends State<Expenses> with TickerProviderStateMixin {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            isVisible = !isVisible;
+                             expansesViewModel.categoryListDropDownList(widget.userID);
+                               expansesViewModel.productListDropDownList(widget.userID, cropId);
+                             isVisible = !isVisible;
                           });
                           
                         },
@@ -877,7 +884,7 @@ class _ExpensesState extends State<Expenses> with TickerProviderStateMixin {
                         fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    " ₹43.23",
+                    " ₹${totalExpance == null ? '0.0':totalExpance}",
                     style: TextStyle(
                         color: Colors.red,
                         fontSize: 16,
@@ -1388,6 +1395,7 @@ class _ExpensesState extends State<Expenses> with TickerProviderStateMixin {
           itemCount: value.totalExpanseListList.data!.data.length,
           
           itemBuilder: (context, index) {
+            totalExpance = value.totalExpanseListList.data!.data[0].totalExpence;
             return Material(
                          elevation: 5,
                          borderRadius: BorderRadius.circular(8),

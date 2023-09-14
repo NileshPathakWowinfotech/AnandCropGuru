@@ -21,42 +21,7 @@ class PlotInformation extends StatefulWidget {
 class _PlotInformationState extends State<PlotInformation> {
   PlotInformationViewModel plotInformationviewmodel =
       PlotInformationViewModel();
-  var dateController = TextEditingController();
-  DateTime _dateTime = DateTime.now();
-  DateTime? dateTiming;
-  String? salectedDatebackundDevloper;
-  final timedate_Controller = TextEditingController();
-  final totalarea_Controller = TextEditingController();
-
-  void datetiming() async {
-    dateTiming = await showDatePicker(
-        context: context,
-        initialDate: _dateTime,
-        // firstDate: DateTime(2023),
-        lastDate: DateTime.now(),
-        firstDate: DateTime(2002));
-    if (dateTiming == null) {
-      return;
-    } else {
-      setState(() {
-        _dateTime = dateTiming!;
-        salectedDatebackundDevloper =
-            "${_dateTime.day}/${_dateTime.month}/${_dateTime.year}";
-        timedate_Controller.text = salectedDatebackundDevloper.toString();
-        print("Date $salectedDatebackundDevloper");
-      });
-    }
-  }
-
-  List<String> items = <String>[
-    'Select Report Type',
-    'Leaf',
-    'Soil',
-    'Water',
-    'Other'
-  ];
-
-  String dropdownvalue = 'Select Report Type';
+ 
 
   @override
   void initState() {

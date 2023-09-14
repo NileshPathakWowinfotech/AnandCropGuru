@@ -27,9 +27,6 @@ class AddPurchases extends StatefulWidget {
 
 class _AddPurchasesState extends State<AddPurchases> {
   PurchesdropViewModel purchesdropViewModel = PurchesdropViewModel();
-  int? _value2;
-  int? _value3;
-  int? _value5;
   double size = 14;
   double Fromsize = 15;
   String SelectOption = 'Select Option';
@@ -40,7 +37,6 @@ class _AddPurchasesState extends State<AddPurchases> {
   int? unitId;
 
   final timedate_Controller = TextEditingController();
-  var jsonResponse;
   DateTime? dateTiming;
   File? image;
   var addProduct_Controller = TextEditingController();

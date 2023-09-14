@@ -108,7 +108,7 @@ class HomeViewViewModel with ChangeNotifier {
     });
   }
 
-  Future<void> labListApi() async {
+  Future<void> labListApi(soiltype) async {
     
      getUserData().then((value) {
       print("kddkdkd :-${value.userId} ");
@@ -125,12 +125,12 @@ class HomeViewViewModel with ChangeNotifier {
     "STATUS": "",
     "START_DATE": "",
     "END_DATE": "",
-    "EXTRA1": "माती परीक्षण",
+    "EXTRA1":soiltype.toString(),
     "EXTRA2": "",
     "EXTRA3": "",
     "LANG_ID": "3"
     });
-    print(listData);
+    print(' data founding this weindoe :- $listData');
     setlablist(ApiResponse.loading());
     _myRepo.labList(listData).then((value) {
       setlablist(ApiResponse.completed(value));

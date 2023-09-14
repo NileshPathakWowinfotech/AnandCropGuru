@@ -42,11 +42,9 @@ class _CommunittyState extends State<Communitty> with TickerProviderStateMixin {
           Container(
             height: 70,
             decoration: BoxDecoration(
-            image: DecorationImage( 
-              image: AssetImage(Util.backgroundImage),
-              fit: BoxFit.cover
-              )
-            ),
+                image: DecorationImage(
+                    image: AssetImage(Util.backgroundImage),
+                    fit: BoxFit.cover)),
             child: Column(
               children: [
                 SizedBox(
@@ -147,6 +145,8 @@ class _CommunittyState extends State<Communitty> with TickerProviderStateMixin {
                                     child: InkWell(
                                       onTap: () {
                                         Get.to(PostDetailsScreen(
+                                          postId: value.CommunityList.data!
+                                              .data[index].postId,
                                           communityListMOdel: item,
                                         ));
                                       },
@@ -188,7 +188,9 @@ class _CommunittyState extends State<Communitty> with TickerProviderStateMixin {
                                                           );
                                                         }),
                                                       )),
-                                                      SizedBox(height: 5,),
+                                                  SizedBox(
+                                                    height: 5,
+                                                  ),
                                                   Text(
                                                     value.CommunityList.data!
                                                         .data[index].fullName,
@@ -308,12 +310,13 @@ class _CommunittyState extends State<Communitty> with TickerProviderStateMixin {
                                                               ? Image.asset(
                                                                   "assets/images/like.png",
                                                                   height: 25,
-                                                                  color:  Colors.orange)
+                                                                  color: Colors
+                                                                      .orange)
                                                               : Image.asset(
                                                                   "assets/images/like2.png",
                                                                   height: 25,
-                                                                  color:
-                                                                       Colors.orange),
+                                                                  color: Colors
+                                                                      .orange),
                                                         ),
                                                         SizedBox(
                                                           width: 5,
@@ -353,7 +356,8 @@ class _CommunittyState extends State<Communitty> with TickerProviderStateMixin {
                                                       children: [
                                                         Icon(Icons.message,
                                                             size: 27,
-                                                            color:  Colors.orange),
+                                                            color:
+                                                                Colors.orange),
                                                         SizedBox(
                                                           width: 8,
                                                         ),
@@ -392,7 +396,8 @@ class _CommunittyState extends State<Communitty> with TickerProviderStateMixin {
                                                           child: Icon(
                                                             Icons.share,
                                                             size: 25,
-                                                            color:  Colors.orange,
+                                                            color:
+                                                                Colors.orange,
                                                           ),
                                                           onTap: () {
                                                             Share.share(

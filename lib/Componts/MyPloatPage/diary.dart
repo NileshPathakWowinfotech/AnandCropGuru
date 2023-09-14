@@ -59,7 +59,7 @@ class _DiaryState extends State<Diary> with SingleTickerProviderStateMixin  {
                 Icon(Icons.add,size: 28,),
                 InkWell(
                   onTap: (){
-                    //Get.to(AddPurchases());
+                    Get.to(AddPurchases(userID: widget.userId,plotId: widget.plotID,cropID: widget.cropID,));
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 15),

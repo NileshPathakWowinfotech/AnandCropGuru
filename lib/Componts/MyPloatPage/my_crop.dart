@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Componts/MyPloatPage/plot_information.dart';
 import 'package:flutter_application_1/Componts/MyPloatPage/question_answer_list.dart';
 import 'package:flutter_application_1/Componts/MyPloatPage/report_master.dart';
+import 'package:flutter_application_1/Componts/MyPloatPage/update_plot.dart';
 import 'package:get/get.dart';
 import '../../data/Model/MyPlotModel.dart/my_plot_model.dart';
 import '../../utils/Colors.dart';
@@ -445,6 +446,8 @@ class MyCrop extends StatelessWidget {
                     Expanded(
                       child: InkWell(
                         onTap: () {
+                             Get.to( UpdatePloat(item: item,));
+                         
                           // Get.to(NRC(userid: userId,cropId: cropId, plotId:plotId));
                         },
                         child: Column(

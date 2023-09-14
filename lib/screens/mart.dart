@@ -124,18 +124,29 @@ class _MartState extends State<Mart> with TickerProviderStateMixin{
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    margin: EdgeInsets.only(top: 15, left: 15),
-                    child: Text(
-                      'Shop for your crop',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        margin: EdgeInsets.only(top: 15, left: 15),
+                        child: Text(
+                          'Shop for your crop',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    SizedBox(height: 5,),
+                     Padding(
+                         padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 10),
+                         child: Image.asset('assets/images/next_arr.gif',
+                         height: 25,),
+                       ),
+                  ],
                 ),
                 SizedBox(
                   height: 15,
@@ -158,7 +169,17 @@ class _MartState extends State<Mart> with TickerProviderStateMixin{
                       SizedBox(height: 15),
                       Container(
                           margin: const EdgeInsets.only(left: 15),
-                          child: Text('Shop by Category')),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Shop by Category'),
+                                Padding(
+                             padding: const EdgeInsets.symmetric(horizontal: 5),
+                             child: Image.asset('assets/images/next_arr.gif',
+                             height: 25,),
+                                )
+                            ],
+                          )),
                       SizedBox(height: 15),
                       SizedBox(
                         height: 100,
@@ -173,7 +194,9 @@ class _MartState extends State<Mart> with TickerProviderStateMixin{
                     child: Container(
                         margin: EdgeInsets.only(left: 15),
                         child: Text('Recommended Products'))),
+                    
                 // SizedBox(height: 6),
+                
                   RecommendedProduct()
                
               ],

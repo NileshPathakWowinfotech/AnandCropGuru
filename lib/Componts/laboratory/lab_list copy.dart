@@ -18,7 +18,7 @@ class _lab_ListState extends State<lab_List> {
   HomeViewViewModel listLabView = HomeViewViewModel();
   @override
   void initState() {
-    listLabView.labListApi();
+    listLabView.labListApi(widget.category.TESTING_TYPE_NAME);
     super.initState();
   }
 

@@ -37,7 +37,7 @@ BaseApiServices  _apiServices = NetworkApiService();
    Future<LabListModel> labList(dynamic data)async{
     try{
      dynamic response = await _apiServices.getPostResponse(AppUrls.GetData, data);
-    // print(response);
+    print(' data founding this weindoe :- ${AppUrls.GetData}');
      return response = LabListModel.fromJson(response);
     }catch(e){
       throw e;

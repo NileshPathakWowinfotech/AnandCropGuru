@@ -15,6 +15,7 @@ import 'package:flutter_application_1/view_model/myplot_view_model/diary_view_mo
 import 'package:flutter_application_1/view_model/myplot_view_model/purchesdrop_view_model.dart';
 import 'package:flutter_application_1/view_model/myplot_view_model/question_answer.dart';
 import 'package:flutter_application_1/view_model/myplot_view_model/reportmaster_view_model.dart';
+import 'package:flutter_application_1/view_model/myplot_view_model/update_plot_view_model.dart';
 import 'package:flutter_application_1/view_model/user_view_model.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -47,9 +48,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => BlukOrderViewModel()),
         ChangeNotifierProvider(create: (_) => CommentProductViewViewModel()),
         ChangeNotifierProvider(create: (_) => PurchesdropViewModel()),
-         ChangeNotifierProvider(create: (_) => ExpansesViewModel()),
-
-        
+        ChangeNotifierProvider(create: (_) => ExpansesViewModel()), 
+        ChangeNotifierProvider(create: (_) => UpadtePlotViewModel()),   
       ],
       child: GetMaterialApp(
         translations: Messages(),

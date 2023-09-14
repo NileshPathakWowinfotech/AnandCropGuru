@@ -89,6 +89,7 @@ class ExpansesViewModel with ChangeNotifier {
     }).onError((error, stackTrace) {
       print('error this $error');
       setlabTestingType(ApiResponse.error(error.toString()));
+       notifyListeners();
     });
   }
 

@@ -129,7 +129,11 @@ class AppUrls {
   static var Expance =  BASEURL+'FarmerPlotExpence';  
 
     // Total Expanse 
-  static var TotalExpanse =  BASEURL+'FarmerPlotExpence/1'; 
+  static var TotalExpanse =  BASEURL+'FarmerPlotExpence/1';  
+
+  // Total Expanse 
+  static var TotalArea =  BASEURL+'UpdatePlotDetails?TYPE='; 
+
 
 
  

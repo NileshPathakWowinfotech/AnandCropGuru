@@ -70,7 +70,8 @@ class CommunityViewModel with ChangeNotifier {
     });
   }
 
-  Future<void> commentListAPi() async {
+
+  Future<void> commentListAPi(userId) async {
     getUserData().then((value) async {
       print(value.userId);
       final data = jsonEncode({
@@ -78,7 +79,7 @@ class CommunityViewModel with ChangeNotifier {
         "END": 10000,
         "WORD": "NONE",
         "GET_DATA": "Get_AllPostCommentsByPostId",
-        "ID1": '1',
+        "ID1": userId.toString(),
         "ID2": "",
         "ID3": "",
         "STATUS": "",

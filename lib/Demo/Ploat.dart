@@ -80,7 +80,7 @@ class _PloatState extends State<Ploat> with TickerProviderStateMixin {
                       onTap: () {
                         Get.to(MyCrop(
                           item: item,
-                        ));
+                        )); 
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),

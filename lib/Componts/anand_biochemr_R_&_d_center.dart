@@ -53,6 +53,7 @@ class _AnandBiochemRandDCenterState extends State<AnandBiochemRandDCenter>
                           child: Text(value.movieslLists.message.toString()));
                     case Status.COMPLETED:
                       return GridView.builder(
+                        physics: NeverScrollableScrollPhysics(),
                         itemCount: value.movieslLists.data!.DATA!.length,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           childAspectRatio: 1.5,

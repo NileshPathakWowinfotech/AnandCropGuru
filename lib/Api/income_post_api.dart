@@ -21,23 +21,24 @@ class IncomePostApi{
     _loading = vlaue;
   }
 
-  static  incomePostApi(productname,unitid,price,incomedate,quantity,remark) async {
+  static  incomePostApi( productname,unitid,price,incomedate,quantity,remark,userId,plotID) async {
 
     Map<String, dynamic> data = {
-      "USER_ID": "21013",
-      "PLOT_ID": "67898",
-      "PRODUCT_NAME": productname,
-      "UNIT_ID": unitid,
-      "QUANTITY": quantity,
-      "PRICE": price,
-      "INCOME_DATE": incomedate,
+      "USER_ID": userId.toString(),
+      "PLOT_ID": plotID.toString(),
+      "PRODUCT_NAME": productname.toString(),
+      "UNIT_ID":unitid,
+      "QUANTITY": quantity.toString(),
+      "PRICE": price.toString(),
+      "INCOME_DATE": incomedate.toString(),
       "INCOME_TIME": "",
       "FP_ID": "",
       "EXTRA1": "",
       "EXTRA2": "",
       "TASK": "ADD",
-      "REMARK":remark
+      "REMARK":remark.toString()
     };
+    print(data);
     try {
       var response = await http.post(
           Uri.parse("http://mycropguruapiwow.cropguru.in/api/FarmerPlotIncome"),
