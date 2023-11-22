@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_application_1/view_model/user_view_model.dart';
@@ -13,6 +15,8 @@ class ProfileViewModel with ChangeNotifier {
   String? districtname;
   String? talukaname;
   String? stateName;
+  String? cityname;
+  
 
   final _myRepo = SearchProductRepository();
   bool _loading = false;
@@ -30,8 +34,10 @@ class ProfileViewModel with ChangeNotifier {
       districtname = value.distructName;
        talukaname = value.talukaName;
        stateName = value.stateName;
+
     });
      notifyListeners();
+     log("state name ${cityname}");
   }
     
 }

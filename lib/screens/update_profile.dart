@@ -5,6 +5,7 @@ import '../services.dart';
 import '../utils/Colors.dart';
 import '../utils/prefs_util.dart';
 import '../utils/util.dart';
+import '../view_model/profile_view_model.dart';
 
 
 class UpdateProfile extends StatefulWidget {
@@ -63,9 +64,7 @@ class _UpdateProfileState extends State<UpdateProfile> with TickerProviderStateM
   }
 
   late AnimationController _controller;
-  // String enteredVillageName = 'not set';
-  // String enteredAddress = 'not set';
-  // String enteredFullName = 'not set';
+   ProfileViewModel profileViewModel = ProfileViewModel();
 
   void showProgressIndicator() {
     showDialog(
@@ -90,6 +89,17 @@ class _UpdateProfileState extends State<UpdateProfile> with TickerProviderStateM
 
   @override
   void initState() {
+     Future.delayed(const Duration(milliseconds: 500), () {
+
+// Here you can write your code
+
+  setState(() {
+      profileViewModel.userDetails();
+
+    // Here you can write your code for open new view
+  });
+
+});
     Future.delayed(const Duration(milliseconds: 0), () {
       setState(() {
         isInitialized = false;
@@ -142,6 +152,7 @@ class _UpdateProfileState extends State<UpdateProfile> with TickerProviderStateM
     //   selectedTalukaName = user?.TALUKA_NAME ?? 'not set';
     //   selectedTalukaID = user?.TALUKA_ID ?? 'not set';
     // }
+    
 
     return Scaffold(
        appBar: AppBar(
@@ -185,7 +196,7 @@ class _UpdateProfileState extends State<UpdateProfile> with TickerProviderStateM
                       children: [
                         SizedBox(height: 12),
                         Text(
-                          'Full Name',
+                          'Full Name${profileViewModel.mobilenumber}',
                           style: TextStyle(
                               color: Util.newHomeColor,
                               fontWeight: FontWeight.bold,

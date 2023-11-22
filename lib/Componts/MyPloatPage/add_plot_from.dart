@@ -29,10 +29,11 @@ class _AddNewPlotFromState extends State<AddNewPlotFrom> {
   ];
   String dropdownvalue = 'Soil type';
   String _selectedGender = 'male';
+  String _methoad = "k";
 
   @override
   void initState() {
-  //  CropViewvarityModel.cropVarietyApi();
+    //  CropViewvarityModel.cropVarietyApi();
     // TODO: implement initState
     super.initState();
   }
@@ -81,13 +82,12 @@ class _AddNewPlotFromState extends State<AddNewPlotFrom> {
               ),
               InkWell(
                 onTap: () {
-                
                   bttomSheet();
-                   CropViewvarityModel.cropVarietyApi();
+                  CropViewvarityModel.cropVarietyApi();
                 },
                 child: TextField(
                   enabled: false,
- 
+
                   // controller: _mobile,
                   decoration: InputDecoration(
                     isDense: true, // important line
@@ -173,8 +173,9 @@ class _AddNewPlotFromState extends State<AddNewPlotFrom> {
                           groupValue: _selectedGender,
                           onChanged: (value) {
                             setState(() {
-                              print(_selectedGender);
+                            
                               _selectedGender = value!;
+                            
                             });
                           },
                         ),
@@ -199,6 +200,7 @@ class _AddNewPlotFromState extends State<AddNewPlotFrom> {
                           onChanged: (value) {
                             setState(() {
                               _selectedGender = value!;
+                              print('${_selectedGender}');
                             });
                           },
                         ),
@@ -217,6 +219,7 @@ class _AddNewPlotFromState extends State<AddNewPlotFrom> {
               SizedBox(
                 height: 15,
               ),
+             
               Text(
                 "Please select Plantation type:",
                 style: TextStyle(
@@ -230,7 +233,7 @@ class _AddNewPlotFromState extends State<AddNewPlotFrom> {
                   Get.bottomSheet(
                     Container(
                         height: 300,
-                        color: Colors.white,
+                        color: kWhite,
                         child: Column(
                           children: [
                             Container(
@@ -302,11 +305,13 @@ class _AddNewPlotFromState extends State<AddNewPlotFrom> {
               SizedBox(
                 height: 10,
               ),
+            _selectedGender == "No"?
               Text(
-                "Select the Pruning / planting date",
+                "Select the Pruning / sowed/ pruning type ",
                 style: TextStyle(
                     color: kgreen, fontSize: 17, fontWeight: FontWeight.bold),
-              ),
+              ):Text("Select the Pruning / planting date",style: TextStyle(
+                    color: kgreen, fontSize: 17, fontWeight: FontWeight.bold)),
               SizedBox(
                 height: 5,
               ),
@@ -324,7 +329,7 @@ class _AddNewPlotFromState extends State<AddNewPlotFrom> {
                 ),
               ),
               SizedBox(
-                height: 20,
+                height: 10,
               ),
               Text(
                 "Garden method",
@@ -334,26 +339,195 @@ class _AddNewPlotFromState extends State<AddNewPlotFrom> {
               SizedBox(
                 height: 5,
               ),
-              TextField(
-                enabled: false,
-                // controller: _mobile,
-                decoration: InputDecoration(
-                  isDense: true, // important line
-                  contentPadding: EdgeInsets.fromLTRB(12, 12, 12, 12),
-                  //errorText: _mobileValidated ? null : _mobileError,
-
-                  hintText: ' ',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                  ),
+              Container(
+                height: 45,
+                decoration: BoxDecoration(
+                    color: kWhite,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(width: 0, color: Colors.grey)),
+                child: Row(
+                  children: [
+                    Radio<String>(
+                      activeColor: kblue,
+                      value: 'vv',
+                      groupValue: _methoad,
+                      onChanged: (value) {
+                        setState(() {
+                          print(_selectedGender);
+                          // _selectedGender = value!;
+                        });
+                      },
+                    ),
+                    Text(
+                      "Poly",
+                      style: TextStyle(
+                          color: kblack, fontSize: 15, fontFamily: 'newfont'),
+                    ),
+                     Radio<String>(
+                      activeColor: kblue,
+                      value: 'vv',
+                      groupValue: _methoad,
+                      onChanged: (value) {
+                        setState(() {
+                          print(_selectedGender);
+                          // _selectedGender = value!;
+                        });
+                      },
+                    ),
+                    Text(
+                      "Shednet",
+                      style: TextStyle(
+                          color: kblack, fontSize: 15, fontFamily: 'newfont'),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+           
+            Container(
+                height: 45,
+                decoration: BoxDecoration(
+                    color: kWhite,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(width: 0, color: Colors.grey)),
+                child: Row(
+                  children: [
+                    Radio<String>(
+                      activeColor: kblue,
+                      value: 'vv',
+                      groupValue: _methoad,
+                      onChanged: (value) {
+                        setState(() {
+                          print(_selectedGender);
+                          // _selectedGender = value!;
+                        });
+                      },
+                    ),
+                    Text(
+                      "Mulching",
+                      style: TextStyle(
+                          color: kblack, fontSize: 15, fontFamily: 'newfont'),
+                    ),
+                  ],
                 ),
               ),
               SizedBox(
                 height: 10,
               ),
-              SizedBox(
-                height: 10,
+                Container(
+                height: 45,
+                decoration: BoxDecoration(
+                    color: kWhite,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(width: 0, color: Colors.grey)),
+                child: Row(
+                  children: [
+                    Radio<String>(
+                      activeColor: kblue,
+                      value: 'vv',
+                      groupValue: _methoad,
+                      onChanged: (value) {
+                        setState(() {
+                          print(_selectedGender);
+                          // _selectedGender = value!;
+                        });
+                      },
+                    ),
+                    Text(
+                      "M",
+                      style: TextStyle(
+                          color: kblack, fontSize: 15, fontFamily: 'newfont'),
+                    ),
+                  ],
+                ),
               ),
+              Text(
+                "Garden method",
+                style: TextStyle(
+                    color: kgreen, fontSize: 17, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 15,),
+              Container(
+                height: 45,
+                decoration: BoxDecoration(
+                    color: kWhite,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(width: 0, color: Colors.grey)),
+                child: Row(
+                  children: [
+                   Expanded(child: Padding(
+                     padding: const EdgeInsets.symmetric(horizontal: 10),
+                     child: Container(
+                      height: 38,
+                      decoration: BoxDecoration(
+                        color: kpareatgreen ,
+                       borderRadius: BorderRadius.circular(15),
+                        ),),
+                   )),
+                   Icon(Icons.cancel),
+                   Expanded(child: Container(
+                    height: 38,
+                      decoration: BoxDecoration(
+                        color: kpareatgreen ,
+                       borderRadius: BorderRadius.circular(15),
+                        ),
+                  )),
+                  ],
+                ),
+              ),
+               SizedBox(height: 20,),
+                Container(
+                height: 45,
+                decoration: BoxDecoration(
+                    color: kWhite,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(width: 0, color: Colors.grey)),
+                child: Row(
+                  children: [
+                    Radio<String>(
+                      activeColor: kblue,
+                      value: 'vv',
+                      groupValue: _methoad,
+                      onChanged: (value) {
+                        setState(() {
+                          print(_selectedGender);
+                          // _selectedGender = value!;
+                        });
+                      },
+                    ),
+                    Text(
+                      "Bed",
+                      style: TextStyle(
+                          color: kblack, fontSize: 15, fontFamily: 'newfont'),
+                    ),
+                  ],
+                ),
+              ),
+               Text(
+                "Choose plantation type",
+                style: TextStyle(
+                    color: kgreen, fontSize: 17, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              TextField(
+                // controller: _mobile,
+                decoration: InputDecoration(
+                  isDense: true, // important line
+                  contentPadding: EdgeInsets.fromLTRB(14, 14, 14, 14),
+                  //errorText: _mobileValidated ? null : _mobileError,
+
+
+                  hintText: 'Total Area (Acers)',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+              ),
+            SizedBox(height: 10,),
               Text(
                 "Total Area (Acers):",
                 style: TextStyle(
@@ -406,7 +580,6 @@ class _AddNewPlotFromState extends State<AddNewPlotFrom> {
   }
 
   void bttomSheet() {
-     
     Get.bottomSheet(SingleChildScrollView(
       child: Column(
         children: [
@@ -416,8 +589,8 @@ class _AddNewPlotFromState extends State<AddNewPlotFrom> {
             color: lgreen,
             child: Center(
               child: InkWell(
-                onTap: (){
-                   CropViewvarityModel.cropVarietyApi();
+                onTap: () {
+                  CropViewvarityModel.cropVarietyApi();
                 },
                 child: Text(
                   'Crop variety :',

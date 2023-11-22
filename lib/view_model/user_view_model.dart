@@ -14,6 +14,7 @@ class UserViewModel with ChangeNotifier {
     sp.setString('taluka', user.talukaName.toString());
     sp.setString('statename', user.stateName.toString());
     sp.setString('stateId', user.stateId.toString());
+    sp.setString('cityName', user.stateId.toString());
     sp.setString('districtId', user.districtId.toString());
     sp.setString('distructname', user.distructName.toString());
     notifyListeners();
@@ -32,6 +33,7 @@ class UserViewModel with ChangeNotifier {
     final String statename = sp.getString('statename').toString();
     final String stateId = sp.getString('stateId').toString();
     final String districtId = sp.getString('districtId').toString();
+    final String cityName = sp.getString('cityName').toString();
     final String talukaId = sp.getString('talukaId').toString();
     print(talukaId,);
     print(taluke,);
@@ -51,7 +53,10 @@ class UserViewModel with ChangeNotifier {
         stateName: statename,
         stateId: stateId,
         districtId: districtId,
-        talukaId: talukaId);
+        talukaId: talukaId ,
+       
+        
+        );
   }
 
   Future<bool> remove() async {
@@ -66,7 +71,8 @@ class UserViewModel with ChangeNotifier {
     sp.remove('statename').toString();
     sp.remove('stateId').toString();
     sp.remove('districtId').toString();
-     sp.remove('talukaId').toString();
+    sp.remove('talukaId').toString();
+    sp.remove('talukaId').toString();
     return true;
   }
 }
